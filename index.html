@@ -8,8 +8,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="MediStock">
     <meta name="theme-color" content="#0ea5e9">
-    <meta name="medistock-core" content="v5.1.4-schema13">
-    <title>MediStock v5.1.4</title>
+    <meta name="medistock-core" content="v5.1.5-schema13">
+    <title>MediStock v5.1.5</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -77,6 +77,7 @@
         .card-title i{color:var(--primary);width:20px;text-align:center;font-size:15px}
         .btn{padding:12px 20px;border:none;border-radius:var(--radius-md);font-size:14px;font-weight:600;cursor:pointer;transition:var(--transition);display:inline-flex;align-items:center;justify-content:center;gap:6px;box-shadow:var(--shadow-sm);font-family:'Plus Jakarta Sans',sans-serif;min-height:46px}
         .btn:active{transform:scale(0.96)}
+        .btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
         .btn-primary{background:var(--primary-gradient);color:#fff}
         .btn-success{background:var(--success);color:#fff}
         .btn-danger{background:var(--danger);color:#fff}
@@ -98,7 +99,7 @@
         .scanner-overlay-full .scan-frame .corner-bl{bottom:-3px;left:-3px;border-bottom-width:4px;border-left-width:4px}
         .scanner-overlay-full .scan-frame .corner-br{bottom:-3px;right:-3px;border-bottom-width:4px;border-right-width:4px}
         .scanner-overlay-full .scan-frame .scan-line{position:absolute;top:10%;left:10%;width:80%;height:2px;background:rgba(52,211,153,0.5);box-shadow:0 0 10px rgba(52,211,153,0.3);animation:scanMove 1.8s ease-in-out infinite}
-        .scanner-overlay-full .scan-label{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);color:#34d399;font-size:13px;font-weight:600;background:rgba(0,0,0,0.75);padding:6px 18px;border-radius:20px;white-space:nowrap;text-shadow:0 1px 4px rgba(0,0,0,0.5);letter-spacing:0.5px;border:1px solid rgba(52,211,153,0.3)}
+        .scanner-overlay-full .scan-frame .scan-label{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);color:#34d399;font-size:13px;font-weight:600;background:rgba(0,0,0,0.75);padding:6px 18px;border-radius:20px;white-space:nowrap;text-shadow:0 1px 4px rgba(0,0,0,0.5);letter-spacing:0.5px;border:1px solid rgba(52,211,153,0.3)}
         @keyframes scanMove{0%{top:10%;opacity:0.3}50%{top:90%;opacity:1}100%{top:10%;opacity:0.3}}
         .scanner-fullscreen .scanner-close-btn{position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:24px;padding:12px 16px;border-radius:50%;cursor:pointer;z-index:20;backdrop-filter:blur(4px)}
         .scanner-fullscreen .scanner-status-full{position:absolute;bottom:100px;left:50%;transform:translateX(-50%);color:#fff;font-size:14px;background:rgba(0,0,0,0.6);padding:10px 24px;border-radius:20px;backdrop-filter:blur(4px);z-index:20;text-align:center;max-width:90%;font-weight:600;transition:all 0.3s;display:none}
@@ -180,7 +181,7 @@
         .modal-handle{width:36px;height:4px;background:var(--border-color);border-radius:2px;margin:0 auto 12px}
         .modal-title{font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;margin-bottom:12px}
         .toast-container{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:300;max-width:92%;width:400px;pointer-events:none}
-        .toast{background:var(--text-main);color:#fff;padding:10px 18px;border-radius:var(--radius-md);font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);text-align:center;margin-bottom:6px;animation:toastIn 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:auto}
+        .toast{background:var(--text-main);color:#fff;padding:10px 18px;border-radius:var(--radius-md);font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);text-align:center;margin-bottom:6px;animation:toastIn 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:auto;word-break:normal;overflow-wrap:break-word}
         .toast.success{background:var(--success)}
         .toast.error{background:var(--danger)}
         .toast.warning{background:var(--warning);color:#0f172a}
@@ -250,19 +251,20 @@
         .update-banner button{background:#fff;color:var(--primary);border:none;padding:8px 16px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px}
         .uncounted-summary{margin-bottom:8px}
         @keyframes spin{to{transform:rotate(360deg)}}
+        .loading-inline{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:6px}
         @media(max-width:480px){.logo-icon{width:34px;height:34px;font-size:15px}.logo-text .brand .main{font-size:14px}.logo-text .brand .version{font-size:8px}.logo-text .tagline{font-size:8px}.tab-btn{min-width:36px;padding:4px 2px}.tab-btn i{font-size:12px}.tab-btn .tab-label{font-size:7px}.card{padding:10px}.qty-btn{width:40px;height:40px;font-size:18px}.qty-input{font-size:var(--font-xl);height:40px}.scanner-overlay-full{width:70%;height:20%}.scanner-overlay-full .scan-label{font-size:10px;padding:4px 12px;bottom:-32px}.scanner-fullscreen .scanner-help-btn{padding:10px 18px;font-size:13px}.scanner-fullscreen .focus-tip{bottom:130px;font-size:9px}.scanner-controls{grid-template-columns:1fr 1fr}.scanner-controls .btn-full{grid-column:1/-1}.dashboard-grid{grid-template-columns:1fr 1fr}.btn{font-size:13px;padding:10px 16px;min-height:42px}.edit-product-grid{grid-template-columns:1fr}.product-info .highlight-stock{font-size:var(--font-xl);padding:2px 12px}.product-info .highlight-cost{font-size:var(--font-large);padding:2px 10px}}
     </style>
 </head>
 <body>
 
-<!-- ⚠️ LOADING OVERLAY -->
+<!-- LOADING OVERLAY -->
 <div id="appLoadingOverlay" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#0ea5e9 0%,#6366f1 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:opacity 0.3s;">
     <div style="width:60px;height:60px;border:5px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;"></div>
-    <div style="margin-top:16px;font-size:16px;font-weight:600;">กำลังโหลด MediStock...</div>
+    <div style="margin-top:16px;font-size:16px;font-weight:600;">กำลังโหลด MediStock v5.1.5...</div>
     <div style="margin-top:6px;font-size:12px;opacity:0.8;">กรุณารอสักครู่</div>
 </div>
 
-<!-- ⚠️ ERROR BANNER -->
+<!-- ERROR BANNER -->
 <div id="appErrorBanner" style="display:none;position:fixed;top:0;left:0;right:0;background:#ef4444;color:#fff;padding:12px 16px;z-index:99998;font-size:13px;text-align:center;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.2);">
     <i class="fas fa-exclamation-triangle"></i>
     <span id="appErrorText">เกิดข้อผิดพลาด</span>
@@ -276,7 +278,7 @@
             <div class="logo-text">
                 <span class="brand">
                     <span class="main">MediStock</span>
-                    <span class="version">v5.1.4</span>
+                    <span class="version">v5.1.5</span>
                 </span>
                 <span class="tagline"><i class="fas fa-circle" style="font-size:4px;color:#34d399;margin-right:3px;"></i>ระบบนับสต็อกสินค้ายา</span>
             </div>
@@ -312,6 +314,7 @@
         <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')"><i class="fas fa-sliders-h"></i><span class="tab-label">ตั้งค่า</span></button>
     </nav>
 
+    <!-- ==================== IMPORT PAGE ==================== -->
     <div class="page active" id="page-import">
         <div class="card">
             <div class="card-title"><i class="fas fa-file-import"></i> นำเข้าข้อมูลสินค้า</div>
@@ -335,7 +338,7 @@
         <div class="card" id="mappingCard" style="display:none;">
             <div class="card-title"><i class="fas fa-cog"></i> กำหนดคอลัมน์</div>
             <div class="mapping-grid" id="mappingFields"></div>
-            <button class="btn btn-primary btn-block" onclick="confirmMapping()" style="margin-top:8px;font-size:14px;padding:12px;"><i class="fas fa-check"></i> ยืนยันและนำเข้าข้อมูล</button>
+            <button class="btn btn-primary btn-block" id="confirmMappingBtn" onclick="confirmMapping()" style="margin-top:8px;font-size:14px;padding:12px;"><i class="fas fa-check"></i> ยืนยันและนำเข้าข้อมูล</button>
         </div>
         <div class="card" id="previewCard" style="display:none;">
             <div class="card-title"><i class="fas fa-eye"></i> ข้อมูลตัวอย่าง</div>
@@ -355,6 +358,7 @@
         </div>
     </div>
 
+    <!-- ==================== SCAN PAGE ==================== -->
     <div class="page" id="page-scan">
         <div class="card" style="padding:8px;">
             <div class="flex-between" style="flex-wrap:wrap;gap:4px;">
@@ -452,6 +456,7 @@
                 <span id="scanCount" style="background:var(--primary);color:#fff;padding:2px 10px;border-radius:14px;font-size:12px;font-weight:700;">0</span>
             </div>
             <div id="recentScans"><p style="text-align:center;color:var(--text-muted);padding:16px;font-size:13px;"><i class="fas fa-inbox" style="font-size:20px;display:block;margin-bottom:6px;opacity:0.5;"></i>ยังไม่มีประวัติการสแกน</p></div>
+            <div id="recentScansMore" style="text-align:center;margin-top:6px;"></div>
             <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
                 <button class="btn btn-outline btn-sm" onclick="undoLast()" style="flex:1;font-size:12px;padding:8px 12px;min-height:36px;"><i class="fas fa-undo"></i> ยกเลิก</button>
                 <button class="btn btn-danger btn-sm" onclick="clearSession()" style="flex:1;font-size:12px;padding:8px 12px;min-height:36px;"><i class="fas fa-trash"></i> ล้าง</button>
@@ -460,6 +465,7 @@
         </div>
     </div>
 
+    <!-- ==================== LAYOUT PAGE ==================== -->
     <div class="page" id="page-layout">
         <div class="card">
             <div class="card-title"><i class="fas fa-sitemap"></i> ผังร้าน</div>
@@ -493,6 +499,7 @@
         </div>
     </div>
 
+    <!-- ==================== REPORT PAGE ==================== -->
     <div class="page" id="page-report">
         <div class="card" style="background:linear-gradient(135deg,var(--success-light) 0%,#d1fae5 100%);border:2px solid #6ee7b7;padding:14px;">
             <div class="card-title" style="color:#065f46;font-size:15px;margin-bottom:6px;"><i class="fas fa-chart-pie"></i> สรุปภาพรวม</div>
@@ -574,6 +581,7 @@
         </div>
     </div>
 
+    <!-- ==================== ANALYTICS PAGE ==================== -->
     <div class="page" id="page-analytics">
         <div class="card">
             <div class="card-title"><i class="fas fa-chart-pie"></i> วิเคราะห์ข้อมูลสต็อก</div>
@@ -603,6 +611,7 @@
         </div>
     </div>
 
+    <!-- ==================== SETTINGS PAGE ==================== -->
     <div class="page" id="page-settings">
         <div class="card" style="border:2px solid var(--info);">
             <div class="card-title" style="color:var(--info);font-size:14px;"><i class="fas fa-sync-alt"></i> PWA / แคช</div>
@@ -656,6 +665,7 @@
     </div>
 </div>
 
+<!-- ==================== MODALS & OVERLAYS ==================== -->
 <div class="update-banner" id="updateBanner">
     <span>🆕 มีอัปเดตใหม่พร้อมใช้งาน</span>
     <button onclick="app && app.applyUpdate()">อัปเดตเลย</button>
@@ -764,23 +774,6 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="qrCodeModal">
-    <div class="modal">
-        <div class="modal-handle"></div>
-        <div class="modal-title"><i class="fas fa-qrcode"></i> QR Code และป้ายสินค้า</div>
-        <div id="qrCodeContent" class="qr-code-container">
-            <div id="qrcode"></div>
-            <div class="product-label" id="qrProductLabel">-</div>
-            <div style="font-size:12px;color:var(--text-muted);margin-top:4px;" id="qrProductDetail">-</div>
-        </div>
-        <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
-            <button class="btn btn-primary btn-sm" onclick="printProductLabel()" style="flex:1;font-size:13px;padding:8px 12px;min-height:38px;"><i class="fas fa-print"></i> พิมพ์</button>
-            <button class="btn btn-outline btn-sm" onclick="downloadQRCode()" style="flex:1;font-size:13px;padding:8px 12px;min-height:38px;"><i class="fas fa-download"></i> ดาวน์โหลด</button>
-            <button class="btn btn-outline-danger btn-sm" onclick="closeQRCodeModal()" style="font-size:13px;padding:8px 12px;min-height:38px;"><i class="fas fa-times"></i> ปิด</button>
-        </div>
-    </div>
-</div>
-
 <div class="modal-overlay" id="addCabinetScanModal">
     <div class="modal">
         <div class="modal-handle"></div>
@@ -822,37 +815,15 @@
             <div><label style="font-weight:600;font-size:12px;">📉 Min Stock</label><input type="number" class="input" id="editProductMinStock" style="font-size:14px;padding:8px 12px;min-height:38px;"></div>
             <div><label style="font-weight:600;font-size:12px;">📈 Max Stock</label><input type="number" class="input" id="editProductMaxStock" style="font-size:14px;padding:8px 12px;min-height:38px;"></div>
             <div class="full-width"><label style="font-weight:600;font-size:12px;">🏢 ผู้จัดจำหน่าย</label><input type="text" class="input" id="editProductSupplier" style="font-size:14px;padding:8px 12px;min-height:38px;"></div>
+            <div class="full-width">
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;margin-top:4px;">
+                    <input type="checkbox" id="editUpdateAllLots" style="width:18px;height:18px;"> อัปเดตราคาทุน/ราคาขายให้ทุก LOT ด้วย
+                </label>
+            </div>
         </div>
         <div style="display:flex;gap:6px;margin-top:8px;">
             <button class="btn btn-success btn-block" onclick="app && app.saveEditProductInfo()" style="font-size:14px;padding:10px;min-height:44px;"><i class="fas fa-save"></i> บันทึก</button>
             <button class="btn btn-outline btn-block" onclick="closeEditProductModal()" style="font-size:14px;padding:10px;min-height:44px;"><i class="fas fa-times"></i> ยกเลิก</button>
-        </div>
-    </div>
-</div>
-
-<div class="modal-overlay" id="unknownUnitModal">
-    <div class="modal">
-        <div class="modal-handle"></div>
-        <div class="modal-title"><i class="fas fa-question-circle"></i> ไม่รู้จักหน่วย</div>
-        <p style="font-size:14px;margin-bottom:8px;">ระบบไม่รู้จักหน่วย <strong id="unknownUnitName">"แพ็ค"</strong></p>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
-            <select id="selectUnitMapping" style="flex:2;padding:10px;border:2px solid var(--border-color);border-radius:var(--radius-sm);font-size:14px;min-height:44px;">
-                <option value="ชิ้น">ชิ้น (ค่าเริ่มต้น)</option>
-                <option value="โหล">โหล (1 โหล = 12 ชิ้น)</option>
-                <option value="ลัง">ลัง (1 ลัง = 12 ชิ้น)</option>
-                <option value="กล่อง">กล่อง (1 กล่อง = 1 ชิ้น)</option>
-                <option value="แผง">แผง (1 แผง = 10 ชิ้น)</option>
-                <option value="ขวด">ขวด (1 ขวด = 1 ชิ้น)</option>
-                <option value="หลอด">หลอด (1 หลอด = 1 ชิ้น)</option>
-                <option value="ซอง">ซอง (1 ซอง = 1 ชิ้น)</option>
-                <option value="ตลับ">ตลับ (1 ตลับ = 1 ชิ้น)</option>
-                <option value="custom">➕ เพิ่มหน่วยใหม่</option>
-            </select>
-            <input type="number" id="customUnitFactor" placeholder="เท่ากับกี่ชิ้น?" style="flex:1;padding:10px;border:2px solid var(--border-color);border-radius:var(--radius-sm);font-size:14px;min-height:44px;display:none;">
-        </div>
-        <div style="display:flex;gap:6px;">
-            <button class="btn btn-primary btn-block" onclick="app && app.confirmUnknownUnit()" style="font-size:15px;padding:12px;min-height:48px;"><i class="fas fa-check"></i> ยืนยัน</button>
-            <button class="btn btn-outline btn-block" onclick="app && app.skipUnknownUnit()" style="font-size:15px;padding:12px;min-height:48px;"><i class="fas fa-times"></i> ใช้ "ชิ้น" แทน</button>
         </div>
     </div>
 </div>
@@ -874,10 +845,9 @@
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
-
 <script>
 // ================================================================
-// ✅ Service Worker - Early Registration
+// MediStock v5.1.5 - Service Worker Early Registration
 // ================================================================
 (function registerSWEarly() {
     if (!('serviceWorker' in navigator)) return;
@@ -904,15 +874,28 @@
     });
 })();
 
-console.log('✅ MediStock v5.1.4 กำลังเริ่มต้น...');
+console.log('✅ MediStock v5.1.5 กำลังเริ่มต้น...');
 
+// ================================================================
+// Utility: num - แปลงเป็น number ปลอดภัย
+// ================================================================
 function num(v, d = 0) { const n = Number(v); return Number.isFinite(n) ? n : d; }
 
+// ================================================================
+// Utility: escapeHtml - กัน XSS
+// ================================================================
+function escapeHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    })[c]);
+}
+
 const CONFIG = {
-    APP_NAME: 'MediStock', VERSION: '5.1.4',
+    APP_NAME: 'MediStock', VERSION: '5.1.5',
     STORE_ID: localStorage.getItem('storeId') || 'default',
     EXPIRY_WARNING_DAYS: 90, MIN_STOCK_ALERT: 5, MAX_STOCK_ALERT: 100,
-    DEAD_STOCK_DAYS: 90, ABC_A_PERCENT: 70, ABC_B_PERCENT: 90, BATCH_SIZE: 100
+    DEAD_STOCK_DAYS: 90, ABC_A_PERCENT: 70, ABC_B_PERCENT: 90, 
+    BATCH_SIZE: 100, SEARCH_DEBOUNCE_MS: 250, RECENT_SCANS_PAGE: 30
 };
 
 class StockApp {
@@ -968,25 +951,91 @@ class StockApp {
             { icon: '✏️', title: 'ขั้นตอนที่ 4: ใส่จำนวน', desc: 'ใส่จำนวน → กด "ยืนยันการนับ"' },
             { icon: '📊', title: 'ขั้นตอนที่ 5: สรุปผล', desc: 'นับเสร็จ → กด "สรุปผล" → Export' }
         ];
+        // Cache AudioContext
+        this._audioCtx = null;
+        // Recent scans pagination
+        this.recentScansPage = 1;
+        // Search debounce
+        this._searchDebounce = null;
         this.init();
     }
 
+    // ============================================================
+    // ✅ FIX #1: normalizeDateValue ใหม่ทั้งหมด - รองรับทุก format
+    // ============================================================
     normalizeDateValue(value) {
         if (value === null || value === undefined || value === '') return '';
-        if (value instanceof Date && !isNaN(value.getTime())) return value.toISOString().slice(0, 10);
-        const raw = String(value).trim();
+        
+        // 1) Date object
+        if (value instanceof Date && !isNaN(value.getTime())) {
+            const y = value.getUTCFullYear();
+            if (y >= 1900 && y <= 2200) {
+                return value.toISOString().slice(0, 10);
+            }
+            return '';
+        }
+        
+        // 2) Number (Excel serial) — จัดการตรงๆ
+        if (typeof value === 'number' && Number.isFinite(value)) {
+            // Excel epoch: 1899-12-30 → แต่ใช้ 25569 เป็น offset จาก Unix epoch (1970-01-01)
+            // 25569 = จำนวนวันจาก 1900-01-01 ถึง 1970-01-01 (ปรับ leap year bug)
+            const ms = Math.round((value - 25569) * 86400 * 1000);
+            const d = new Date(ms);
+            if (!isNaN(d.getTime())) {
+                const y = d.getUTCFullYear();
+                if (y >= 1900 && y <= 2200) {
+                    return d.toISOString().slice(0, 10);
+                }
+            }
+            return '';
+        }
+        
+        // 3) String
+        const raw = String(value).trim().replace(/,/g, '');
         if (!raw) return '';
-        const numeric = Number(raw);
-        if (Number.isFinite(numeric) && numeric >= 1 && numeric <= 2958465 && /^\d+(?:\.\d+)?$/.test(raw)) {
-            const d = new Date(Date.UTC(1899, 11, 30) + Math.round(numeric) * 86400000);
+        
+        // 3.1) Numeric string → ลอง parse เป็น serial
+        if (/^\d+(\.\d+)?$/.test(raw)) {
+            const n = Number(raw);
+            if (n >= 1 && n <= 2958465) {
+                const ms = Math.round((n - 25569) * 86400 * 1000);
+                const d = new Date(ms);
+                if (!isNaN(d.getTime())) {
+                    const y = d.getUTCFullYear();
+                    if (y >= 1900 && y <= 2200) {
+                        return d.toISOString().slice(0, 10);
+                    }
+                }
+            }
+        }
+        
+        // 3.2) dd/mm/yyyy หรือ dd-mm-yyyy (สันนิษฐาน พ.ศ. ถ้าปี > 2400)
+        let m = raw.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/);
+        if (m) {
+            let y = Number(m[3]);
+            if (y < 100) y += y > 50 ? 2500 - 543 : 2000;
+            if (y > 2400) y -= 543; // พ.ศ. → ค.ศ.
+            const d = new Date(Date.UTC(y, Number(m[2]) - 1, Number(m[1])));
             if (!isNaN(d.getTime())) return d.toISOString().slice(0, 10);
         }
-        let x = raw.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
-        if (x) { const d = new Date(Date.UTC(Number(x[3]), Number(x[2])-1, Number(x[1]))); if (!isNaN(d.getTime())) return d.toISOString().slice(0, 10); }
-        x = raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:T.*)?$/);
-        if (x) { const d = new Date(Date.UTC(Number(x[1]), Number(x[2])-1, Number(x[3]))); if (!isNaN(d.getTime())) return d.toISOString().slice(0, 10); }
+        
+        // 3.3) yyyy-mm-dd (รองรับ พ.ศ. ด้วย)
+        m = raw.match(/^(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})/);
+        if (m) {
+            let y = Number(m[1]);
+            if (y > 2400) y -= 543;
+            const d = new Date(Date.UTC(y, Number(m[2]) - 1, Number(m[3])));
+            if (!isNaN(d.getTime())) return d.toISOString().slice(0, 10);
+        }
+        
+        // 3.4) Fallback
         const parsed = new Date(raw);
-        return isNaN(parsed.getTime()) ? '' : parsed.toISOString().slice(0, 10);
+        if (!isNaN(parsed.getTime())) {
+            const y = parsed.getUTCFullYear();
+            if (y >= 1900 && y <= 2200) return parsed.toISOString().slice(0, 10);
+        }
+        
+        return '';
     }
 
     calculateProductAge(mfgDate, expiryDate) {
@@ -1026,7 +1075,7 @@ class StockApp {
         this.v51UpdateSyncStatus();
         if (this.v51SyncConfig().endpoint && this.v51SyncConfig().token) this.v51StartSync();
         this.v51RenderConflicts();
-        console.log('✅ MediStock v5.1.4 พร้อมใช้งาน!');
+        console.log('✅ MediStock v5.1.5 พร้อมใช้งาน!');
         if (this.products.length === 0) {
             this.updateStatus('📥 กรุณานำเข้าข้อมูลสินค้าก่อนใช้งาน');
             this.showToast('📥 กรุณานำเข้าข้อมูลสินค้าจาก Excel หรือ Google Sheets', 'info');
@@ -1034,8 +1083,34 @@ class StockApp {
         this.updateAlerts();
         this.startAutoSave();
         this.runAnalytics();
+        // Keyboard shortcuts
+        this.setupKeyboardShortcuts();
     }
 
+    setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            // Ignore if typing in input
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+            
+            // Ctrl+1..6 = switch tabs
+            if (e.ctrlKey && e.key >= '1' && e.key <= '6') {
+                e.preventDefault();
+                const tabs = ['import', 'scan', 'layout', 'report', 'analytics', 'settings'];
+                this.switchTab(tabs[parseInt(e.key) - 1]);
+                return;
+            }
+            // ESC = close modals
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show'));
+                document.querySelectorAll('.help-overlay.show').forEach(m => m.classList.remove('show'));
+                this.closeFullscreenScanner();
+            }
+        });
+    }
+
+    // ============================================================
+    // ✅ FIX #1.1: initDB + v5GetAll/v5Put null-safe
+    // ============================================================
     initDB() {
         return new Promise((resolve) => {
             const request = indexedDB.open('StockCountDB_' + this.branchId, 13);
@@ -1066,7 +1141,7 @@ class StockApp {
                 make('v5_syncQueue', { keyPath: 'id' });
                 make('v5_organizations', { keyPath: 'id' });
                 if (db.objectStoreNames.contains('v5_meta')) {
-                    try { tx.objectStore('v5_meta').put({ key: 'schema', version: '5.1.4', schema: 13, migratedAt: new Date().toISOString(), branchId: this.branchId }); } catch (_) {}
+                    try { tx.objectStore('v5_meta').put({ key: 'schema', version: '5.1.5', schema: 13, migratedAt: new Date().toISOString(), branchId: this.branchId }); } catch (_) {}
                 }
             };
             request.onsuccess = (e) => { this.db = e.target.result; resolve(); };
@@ -1074,44 +1149,92 @@ class StockApp {
         });
     }
 
+    // ✅ FIX #1.1: v5GetAll null-safe
+    v5GetAll(storeName) {
+        if (!this.db || !this.db.objectStoreNames.contains(storeName)) {
+            return Promise.resolve([]);
+        }
+        return new Promise((resolve) => {
+            try {
+                const req = this.db.transaction(storeName, 'readonly').objectStore(storeName).getAll();
+                req.onsuccess = () => resolve(req.result || []);
+                req.onerror = () => resolve([]);
+            } catch (e) { resolve([]); }
+        });
+    }
+
+    v5Put(storeName, value) {
+        if (!this.db || !this.db.objectStoreNames.contains(storeName)) {
+            return Promise.reject(new Error('Store not available'));
+        }
+        return new Promise((resolve, reject) => {
+            try {
+                const req = this.db.transaction(storeName, 'readwrite').objectStore(storeName).put(value);
+                req.onsuccess = () => resolve(value);
+                req.onerror = () => reject(req.error);
+            } catch (e) { reject(e); }
+        });
+    }
+
+    // ============================================================
+    // ✅ FIX #1.2: saveProduct handle error
+    // ============================================================
+    async saveProduct(product) {
+        if (!this.db) throw new Error('Database not ready');
+        return new Promise((resolve, reject) => {
+            try {
+                const tx = this.db.transaction('products', 'readwrite');
+                const req = tx.objectStore('products').put(product);
+                req.onsuccess = () => resolve(product);
+                req.onerror = () => reject(req.error || new Error('Save failed'));
+                tx.onerror = () => reject(tx.error);
+            } catch (e) { reject(e); }
+        });
+    }
+
+    // ============================================================
+    // ✅ FIX #1.3: loadProducts ที่มี error handling
+    // ============================================================
     async loadProducts() {
         try {
+            if (!this.db) { this.products = []; return; }
             const tx = this.db.transaction('products', 'readonly');
             const store = tx.objectStore('products');
             const req = store.getAll();
             this.products = await new Promise(r => { req.onsuccess = () => r(req.result || []); req.onerror = () => r([]); });
             console.log('📦 โหลดสินค้าทั้งหมด:', this.products.length, 'รายการ');
-            this.updateProgress();
-            this.updateAlerts();
-            this.runAnalytics();
+            try { this.updateProgress(); } catch(e) {}
+            try { this.updateAlerts(); } catch(e) {}
+            try { this.runAnalytics(); } catch(e) {}
         } catch (e) { this.products = []; console.error('Load products error:', e); }
     }
 
     async loadLocations() {
         try {
+            if (!this.db) { this.locations = []; return; }
             const tx = this.db.transaction('locations', 'readonly');
             const req = tx.objectStore('locations').getAll();
             this.locations = await new Promise(r => { req.onsuccess = () => r(req.result || []); req.onerror = () => r([]); });
             console.log('📦 โหลดตำแหน่ง:', this.locations.length, 'ตู้');
-            this.renderMap();
+            try { this.renderMap(); } catch(e) {}
         } catch (e) { this.locations = []; console.error('Load locations error:', e); }
     }
 
-    async saveProduct(product) {
-        const tx = this.db.transaction('products', 'readwrite');
-        await new Promise(r => { const req = tx.objectStore('products').put(product); req.onsuccess = r; req.onerror = r; });
-    }
-
+    // ✅ FIX 4.3: saveLocations atomic - ใช้ put ทีละตัว
     async saveLocations() {
+        if (!this.db) return;
         const tx = this.db.transaction('locations', 'readwrite');
         const store = tx.objectStore('locations');
         store.clear();
-        this.locations.forEach(l => store.add(l));
-        await new Promise(r => { tx.oncomplete = r; });
+        this.locations.forEach(l => {
+            try { store.put(l); } catch(e) { console.warn('Save location error:', e); }
+        });
+        return new Promise(r => { tx.oncomplete = r; tx.onerror = r; tx.onabort = r; });
     }
 
     async loadUnits() {
         try {
+            if (!this.db) return;
             const tx = this.db.transaction('units', 'readonly');
             const req = tx.objectStore('units').getAll();
             const units = await new Promise(r => { req.onsuccess = () => r(req.result || []); req.onerror = () => r([]); });
@@ -1121,6 +1244,7 @@ class StockApp {
     }
 
     async saveUnit(name, factor) {
+        if (!this.db) return;
         const tx = this.db.transaction('units', 'readwrite');
         await new Promise(r => { const req = tx.objectStore('units').put({ name, factor }); req.onsuccess = r; req.onerror = r; });
         this.unitMap[name] = factor;
@@ -1140,8 +1264,8 @@ class StockApp {
         const units = Object.keys(this.unitMap);
         if (units.length === 0) { container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:8px;font-size:13px;">ยังไม่มีหน่วย</p>'; return; }
         container.innerHTML = units.map(name => `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid var(--border-color);">
-            <span><strong>${name}</strong> = ${this.unitMap[name]} ชิ้น</span>
-            <button class="btn btn-danger btn-sm" onclick="app && app.deleteUnit('${name}')" style="font-size:10px;padding:2px 8px;min-height:28px;"><i class="fas fa-trash"></i></button>
+            <span><strong>${escapeHtml(name)}</strong> = ${this.unitMap[name]} ชิ้น</span>
+            <button class="btn btn-danger btn-sm" onclick="app && app.deleteUnit('${escapeHtml(name)}')" style="font-size:10px;padding:2px 8px;min-height:28px;"><i class="fas fa-trash"></i></button>
         </div>`).join('');
     }
 
@@ -1160,7 +1284,7 @@ class StockApp {
         if (name === 'ชิ้น') { this.showToast('⚠️ ไม่สามารถลบหน่วย "ชิ้น" ได้', 'warning'); return; }
         if (!confirm(`🗑️ ยืนยันลบหน่วย "${name}"?`)) return;
         delete this.unitMap[name];
-        this.db.transaction('units', 'readwrite').objectStore('units').delete(name);
+        if (this.db) this.db.transaction('units', 'readwrite').objectStore('units').delete(name);
         this.renderUnitList();
     }
 
@@ -1204,6 +1328,7 @@ class StockApp {
         } catch (e) { this.showToast('❌ ล้าง Cache ไม่สำเร็จ: ' + e.message, 'error'); }
     }
 
+    // ✅ FIX #3.9: checkForUpdates handle installing
     async checkForUpdates() {
         if (!('serviceWorker' in navigator)) { this.showToast('⚠️ ไม่รองรับ SW', 'warning'); return; }
         const reg = await navigator.serviceWorker.getRegistration();
@@ -1215,13 +1340,28 @@ class StockApp {
                 reg.waiting.postMessage({ type: 'SKIP_WAITING' });
                 setTimeout(() => window.location.reload(), 300);
             }
-        } else { this.showToast('✅ ใช้เวอร์ชันล่าสุดอยู่แล้ว', 'success'); }
+        } else if (reg.installing) {
+            this.showToast('⏳ กำลังติดตั้งอัปเดต...', 'info');
+        } else {
+            this.showToast('✅ ใช้เวอร์ชันล่าสุดอยู่แล้ว', 'success');
+        }
     }
 
+    // ============================================================
+    // Branches
+    // ============================================================
     getBranches() {
         const data = localStorage.getItem('pharmacy_branches');
         if (!data) { const d = [{ id: 'default', name: 'สาขาหลัก' }]; localStorage.setItem('pharmacy_branches', JSON.stringify(d)); return d; }
-        try { return JSON.parse(data); } catch(e) { return [{ id: 'default', name: 'สาขาหลัก' }]; }
+        try { 
+            const parsed = JSON.parse(data);
+            if (!Array.isArray(parsed) || parsed.length === 0) throw new Error('Invalid');
+            return parsed;
+        } catch(e) { 
+            const d = [{ id: 'default', name: 'สาขาหลัก' }]; 
+            localStorage.setItem('pharmacy_branches', JSON.stringify(d)); 
+            return d; 
+        }
     }
 
     saveBranches(branches) {
@@ -1235,7 +1375,7 @@ class StockApp {
     updateBranchSelect() {
         const select = document.getElementById('branchSelect');
         if (!select) return;
-        select.innerHTML = this.branches.map(b => `<option value="${b.id}">🏪 ${b.name}</option>`).join('');
+        select.innerHTML = this.branches.map(b => `<option value="${escapeHtml(b.id)}">🏪 ${escapeHtml(b.name)}</option>`).join('');
         select.value = this.branchId;
     }
 
@@ -1294,10 +1434,10 @@ class StockApp {
         this.branches = this.getBranches();
         if (this.branches.length === 0) { container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:12px;">ยังไม่มีสาขา</p>'; return; }
         container.innerHTML = this.branches.map(b => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--border-color);">
-            <span>🏪 ${b.name}</span>
+            <span>🏪 ${escapeHtml(b.name)}</span>
             <div style="display:flex;gap:4px;">
-                <button class="btn btn-outline btn-sm" onclick="app.renameBranch('${b.id}')" style="min-height:30px;padding:4px 10px;font-size:11px;"><i class="fas fa-pen"></i></button>
-                <button class="btn btn-danger btn-sm" onclick="app.deleteBranch('${b.id}')" style="min-height:30px;padding:4px 10px;font-size:11px;"><i class="fas fa-trash"></i></button>
+                <button class="btn btn-outline btn-sm" onclick="app.renameBranch('${escapeHtml(b.id)}')" style="min-height:30px;padding:4px 10px;font-size:11px;"><i class="fas fa-pen"></i></button>
+                <button class="btn btn-danger btn-sm" onclick="app.deleteBranch('${escapeHtml(b.id)}')" style="min-height:30px;padding:4px 10px;font-size:11px;"><i class="fas fa-trash"></i></button>
             </div>
         </div>`).join('');
     }
@@ -1335,13 +1475,18 @@ class StockApp {
         this.renderBranchList();
     }
 
+    // ============================================================
+    // ✅ FIX #4.6: showToast รองรับ \n
+    // ============================================================
     showToast(message, type = 'info', suggestion = '') {
         const container = document.getElementById('toastContainer');
         if (!container) return;
         const toast = document.createElement('div');
         toast.className = 'toast ' + type;
-        let html = `<div style="font-weight:600;">${message}</div>`;
-        if (suggestion) html += `<div style="font-size:11px;opacity:0.85;margin-top:4px;">💡 ${suggestion}</div>`;
+        const safeMsg = String(message).replace(/\n/g, '<br>');
+        const safeSug = suggestion ? String(suggestion).replace(/\n/g, '<br>') : '';
+        let html = `<div style="font-weight:600;">${safeMsg}</div>`;
+        if (safeSug) html += `<div style="font-size:11px;opacity:0.85;margin-top:4px;">💡 ${safeSug}</div>`;
         toast.innerHTML = html;
         container.appendChild(toast);
         setTimeout(() => { toast.classList.add('hide'); setTimeout(() => toast.remove(), 300); }, 4500);
@@ -1375,13 +1520,17 @@ class StockApp {
         else badge.style.display = 'none';
     }
 
+    // ✅ FIX #3.2: formatDate timezone UTC
     formatDate(dateStr) {
         if (!dateStr) return '-';
+        // ลอง parse เป็น yyyy-mm-dd ก่อน
+        const m = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (m) return `${m[3]}/${m[2]}/${m[1]}`;
         try {
             const d = new Date(dateStr);
-            if (isNaN(d.getTime())) return dateStr;
-            return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
-        } catch(e) { return dateStr; }
+            if (isNaN(d.getTime())) return String(dateStr);
+            return `${String(d.getUTCDate()).padStart(2,'0')}/${String(d.getUTCMonth()+1).padStart(2,'0')}/${d.getUTCFullYear()}`;
+        } catch(e) { return String(dateStr); }
     }
 
     download(blob, name) {
@@ -1398,22 +1547,34 @@ class StockApp {
     }
 
     saveSession() {
-        if (this.sessionItems.length > 0) localStorage.setItem('sessionItems_' + CONFIG.STORE_ID, JSON.stringify(this.sessionItems));
+        if (this.sessionItems.length > 0) {
+            try { localStorage.setItem('sessionItems_' + CONFIG.STORE_ID, JSON.stringify(this.sessionItems)); } catch(e) {}
+        }
     }
 
+    // ✅ FIX #3.10: loadSession validate schema
     loadSession() {
         const saved = localStorage.getItem('sessionItems_' + CONFIG.STORE_ID);
         if (saved) {
             try {
                 const items = JSON.parse(saved);
-                if (items.length > 0) {
-                    this.sessionItems = items;
-                    this.renderRecentScans();
-                    this.updateProgress();
-                    this.updateScanBadge();
-                    this.showToast('💾 โหลดข้อมูลที่บันทึกไว้ (' + items.length + ' รายการ)', 'info');
+                if (Array.isArray(items) && items.length > 0) {
+                    // Validate structure
+                    const valid = items.every(item => 
+                        item && typeof item === 'object' && item.productId && item.name
+                    );
+                    if (valid) {
+                        this.sessionItems = items;
+                        this.renderRecentScans();
+                        this.updateProgress();
+                        this.updateScanBadge();
+                        this.showToast('💾 โหลดข้อมูลที่บันทึกไว้ (' + items.length + ' รายการ)', 'info');
+                    } else {
+                        console.warn('Session data invalid, skipping');
+                        localStorage.removeItem('sessionItems_' + CONFIG.STORE_ID);
+                    }
                 }
-            } catch(e) {}
+            } catch(e) { console.warn('Load session error:', e); }
         }
     }
 
@@ -1444,7 +1605,7 @@ class StockApp {
     }
 
     showOnboarding() {
-        const key = 'onboarding_v514_done_' + this.branchId;
+        const key = 'onboarding_v515_done_' + this.branchId;
         if (localStorage.getItem(key)) return;
         setTimeout(() => {
             this.onboardingStep = 0;
@@ -1471,13 +1632,13 @@ class StockApp {
 
     finishOnboarding() {
         document.getElementById('onboardingOverlay').classList.remove('show');
-        localStorage.setItem('onboarding_v514_done_' + this.branchId, 'true');
+        localStorage.setItem('onboarding_v515_done_' + this.branchId, 'true');
         this.showToast('🎉 พร้อมใช้งานแล้ว!', 'success');
     }
 
     skipOnboarding() {
         document.getElementById('onboardingOverlay').classList.remove('show');
-        localStorage.setItem('onboarding_v514_done_' + this.branchId, 'true');
+        localStorage.setItem('onboarding_v515_done_' + this.branchId, 'true');
     }
 
     showHelp() {
@@ -1493,7 +1654,7 @@ class StockApp {
         let content = helpContent['นำเข้า'];
         for (const [key, val] of Object.entries(helpContent)) { if (tabName.includes(key)) { content = val; break; } }
         document.getElementById('helpTitle').textContent = content.title;
-        document.getElementById('helpBody').innerHTML = content.steps.map(s => `<div class="help-step">${s}</div>`).join('') + `<div class="help-tip">${content.tip}</div>`;
+        document.getElementById('helpBody').innerHTML = content.steps.map(s => `<div class="help-step">${escapeHtml(s)}</div>`).join('') + `<div class="help-tip">${escapeHtml(content.tip)}</div>`;
         document.getElementById('helpOverlay').classList.add('show');
     }
 
@@ -1560,40 +1721,159 @@ class StockApp {
         return ((10 - (sum % 10)) % 10) === parseInt(barcode[12]);
     }
 
+    // ============================================================
+    // ✅ FIX #2: scanImage ใหม่ทั้งหมด - multi-fallback
+    // ============================================================
     async scanImage(event) {
-        const file = event.target.files[0];
+        const file = event.target.files?.[0];
         if (!file) return;
+        event.target.value = '';
+        
+        const statusEl = document.getElementById('scannerStatus');
+        if (statusEl) {
+            statusEl.textContent = '📷 กำลังอ่านบาร์โค้ด...';
+            statusEl.className = 'scanner-status info';
+        }
         this.showToast('📷 กำลังอ่านบาร์โค้ด...', 'info');
-        document.getElementById('scannerStatus').textContent = '📷 กำลังอ่าน...';
-        document.getElementById('scannerStatus').className = 'scanner-status info';
+        
+        // Helper: preprocess image (resize + binarize)
+        const preprocessImage = (imgEl, maxSize = 1600) => {
+            const canvas = document.createElement('canvas');
+            let { width, height } = imgEl;
+            const scale = Math.min(1, maxSize / Math.max(width, height));
+            canvas.width = Math.round(width * scale);
+            canvas.height = Math.round(height * scale);
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(imgEl, 0, 0, canvas.width, canvas.height);
+            // Binarize เพื่อเพิ่ม contrast
+            try {
+                const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const d = imgData.data;
+                for (let i = 0; i < d.length; i += 4) {
+                    const gray = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+                    const v = gray < 128 ? 0 : 255;
+                    d[i] = d[i+1] = d[i+2] = v;
+                }
+                ctx.putImageData(imgData, 0, 0);
+            } catch(e) { console.warn('Binarize failed:', e); }
+            return canvas;
+        };
+        
         try {
-            let result = null, method = '';
-            if (typeof ZXing !== 'undefined') {
+            // โหลดรูปเป็น Image element
+            const img = await new Promise((resolve, reject) => {
+                const i = new Image();
+                i.onload = () => resolve(i);
+                i.onerror = () => reject(new Error('โหลดรูปไม่สำเร็จ'));
+                i.src = URL.createObjectURL(file);
+            });
+            
+            let result = null;
+            let method = '';
+            
+            // ========== Method 1: Html5Qrcode.scanFile ==========
+            try {
+                if (typeof Html5Qrcode !== 'undefined') {
+                    // ใช้ element ชั่วคราว
+                    let tempId = 'temp-qr-reader';
+                    if (!document.getElementById(tempId)) {
+                        const el = document.createElement('div');
+                        el.id = tempId;
+                        el.style.display = 'none';
+                        document.body.appendChild(el);
+                    }
+                    const html5 = new Html5Qrcode(tempId, { verbose: false });
+                    const decoded = await html5.scanFile(file, false);
+                    if (decoded) { result = decoded; method = 'Html5Qrcode'; }
+                }
+            } catch (e) { console.warn('Html5Qrcode.scanFile failed:', e?.message); }
+            
+            // ========== Method 2: ZXing decodeFromImageElement ==========
+            if (!result && typeof ZXing !== 'undefined') {
                 try {
-                    const img = new Image();
-                    img.src = URL.createObjectURL(file);
-                    await new Promise((resolve) => { img.onload = resolve; img.onerror = resolve; });
                     const reader = new ZXing.BrowserMultiFormatReader();
                     const decoded = await reader.decodeFromImageElement(img);
                     if (decoded) { result = decoded.getText(); method = 'ZXing'; }
-                } catch (e) {}
+                } catch (e) { console.warn('ZXing decode failed:', e?.message); }
             }
+            
+            // ========== Method 3: ZXing กับ canvas ที่ preprocess ==========
+            if (!result && typeof ZXing !== 'undefined') {
+                try {
+                    const canvas = preprocessImage(img);
+                    const dataUrl = canvas.toDataURL('image/png');
+                    const reader = new ZXing.BrowserMultiFormatReader();
+                    const decoded = await reader.decodeFromImageUrl(dataUrl);
+                    if (decoded) { result = decoded.getText(); method = 'ZXing-preprocessed'; }
+                } catch (e) { console.warn('ZXing preprocess failed:', e?.message); }
+            }
+            
+            // ========== Method 4: BarcodeDetector API ==========
+            if (!result && 'BarcodeDetector' in window) {
+                try {
+                    const detector = new BarcodeDetector();
+                    const barcodes = await detector.detect(img);
+                    if (barcodes.length > 0) {
+                        result = barcodes[0].rawValue;
+                        method = 'BarcodeDetector';
+                    }
+                } catch (e) { console.warn('BarcodeDetector failed:', e?.message); }
+            }
+            
+            // ========== ตรวจสอบผลลัพธ์ ==========
             if (result) {
                 const clean = String(result).replace(/[^0-9]/g, '');
+                let finalBarcode = clean;
                 const v = this.validateBarcode(clean);
-                if (v.valid) {
-                    document.getElementById('scannerStatus').textContent = `✅ อ่านสำเร็จ! (${method})`;
-                    document.getElementById('scannerStatus').className = 'scanner-status success';
-                    this.showToast(`✅ อ่านบาร์โค้ดได้!`, 'success');
-                    this.processScannedBarcode(v.barcode, method);
+                
+                if (!v.valid && clean.length >= 8 && clean.length <= 13) {
+                    // Checksum ไม่ตรงแต่ความยาวถูก → ถามผู้ใช้
+                    if (confirm(`⚠️ อ่านได้: ${clean}\nแต่ Checksum ไม่ถูกต้อง\n\nใช้งานต่อหรือไม่?`)) {
+                        finalBarcode = clean;
+                    } else {
+                        if (statusEl) {
+                            statusEl.textContent = '❌ Checksum ไม่ถูกต้อง';
+                            statusEl.className = 'scanner-status error';
+                        }
+                        return;
+                    }
+                } else if (!v.valid) {
+                    if (statusEl) {
+                        statusEl.textContent = `❌ ${v.message}`;
+                        statusEl.className = 'scanner-status error';
+                    }
+                    this.showToast(`❌ อ่านได้ "${clean}" แต่รูปแบบไม่ถูกต้อง`, 'error');
                     return;
                 }
+                
+                if (statusEl) {
+                    statusEl.textContent = `✅ อ่านสำเร็จ! (${method})`;
+                    statusEl.className = 'scanner-status success';
+                }
+                this.showToast(`✅ อ่านบาร์โค้ดได้! (${method})`, 'success');
+                this.processScannedBarcode(finalBarcode, method);
+                return;
             }
-            document.getElementById('scannerStatus').textContent = '❌ ไม่พบบาร์โค้ด';
-            document.getElementById('scannerStatus').className = 'scanner-status error';
-            this.showToast('❌ ไม่พบบาร์โค้ดในรูป', 'error');
-        } catch (err) { this.showToast('❌ อ่านไม่สำเร็จ: ' + err.message, 'error'); }
-        event.target.value = '';
+            
+            // ไม่พบบาร์โค้ด
+            if (statusEl) {
+                statusEl.textContent = '❌ ไม่พบบาร์โค้ดในรูป';
+                statusEl.className = 'scanner-status error';
+            }
+            this.showToast(
+                '❌ ไม่พบบาร์โค้ดในรูป', 
+                'error', 
+                'ลองถ่ายใหม่ให้ชัดขึ้น ระยะห่างพอดี แสงสว่างเพียงพอ'
+            );
+            
+        } catch (err) {
+            console.error('scanImage error:', err);
+            if (statusEl) {
+                statusEl.textContent = '❌ อ่านไม่สำเร็จ';
+                statusEl.className = 'scanner-status error';
+            }
+            this.showToast('❌ อ่านไม่สำเร็จ: ' + err.message, 'error');
+        }
     }
 
     processScannedBarcode(barcode, method = '') {
@@ -1602,7 +1882,7 @@ class StockApp {
         this.closeFullscreenScanner();
         this.pendingBarcode = barcode;
         this.onScan(barcode);
-        document.getElementById('productDetail').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById('productDetail')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     async openFullscreenScanner() {
@@ -1650,14 +1930,72 @@ class StockApp {
     }
 
     async closeFullscreenScanner() {
-        document.getElementById('scannerFullscreen').classList.remove('show');
+        document.getElementById('scannerFullscreen')?.classList.remove('show');
         if (this.html5Scanner) {
             try { await this.html5Scanner.stop(); this.html5Scanner.clear(); } catch(e) {}
             this.html5Scanner = null;
         }
     }
 
-    showScannerHelp() { this.showToast('📷 วางบาร์โค้ดในกรอบ\n📱 รองรับ 8/12/13 หลัก', 'info'); }
+    // ============================================================
+    // ✅ FIX #3: showScannerHelp ใช้ overlay modal
+    // ============================================================
+    showScannerHelp() {
+        // ลบอันเก่าถ้ามี
+        const old = document.getElementById('scannerHelpOverlay');
+        if (old) old.remove();
+        
+        const overlay = document.createElement('div');
+        overlay.id = 'scannerHelpOverlay';
+        overlay.style.cssText = `
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            z-index: 10001; display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+        `;
+        overlay.innerHTML = `
+            <div style="
+                background: #fff; color: #0f172a; border-radius: 20px;
+                max-width: 380px; width: 100%; padding: 24px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align: left;
+            ">
+                <div style="text-align:center; margin-bottom:16px;">
+                    <div style="font-size:42px;">💡</div>
+                    <h3 style="font-family:'Outfit',sans-serif; font-size:18px; margin:8px 0 0;">
+                        วิธีใช้กล้องสแกน
+                    </h3>
+                </div>
+                <div style="font-size:14px; line-height:1.8;">
+                    <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">
+                        📷 <strong>วางบาร์โค้ดในกรอบสีเขียว</strong>
+                    </div>
+                    <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">
+                        📏 <strong>ระยะห่าง 10-20 ซม.</strong> อย่าใกล้หรือไกลเกิน
+                    </div>
+                    <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">
+                        💡 <strong>แสงสว่างเพียงพอ</strong> หลีกเลี่ยงเงาสะท้อน
+                    </div>
+                    <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">
+                        👆 <strong>แตะจอเพื่อโฟกัส</strong> ถ้าภาพเบลอ
+                    </div>
+                    <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">
+                        📱 รองรับ <strong>EAN-8, EAN-13, UPC-A, Code-128</strong>
+                    </div>
+                    <div style="padding:8px 0;">
+                        🔢 <strong>ถ้าอ่านไม่ได้</strong> ใช้ปุ่ม "ใส่รหัส" แทน
+                    </div>
+                </div>
+                <button id="scannerHelpClose" style="
+                    margin-top:20px; width:100%; padding:14px;
+                    background: linear-gradient(135deg,#0ea5e9,#6366f1);
+                    color:#fff; border:none; border-radius:12px;
+                    font-size:15px; font-weight:700; cursor:pointer;
+                ">✅ เข้าใจแล้ว</button>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        overlay.querySelector('#scannerHelpClose').onclick = () => overlay.remove();
+        overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+    }
 
     async testCamera() {
         try {
@@ -1672,9 +2010,14 @@ class StockApp {
         } catch (err) { this.showToast('❌ ' + err.message, 'error'); return false; }
     }
 
+    // ✅ FIX #3.1: AudioContext cache
     playBeepSound() {
         try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            if (!this._audioCtx) {
+                this._audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            const ctx = this._audioCtx;
+            if (ctx.state === 'suspended') ctx.resume();
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
             osc.connect(gain); gain.connect(ctx.destination);
@@ -1724,6 +2067,7 @@ class StockApp {
         item.difference = item.counted_qty - item.system_qty;
         item.cost_diff = item.difference * item.cost;
         item.sell_diff = item.difference * item.sellPrice;
+        item.timestamp = new Date().toISOString();
         this.sessionItems[index] = item;
         this.renderRecentScans();
         this.updateProgress();
@@ -1765,9 +2109,14 @@ class StockApp {
         this.showToast('ยกเลิกการจับคู่', 'info');
     }
 
+    // ✅ FIX #1.6: lookupProduct null-safe
     async lookupProduct(barcode) {
         if (!barcode) return;
-        let product = this.products.find(p => (p.barcodes && p.barcodes.includes(barcode)) || p.primaryBarcode === barcode);
+        let product = this.products.find(p => {
+            if (p.primaryBarcode === barcode) return true;
+            if (Array.isArray(p.barcodes) && p.barcodes.includes(barcode)) return true;
+            return false;
+        });
         if (product) {
             this.currentProduct = product;
             this.pendingBarcode = null;
@@ -1783,9 +2132,9 @@ class StockApp {
         if (historyId) {
             const hp = this.products.find(p => p.id === historyId);
             if (hp && confirm(`⚠️ บาร์โค้ดนี้เคยใช้กับ "${hp.name}"\nใช้กับสินค้านี้หรือไม่?`)) {
-                if (!hp.barcodes) hp.barcodes = [];
+                if (!Array.isArray(hp.barcodes)) hp.barcodes = [];
                 if (!hp.barcodes.includes(barcode)) hp.barcodes.push(barcode);
-                await this.saveProduct(hp);
+                try { await this.saveProduct(hp); } catch(e) { console.warn('Save failed:', e); }
                 this.barcodeHistory[barcode] = hp.id;
                 localStorage.setItem('barcodeHistory_' + CONFIG.STORE_ID, JSON.stringify(this.barcodeHistory));
                 this.currentProduct = hp;
@@ -1806,7 +2155,7 @@ class StockApp {
         document.getElementById('searchResults').style.display = 'block';
         document.getElementById('searchResults').innerHTML = `<div style="padding:14px;text-align:center;">
             <div style="font-size:14px;color:var(--text-muted);margin-bottom:8px;">⌨️ พิมพ์ชื่อสินค้าในช่องค้นหา</div>
-            <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">📎 บาร์โค้ด: <strong style="color:var(--primary);font-family:monospace;">${barcode}</strong></div>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">📎 บาร์โค้ด: <strong style="color:var(--primary);font-family:monospace;">${escapeHtml(barcode)}</strong></div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
                 <button class="btn btn-primary btn-sm" onclick="app.showAddProductModal()" style="font-size:13px;padding:6px 14px;min-height:36px;"><i class="fas fa-plus"></i> เพิ่มสินค้าใหม่</button>
                 <button class="btn btn-outline btn-sm" onclick="app.clearPendingBarcode()" style="font-size:13px;padding:6px 14px;min-height:36px;"><i class="fas fa-times"></i> ยกเลิก</button>
@@ -1816,16 +2165,27 @@ class StockApp {
         this.updatePendingDisplay();
     }
 
+    // ✅ FIX #4.1: searchProduct debounce
     searchProduct(query) {
+        clearTimeout(this._searchDebounce);
+        this._searchDebounce = setTimeout(() => this._doSearch(query), CONFIG.SEARCH_DEBOUNCE_MS);
+    }
+
+    _doSearch(query) {
         const container = document.getElementById('searchResults');
-        if (!query || query.length < 1) { container.style.display = 'none'; this.filteredProducts = []; this.currentPage = 0; return; }
+        if (!query || query.length < 1) { 
+            container.style.display = 'none'; 
+            this.filteredProducts = []; 
+            this.currentPage = 0; 
+            return; 
+        }
         const q = query.toLowerCase().trim();
         this.filteredProducts = this.products.filter(p => {
             return (p.name && p.name.toLowerCase().includes(q)) ||
                 (p.code && p.code.toLowerCase().includes(q)) ||
                 (p.primaryBarcode && p.primaryBarcode.includes(q)) ||
                 (p.lot && p.lot.toLowerCase().includes(q)) ||
-                (p.barcodes && p.barcodes.some(b => b.includes(q))) ||
+                (Array.isArray(p.barcodes) && p.barcodes.some(b => b.includes(q))) ||
                 (p.lots && p.lots.some(l => l.lot && l.lot.toLowerCase().includes(q)));
         });
         this.currentPage = 0;
@@ -1847,20 +2207,27 @@ class StockApp {
             const lotCount = p.lots ? p.lots.length : (p.lot ? 1 : 0);
             const lotDisplay = lotCount > 0 ? ` (${lotCount} LOT)` : '';
             const selectLabel = hasPending ? '📎 จับคู่' : '✅ เลือก';
-            return `<div class="search-result-item" onclick="app.selectProductFromSearch('${p.id}')">
-                <div class="info"><div class="name">${p.name}</div>
-                <div class="detail">${p.code ? 'รหัส: '+p.code : ''} | 📦 ${p.stock || 0} ชิ้น${lotDisplay}</div></div>
+            return `<div class="search-result-item" onclick="app.selectProductFromSearch('${escapeHtml(p.id)}')">
+                <div class="info"><div class="name">${escapeHtml(p.name)}</div>
+                <div class="detail">${p.code ? 'รหัส: '+escapeHtml(p.code) : ''} | 📦 ${p.stock || 0} ชิ้น${lotDisplay}</div></div>
                 <span class="badge-select">${selectLabel}</span>
             </div>`;
         }).join('');
+        const maxPage = Math.ceil(this.filteredProducts.length / CONFIG.BATCH_SIZE);
         if (end < this.filteredProducts.length) {
-            html += `<div style="padding:8px;text-align:center;"><button class="btn btn-outline btn-sm" onclick="app.loadMoreSearchResults()"><i class="fas fa-chevron-down"></i> โหลดเพิ่ม</button></div>`;
+            html += `<div style="padding:8px;text-align:center;"><button class="btn btn-outline btn-sm" onclick="app.loadMoreSearchResults()"><i class="fas fa-chevron-down"></i> โหลดเพิ่ม (${this.currentPage + 1}/${maxPage})</button></div>`;
         }
         container.style.display = 'block';
         container.innerHTML = html;
     }
 
-    loadMoreSearchResults() { this.currentPage++; this.renderSearchResults(); }
+    // ✅ FIX #3.4: loadMoreSearchResults จำกัด upper bound
+    loadMoreSearchResults() {
+        const maxPage = Math.ceil(this.filteredProducts.length / CONFIG.BATCH_SIZE);
+        if (this.currentPage + 1 >= maxPage) return;
+        this.currentPage++;
+        this.renderSearchResults();
+    }
 
     async selectProductFromSearch(productId) {
         const barcodeToPair = this.pendingBarcode;
@@ -1871,11 +2238,11 @@ class StockApp {
         document.getElementById('qtyInput').value = 1;
         document.getElementById('noteInput').value = '';
         if (barcodeToPair) {
-            if (!product.barcodes) product.barcodes = [];
+            if (!Array.isArray(product.barcodes)) product.barcodes = [];
             if (!product.barcodes.includes(barcodeToPair)) {
                 product.barcodes.push(barcodeToPair);
                 if (!product.primaryBarcode) product.primaryBarcode = barcodeToPair;
-                await this.saveProduct(product);
+                try { await this.saveProduct(product); } catch(e) { console.warn('Save failed:', e); }
                 const idx = this.products.findIndex(p => p.id === product.id);
                 if (idx !== -1) this.products[idx] = product;
                 this.barcodeHistory[barcodeToPair] = product.id;
@@ -1889,20 +2256,27 @@ class StockApp {
         this.showProduct(product);
         document.getElementById('searchResults').style.display = 'none';
         document.getElementById('searchProduct').value = '';
-        document.getElementById('productDetail').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById('productDetail')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     showProduct(product) {
         const detail = document.getElementById('productDetail');
+        if (!detail) return;
         detail.style.display = 'block';
         document.getElementById('productName').textContent = '📦 ' + product.name;
-        const barcodeDisplay = product.barcodes && product.barcodes.length > 0 ? product.barcodes.join(', ') : (product.primaryBarcode || '-');
+        const barcodeDisplay = Array.isArray(product.barcodes) && product.barcodes.length > 0 ? product.barcodes.join(', ') : (product.primaryBarcode || '-');
         document.getElementById('productBarcode').textContent = '🏷️ บาร์โค้ด: ' + barcodeDisplay;
         let stock = product.stock || 0, cost = product.costPerUnit || 0, sellPrice = product.sellPrice1 || 0;
         let expiry = product.expiryDate || '', mfg = product.mfgDate || '';
         if (product.lots && product.lots.length > 0) {
             const lot = product.lots[this.selectedLotIndex] || product.lots[0];
-            if (lot) { stock = lot.stock || 0; cost = lot.cost || product.costPerUnit || 0; sellPrice = lot.sellPrice || product.sellPrice1 || 0; expiry = lot.expiry || ''; mfg = lot.mfg || product.mfgDate || ''; }
+            if (lot) { 
+                stock = lot.stock || 0; 
+                cost = lot.cost || product.costPerUnit || 0; 
+                sellPrice = lot.sellPrice || product.sellPrice1 || 0; 
+                expiry = lot.expiry || ''; 
+                mfg = lot.mfg || product.mfgDate || ''; 
+            }
         }
         const age = this.calculateProductAge(mfg, expiry);
         document.getElementById('stockHighlight').textContent = stock;
@@ -1913,8 +2287,12 @@ class StockApp {
         document.getElementById('productSellPrice').style.display = sellPrice > 0 ? 'block' : 'none';
         document.getElementById('productProfit').textContent = '📈 กำไรต่อหน่วย: ' + profit.toFixed(2) + ' บาท';
         document.getElementById('productProfit').style.display = sellPrice > 0 ? 'block' : 'none';
-        if (age !== null && age > 0) { document.getElementById('productAge').textContent = `📅 อายุสินค้า: ${age.toFixed(1)} ปี`; document.getElementById('productAge').style.display = 'block'; }
-        else { document.getElementById('productAge').style.display = 'none'; }
+        if (age !== null && age > 0) { 
+            document.getElementById('productAge').textContent = `📅 อายุสินค้า: ${age.toFixed(1)} ปี`; 
+            document.getElementById('productAge').style.display = 'block'; 
+        } else { 
+            document.getElementById('productAge').style.display = 'none'; 
+        }
         document.getElementById('qtyInput').value = 1;
         this.showExpiryWarning(product);
         this.renderLotList(product);
@@ -1931,7 +2309,7 @@ class StockApp {
                 return `<div class="lot-item ${isSelected ? 'selected' : ''}" onclick="app.selectLot(${index})">
                     <div class="lot-radio"></div>
                     <div style="flex:1;pointer-events:none;">
-                        <strong style="font-size:14px;">🔖 LOT: ${lot.lot || 'N/A'}</strong>
+                        <strong style="font-size:14px;">🔖 LOT: ${escapeHtml(lot.lot || 'N/A')}</strong>
                         <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">
                             📦 เหลือ: ${lot.stock || 0} ชิ้น | 💰 ทุน: ${(lot.cost || 0).toFixed(2)}${expiryInfo !== 'ไม่ระบุ' ? ' | ⏳ ' + expiryInfo : ''}
                         </div>
@@ -1942,7 +2320,7 @@ class StockApp {
             lotList.innerHTML = `<div class="lot-item selected">
                 <div class="lot-radio"></div>
                 <div style="flex:1;">
-                    <strong style="font-size:14px;">🔖 LOT: ${product.lot}</strong>
+                    <strong style="font-size:14px;">🔖 LOT: ${escapeHtml(product.lot)}</strong>
                     <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">📦 ${product.stock || 0} ชิ้น</div>
                 </div>
             </div>`;
@@ -1951,23 +2329,27 @@ class StockApp {
         }
     }
 
+    // ✅ FIX #2.4: selectLot update display ทั้งหมด
     selectLot(index) {
         this.selectedLotIndex = index;
         document.querySelectorAll('.lot-item').forEach((el, i) => el.classList.toggle('selected', i === index));
-        if (this.currentProduct) this.showExpiryWarning(this.currentProduct);
+        if (this.currentProduct) {
+            // Re-render เพื่อ update stock/cost/sellPrice/expiry display
+            this.showProduct(this.currentProduct);
+        }
     }
 
     showExpiryWarning(product) {
         let expiryDate = product.expiryDate;
         if (product.lots && product.lots[this.selectedLotIndex]) expiryDate = product.lots[this.selectedLotIndex].expiry || product.expiryDate;
+        const warning = document.getElementById('expiryWarning');
+        const text = document.getElementById('expiryWarningText');
         if (expiryDate) {
             const diff = Math.ceil((new Date(expiryDate) - new Date()) / (1000 * 60 * 60 * 24));
-            const warning = document.getElementById('expiryWarning');
-            const text = document.getElementById('expiryWarningText');
             if (diff < 0) { warning.style.display = 'flex'; text.textContent = '🚫 สินค้าหมดอายุแล้ว!'; }
             else if (diff <= CONFIG.EXPIRY_WARNING_DAYS) { warning.style.display = 'flex'; text.textContent = '⚠️ หมดอายุใน ' + diff + ' วัน'; }
             else { warning.style.display = 'none'; }
-        } else { document.getElementById('expiryWarning').style.display = 'none'; }
+        } else { warning.style.display = 'none'; }
     }
 
     editProductInfo(productId) {
@@ -1986,26 +2368,40 @@ class StockApp {
         document.getElementById('editProductMinStock').value = product.minStock || 5;
         document.getElementById('editProductMaxStock').value = product.maxStock || 100;
         document.getElementById('editProductSupplier').value = product.supplier || '';
+        document.getElementById('editUpdateAllLots').checked = false;
         document.getElementById('editProductModal').classList.add('show');
     }
 
+    // ✅ FIX #2.3: saveEditProductInfo update lots
     async saveEditProductInfo() {
         const id = document.getElementById('editProductId').value;
         const product = this.products.find(p => p.id === id);
         if (!product) return;
-        product.name = document.getElementById('editProductName').value.trim();
+        const newName = document.getElementById('editProductName').value.trim();
+        if (!newName) { this.showToast('⚠️ กรุณาใส่ชื่อสินค้า', 'warning'); return; }
+        
+        product.name = newName;
         product.primaryBarcode = document.getElementById('editProductBarcode').value.trim();
         product.lot = document.getElementById('editProductLot').value.trim();
-        product.mfgDate = document.getElementById('editProductMfg').value || '';
+        product.mfgDate = this.normalizeDateValue(document.getElementById('editProductMfg').value);
         product.costPerUnit = parseFloat(document.getElementById('editProductCost').value) || 0;
         product.sellPrice1 = parseFloat(document.getElementById('editProductPrice').value) || 0;
         product.unit = document.getElementById('editProductUnit').value.trim() || 'ชิ้น';
-        product.expiryDate = document.getElementById('editProductExpiry').value || '';
+        product.expiryDate = this.normalizeDateValue(document.getElementById('editProductExpiry').value);
         product.minStock = parseInt(document.getElementById('editProductMinStock').value) || 5;
         product.maxStock = parseInt(document.getElementById('editProductMaxStock').value) || 100;
         product.supplier = document.getElementById('editProductSupplier').value.trim();
-        if (!product.name) { this.showToast('⚠️ กรุณาใส่ชื่อสินค้า', 'warning'); return; }
-        await this.saveProduct(product);
+        
+        // ✅ FIX: update lots ถ้าเลือก
+        if (document.getElementById('editUpdateAllLots').checked && product.lots && product.lots.length > 0) {
+            product.lots.forEach(l => {
+                l.cost = product.costPerUnit;
+                l.sellPrice = product.sellPrice1;
+            });
+            this.showToast('✅ อัปเดตทุก LOT ด้วย', 'success');
+        }
+        
+        try { await this.saveProduct(product); } catch(e) { this.showToast('❌ บันทึกไม่สำเร็จ: ' + e.message, 'error'); return; }
         const idx = this.products.findIndex(p => p.id === product.id);
         if (idx !== -1) this.products[idx] = product;
         this.renderRecentScans();
@@ -2046,16 +2442,17 @@ class StockApp {
         if (!name) { this.showToast('⚠️ กรุณาใส่ชื่อสินค้า', 'warning'); return; }
         let barcode = document.getElementById('newProductBarcode').value.trim() || null;
         const lot = document.getElementById('newProductLot').value.trim() || '';
-        const mfg = document.getElementById('newProductMfg').value || '';
+        const mfg = this.normalizeDateValue(document.getElementById('newProductMfg').value);
         const sellPrice = parseFloat(document.getElementById('newProductSellPrice').value) || 0;
         const unit = document.getElementById('newProductUnit').value.trim() || 'ชิ้น';
-        const expiry = document.getElementById('newProductExpiry').value || '';
+        const expiry = this.normalizeDateValue(document.getElementById('newProductExpiry').value);
         if (barcode) {
             const r = this.validateBarcode(barcode);
             if (!r.valid) { this.showToast(r.message, 'error'); return; }
             barcode = r.barcode;
         }
-        const newId = 'PCO' + String(Date.now()).padStart(10, '0');
+        // ✅ FIX #1.7: ID ไม่ซ้ำ
+        const newId = 'PCO' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
         const product = {
             id: newId, code: newId, name, lot, mfgDate: mfg, stock: 0, costPerUnit: 0, sellPrice1: sellPrice,
             unit, expiryDate: expiry, supplier: 'เพิ่มใหม่', barcodes: barcode ? [barcode] : [],
@@ -2063,7 +2460,7 @@ class StockApp {
             lots: lot ? [{ lot, mfg, stock: 0, cost: 0, sellPrice, expiry }] : [],
             createdAt: new Date().toISOString(), isNew: true
         };
-        await this.saveProduct(product);
+        try { await this.saveProduct(product); } catch(e) { this.showToast('❌ บันทึกไม่สำเร็จ: ' + e.message, 'error'); return; }
         this.products.push(product);
         if (barcode) {
             this.barcodeHistory[barcode] = product.id;
@@ -2121,6 +2518,7 @@ class StockApp {
         input.value = Math.max(0, val + delta);
     }
 
+    // ✅ FIX #1.5: confirmItem ไม่ reset ทิ้ง
     async confirmItem() {
         const qty = Math.max(0, Number(document.getElementById('qtyInput').value) || 0);
         if (!this.currentProduct) { this.showToast('⚠️ กรุณาเลือกสินค้า', 'warning'); return; }
@@ -2133,15 +2531,20 @@ class StockApp {
         const product = this.v5NormalizeProduct(this.currentProduct);
         const lot = product.lots?.[this.selectedLotIndex] || null;
         const lotName = lot?.lot || product.lot || '';
-        const barcode = product.primaryBarcode || product.barcodes?.[0] || this.currentBarcode || '';
+        const barcode = product.primaryBarcode || (Array.isArray(product.barcodes) ? product.barcodes[0] : '') || this.currentBarcode || '';
         const existingIndex = this.sessionItems.findIndex(item =>
             String(item.productId) === String(product.id) &&
             String(item.location) === String(location.id) &&
             String(item.lotName || item.lot || '') === String(lotName)
         );
         if (existingIndex !== -1) {
-            this.showToast('💡 นับในตำแหน่งนี้แล้ว ใช้ปุ่ม "นับเพิ่ม"', 'info');
-            this.resetScanState();
+            // ✅ FIX: ไม่ reset — ให้ผู้ใช้กด "นับเพิ่ม" ต่อ
+            const item = this.sessionItems[existingIndex];
+            this.showToast(
+                `⚠️ นับในตำแหน่งนี้แล้ว (${item.counted_qty} ชิ้น)`, 
+                'warning',
+                'กด "นับเพิ่ม" เพื่อบวกเพิ่ม'
+            );
             return;
         }
         const posQty = lot ? num(lot.stock) : num(product.stock);
@@ -2167,7 +2570,7 @@ class StockApp {
         this.sessionItems.push(item);
         this.offlineQueue.push(item);
         localStorage.setItem('offlineQueue', JSON.stringify(this.offlineQueue));
-        this.saveCountHistory(item);
+        await this.saveCountHistory(item);
         this.resetScanState();
         this.renderRecentScans();
         this.updateProgress();
@@ -2180,13 +2583,15 @@ class StockApp {
         this.showToast(`✅ ${product.name}${lotDisplay} (${qty} ชิ้น) ${location.name}`, 'success');
     }
 
+    // ✅ FIX #1.2: saveCountHistory handle error
     async saveCountHistory(item) {
+        if (!this.db) return;
         try {
             const tx = this.db.transaction('history', 'readwrite');
             tx.objectStore('history').add(item);
             this.history.push(item);
             localStorage.setItem('countHistory_' + CONFIG.STORE_ID, JSON.stringify(this.history));
-        } catch (e) {}
+        } catch (e) { console.warn('saveCountHistory failed:', e); }
     }
 
     updateLocationDropdowns() {
@@ -2195,7 +2600,7 @@ class StockApp {
         if (!cabinetSelect) return;
         cabinetSelect.innerHTML = '<option value="new">➕ สร้างตู้ใหม่</option>';
         this.locations.filter(l => l.type === type).forEach(cab => {
-            cabinetSelect.innerHTML += `<option value="${cab.id}">🗄️ ${cab.name}</option>`;
+            cabinetSelect.innerHTML += `<option value="${escapeHtml(cab.id)}">🗄️ ${escapeHtml(cab.name)}</option>`;
         });
         this.updateShelfDropdown();
         this.updateLocationDisplay();
@@ -2207,9 +2612,9 @@ class StockApp {
         if (!shelfSelect) return;
         shelfSelect.innerHTML = '<option value="new">➕ สร้างชั้นใหม่</option>';
         if (cabinetId !== 'new') {
-            const cabinet = this.locations.find(l => l.id === parseInt(cabinetId));
+            const cabinet = this.locations.find(l => String(l.id) === String(cabinetId));
             if (cabinet && cabinet.shelves) {
-                cabinet.shelves.forEach(s => { shelfSelect.innerHTML += `<option value="${s.id}">📚 ${s.name}</option>`; });
+                cabinet.shelves.forEach(s => { shelfSelect.innerHTML += `<option value="${escapeHtml(s.id)}">📚 ${escapeHtml(s.name)}</option>`; });
             }
         }
         const btnCab = document.getElementById('btnAddCabinetScan');
@@ -2228,11 +2633,11 @@ class StockApp {
         let text = '📍 ';
         if (cabinetId === 'new') text += 'กรุณาสร้างหรือเลือกตู้';
         else {
-            const cabinet = this.locations.find(l => l.id === parseInt(cabinetId));
+            const cabinet = this.locations.find(l => String(l.id) === String(cabinetId));
             if (cabinet) {
                 text += (type === 'front' ? 'หน้าร้าน' : 'หลังร้าน') + ' → ' + cabinet.name;
                 if (shelfId !== 'new') {
-                    const shelf = cabinet.shelves.find(s => s.id === parseInt(shelfId));
+                    const shelf = cabinet.shelves.find(s => String(s.id) === String(shelfId));
                     if (shelf) text += ' → ' + shelf.name;
                 } else text += ' → กำลังสร้างชั้นใหม่...';
             }
@@ -2240,18 +2645,19 @@ class StockApp {
         display.textContent = text;
     }
 
+    // ✅ FIX #3.3: getSelectedLocation ใช้ String match
     getSelectedLocation() {
         const type = document.getElementById('locationType').value;
         const cabinetId = document.getElementById('locationCabinet').value;
         const shelfId = document.getElementById('locationShelf').value;
         let locationId = 'all', locationName = 'ทั้งร้าน';
         if (cabinetId !== 'new') {
-            const cabinet = this.locations.find(l => l.id === parseInt(cabinetId));
+            const cabinet = this.locations.find(l => String(l.id) === String(cabinetId));
             if (cabinet) {
                 locationId = 'cab_' + cabinet.id;
                 locationName = cabinet.name;
                 if (shelfId !== 'new') {
-                    const shelf = cabinet.shelves.find(s => s.id === parseInt(shelfId));
+                    const shelf = cabinet.shelves.find(s => String(s.id) === String(shelfId));
                     if (shelf) {
                         locationId = 'cab_' + cabinet.id + '_shelf_' + shelf.id;
                         locationName = cabinet.name + ' → ' + shelf.name;
@@ -2272,7 +2678,9 @@ class StockApp {
         const name = document.getElementById('scanNewCabinetName').value.trim();
         if (!name) { this.showToast('⚠️ กรุณาใส่ชื่อตู้', 'warning'); return; }
         const type = document.getElementById('locationType').value;
-        this.locations.push({ id: Date.now(), name, type, shelves: [], createdAt: new Date().toISOString() });
+        // ✅ FIX #3.7: Cabinet id unique
+        const cabId = 'cab_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+        this.locations.push({ id: cabId, name, type, shelves: [], createdAt: new Date().toISOString() });
         this.saveLocations();
         this.updateLocationDropdowns();
         this.renderMap();
@@ -2290,11 +2698,12 @@ class StockApp {
 
     confirmScanAddShelf() {
         const cabinetId = document.getElementById('locationCabinet').value;
-        const cabinet = this.locations.find(l => l.id === parseInt(cabinetId));
+        const cabinet = this.locations.find(l => String(l.id) === String(cabinetId));
         if (!cabinet) return;
         const shelfName = document.getElementById('scanNewShelfName').value.trim();
         if (!shelfName) { this.showToast('⚠️ กรุณาใส่ชื่อชั้น', 'warning'); return; }
-        cabinet.shelves.push({ id: Date.now(), name: shelfName, number: cabinet.shelves.length + 1 });
+        const shelfId = 'shelf_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+        cabinet.shelves.push({ id: shelfId, name: shelfName, number: cabinet.shelves.length + 1 });
         this.saveLocations();
         this.updateShelfDropdown();
         this.renderMap();
@@ -2302,10 +2711,12 @@ class StockApp {
         this.showToast(`✅ เพิ่มชั้น "${shelfName}" สำเร็จ`, 'success');
     }
 
+    // ✅ FIX #2.1: undoLast pop ตรงรายการ
     undoLast() {
         if (this.sessionItems.length === 0) { this.showToast('⚠️ ไม่มีรายการ', 'warning'); return; }
         const removed = this.sessionItems.pop();
-        this.offlineQueue.pop();
+        const idx = this.offlineQueue.findIndex(q => q.id === removed.id);
+        if (idx !== -1) this.offlineQueue.splice(idx, 1);
         localStorage.setItem('offlineQueue', JSON.stringify(this.offlineQueue));
         this.renderRecentScans(); this.updateProgress(); this.updateScanBadge();
         this.saveSession(); this.emergencyBackup(); this.runAnalytics();
@@ -2336,6 +2747,7 @@ class StockApp {
     closeEditItemModal() { document.getElementById('editItemModal').classList.remove('show'); this.editingIndex = -1; }
     editChangeQty(delta) { const input = document.getElementById('editQtyInput'); input.value = Math.max(0, (parseInt(input.value) || 0) + delta); }
 
+    // ✅ FIX #2.10: saveEditItem update queue
     async saveEditItem() {
         const index = this.editingIndex;
         if (index < 0 || index >= this.sessionItems.length) { this.closeEditItemModal(); return; }
@@ -2347,7 +2759,13 @@ class StockApp {
         item.cost_diff = item.difference * item.cost;
         item.sell_diff = item.difference * item.sellPrice;
         item.note = newNote;
+        item.timestamp = new Date().toISOString();
+        item.updatedAt = item.timestamp;
         this.sessionItems[index] = item;
+        // Update offlineQueue
+        const qIdx = this.offlineQueue.findIndex(q => q.id === item.id);
+        if (qIdx !== -1) this.offlineQueue[qIdx] = item;
+        localStorage.setItem('offlineQueue', JSON.stringify(this.offlineQueue));
         this.saveSession();
         this.renderRecentScans();
         this.closeEditItemModal();
@@ -2361,6 +2779,9 @@ class StockApp {
         if (!confirm('🗑️ ยืนยันลบ?')) return;
         const item = this.sessionItems[index];
         this.sessionItems.splice(index, 1);
+        const qIdx = this.offlineQueue.findIndex(q => q.id === item.id);
+        if (qIdx !== -1) this.offlineQueue.splice(qIdx, 1);
+        localStorage.setItem('offlineQueue', JSON.stringify(this.offlineQueue));
         this.saveSession();
         this.renderRecentScans();
         this.updateProgress();
@@ -2374,6 +2795,9 @@ class StockApp {
         const item = this.sessionItems[index];
         if (!item) return;
         this.sessionItems.splice(index, 1);
+        const qIdx = this.offlineQueue.findIndex(q => q.id === item.id);
+        if (qIdx !== -1) this.offlineQueue.splice(qIdx, 1);
+        localStorage.setItem('offlineQueue', JSON.stringify(this.offlineQueue));
         this.saveSession();
         this.renderRecentScans();
         this.updateProgress();
@@ -2382,33 +2806,54 @@ class StockApp {
         this.showToast(`🗑️ ลบเรียบร้อย`, 'info');
     }
 
+    // ✅ FIX #1.4: updateProgress นับตาม LOT
     updateProgress() {
-        const total = this.products.filter(p => (p.stock || 0) > 0).length;
-        const counted = this.sessionItems.length;
-        const pct = total > 0 ? (counted / total * 100) : 0;
+        let total = 0;
+        this.products.forEach(p => {
+            if (p.lots && p.lots.length > 0) {
+                total += p.lots.filter(l => (l.stock || 0) > 0).length;
+            } else if ((p.stock || 0) > 0) {
+                total += 1;
+            }
+        });
+        const counted = new Set(
+            this.sessionItems.map(i => `${i.productId}|${i.location}|${i.lotName || ''}`)
+        ).size;
+        const pct = total > 0 ? Math.min((counted / total) * 100, 100) : 0;
         const progressText = document.getElementById('progressText');
         const progressBar = document.getElementById('progressBar');
         if (progressText) progressText.textContent = counted + ' / ' + total + ' (' + pct.toFixed(1) + '%)';
-        if (progressBar) progressBar.style.width = Math.min(pct, 100) + '%';
+        if (progressBar) progressBar.style.width = pct + '%';
     }
 
     checkCountComplete() {
-        const total = this.products.filter(p => (p.stock || 0) > 0).length;
-        if (this.sessionItems.length >= total && total > 0) {
+        let total = 0;
+        this.products.forEach(p => {
+            if (p.lots && p.lots.length > 0) total += p.lots.filter(l => (l.stock || 0) > 0).length;
+            else if ((p.stock || 0) > 0) total += 1;
+        });
+        const counted = new Set(this.sessionItems.map(i => `${i.productId}|${i.location}|${i.lotName || ''}`)).size;
+        if (counted >= total && total > 0) {
             this.showToast('🎉 นับครบทุกชิ้นแล้ว!', 'success');
         }
     }
 
+    // ✅ FIX #4.2: renderRecentScans pagination
     renderRecentScans() {
         const container = document.getElementById('recentScans');
         const countEl = document.getElementById('scanCount');
+        const moreEl = document.getElementById('recentScansMore');
         if (countEl) countEl.textContent = this.sessionItems.length;
         if (!container) return;
         if (this.sessionItems.length === 0) {
             container.innerHTML = `<p style="text-align:center;color:var(--text-muted);padding:16px;font-size:13px;"><i class="fas fa-inbox" style="font-size:20px;display:block;margin-bottom:6px;opacity:0.5;"></i>ยังไม่มีประวัติการสแกน</p>`;
+            if (moreEl) moreEl.innerHTML = '';
             return;
         }
-        container.innerHTML = this.sessionItems.slice(-50).reverse().map((item, idx) => {
+        const pageSize = CONFIG.RECENT_SCANS_PAGE;
+        const showCount = pageSize * this.recentScansPage;
+        const items = this.sessionItems.slice(-showCount).reverse();
+        container.innerHTML = items.map((item, idx) => {
             const realIdx = this.sessionItems.length - 1 - idx;
             const diffClass = item.difference > 0 ? 'positive' : item.difference < 0 ? 'negative' : 'zero';
             const diffText = item.difference > 0 ? '+' + item.difference : item.difference;
@@ -2416,8 +2861,8 @@ class StockApp {
             const lotDisplay = (item.lotName || item.lot) ? ` LOT: ${item.lotName || item.lot}` : '';
             return `<div class="recent-item">
                 <div>
-                    <div class="name">${item.name}</div>
-                    <div class="detail">${lotDisplay} ระบบ: ${item.system_qty || 0} | นับ: ${item.counted_qty || 0}${item.locationName ? ' | ' + typeIcon + ' ' + item.locationName : ''}${item.note ? ' | 📝 ' + item.note : ''}</div>
+                    <div class="name">${escapeHtml(item.name)}</div>
+                    <div class="detail">${escapeHtml(lotDisplay)} ระบบ: ${item.system_qty || 0} | นับ: ${item.counted_qty || 0}${item.locationName ? ' | ' + typeIcon + ' ' + escapeHtml(item.locationName) : ''}${item.note ? ' | 📝 ' + escapeHtml(item.note) : ''}</div>
                 </div>
                 <div style="display:flex;gap:4px;align-items:center;">
                     <span class="qty-diff ${diffClass}">${diffText}</span>
@@ -2426,13 +2871,24 @@ class StockApp {
                 </div>
             </div>`;
         }).join('');
+        if (moreEl) {
+            if (showCount < this.sessionItems.length) {
+                moreEl.innerHTML = `<button class="btn btn-outline btn-sm" onclick="app.loadMoreRecentScans()" style="font-size:12px;padding:6px 14px;min-height:34px;"><i class="fas fa-chevron-down"></i> ดูเพิ่มเติม (${showCount}/${this.sessionItems.length})</button>`;
+            } else { moreEl.innerHTML = ''; }
+        }
+    }
+
+    loadMoreRecentScans() {
+        this.recentScansPage++;
+        this.renderRecentScans();
     }
 
     addCabinet() {
         const type = document.getElementById('newCabinetType').value;
         const name = document.getElementById('newCabinetName').value.trim();
         if (!name) { this.showToast('⚠️ กรุณาใส่ชื่อตู้', 'warning'); return; }
-        this.locations.push({ id: Date.now(), name, type, shelves: [], createdAt: new Date().toISOString() });
+        const cabId = 'cab_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+        this.locations.push({ id: cabId, name, type, shelves: [], createdAt: new Date().toISOString() });
         this.saveLocations();
         this.renderMap();
         this.updateLocationDropdowns();
@@ -2440,13 +2896,20 @@ class StockApp {
         this.showToast('✅ เพิ่มตู้ ' + name + ' สำเร็จ', 'success');
     }
 
+    // ✅ FIX #2.5: deleteCabinet prefix match แม่นยำ
     deleteCabinet(id) {
-        if (this.sessionItems.some(i => i.location && i.location.includes('cab_' + id))) {
+        const cabPrefix = 'cab_' + id;
+        const shelfPrefix = 'cab_' + id + '_shelf_';
+        const hasItems = this.sessionItems.some(i => 
+            i.location === cabPrefix || 
+            (i.location && i.location.startsWith(shelfPrefix))
+        );
+        if (hasItems) {
             this.showToast('⚠️ ลบไม่ได้ เพราะมีสินค้าในตู้นี้', 'warning');
             return;
         }
         if (!confirm('🗑️ ยืนยันลบ?')) return;
-        this.locations = this.locations.filter(l => l.id !== id);
+        this.locations = this.locations.filter(l => String(l.id) !== String(id));
         this.saveLocations();
         this.renderMap();
         this.updateLocationDropdowns();
@@ -2457,9 +2920,10 @@ class StockApp {
         if (!this.selectedCabinetId) { this.showToast('⚠️ กรุณาเลือกตู้', 'warning'); return; }
         const shelfName = document.getElementById('newShelfName').value.trim();
         if (!shelfName) { this.showToast('⚠️ กรุณาใส่ชื่อชั้น', 'warning'); return; }
-        const cabinet = this.locations.find(l => l.id === this.selectedCabinetId);
+        const cabinet = this.locations.find(l => String(l.id) === String(this.selectedCabinetId));
         if (!cabinet) return;
-        cabinet.shelves.push({ id: Date.now(), name: shelfName, number: cabinet.shelves.length + 1 });
+        const shelfId = 'shelf_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+        cabinet.shelves.push({ id: shelfId, name: shelfName, number: cabinet.shelves.length + 1 });
         this.saveLocations();
         this.renderMap();
         this.updateLocationDropdowns();
@@ -2469,13 +2933,14 @@ class StockApp {
     }
 
     deleteShelf(cabinetId, shelfId) {
-        if (this.sessionItems.some(i => i.location === 'cab_' + cabinetId + '_shelf_' + shelfId)) {
+        const locId = 'cab_' + cabinetId + '_shelf_' + shelfId;
+        if (this.sessionItems.some(i => i.location === locId)) {
             this.showToast('⚠️ ลบไม่ได้ เพราะมีสินค้าในชั้นนี้', 'warning');
             return;
         }
-        const cabinet = this.locations.find(l => l.id === cabinetId);
+        const cabinet = this.locations.find(l => String(l.id) === String(cabinetId));
         if (cabinet) {
-            cabinet.shelves = cabinet.shelves.filter(s => s.id !== shelfId);
+            cabinet.shelves = cabinet.shelves.filter(s => String(s.id) !== String(shelfId));
             this.saveLocations();
             this.renderMap();
             this.updateLocationDropdowns();
@@ -2486,9 +2951,9 @@ class StockApp {
     selectCabinet(cabinetId) {
         this.selectedCabinetId = cabinetId;
         document.getElementById('shelfCard').style.display = 'block';
-        const cabinet = this.locations.find(l => l.id === cabinetId);
+        const cabinet = this.locations.find(l => String(l.id) === String(cabinetId));
         if (cabinet) {
-            document.getElementById('shelfCardTitle').innerHTML = `<i class="fas fa-layer-group"></i> จัดการชั้นใน ${cabinet.name}`;
+            document.getElementById('shelfCardTitle').innerHTML = `<i class="fas fa-layer-group"></i> จัดการชั้นใน ${escapeHtml(cabinet.name)}`;
             this.renderShelfList(cabinet);
         }
         document.querySelectorAll('.cabinet-block').forEach(b => b.classList.remove('selected'));
@@ -2500,8 +2965,8 @@ class StockApp {
         if (!list) return;
         if (cabinet.shelves.length === 0) { list.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:12px;font-size:13px;">ยังไม่มีชั้น</p>'; return; }
         list.innerHTML = cabinet.shelves.map(s => `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:var(--bg-body);border-radius:6px;margin-bottom:4px;border:1px solid var(--border-color);">
-            <span style="font-weight:600;font-size:13px;">📚 ${s.name}</span>
-            <button class="btn btn-danger btn-sm" onclick="app.deleteShelf(${cabinet.id}, ${s.id})" style="font-size:11px;padding:4px 10px;min-height:30px;"><i class="fas fa-trash"></i> ลบ</button>
+            <span style="font-weight:600;font-size:13px;">📚 ${escapeHtml(s.name)}</span>
+            <button class="btn btn-danger btn-sm" onclick="app.deleteShelf('${escapeHtml(cabinet.id)}', '${escapeHtml(s.id)}')" style="font-size:11px;padding:4px 10px;min-height:30px;"><i class="fas fa-trash"></i> ลบ</button>
         </div>`).join('');
     }
 
@@ -2524,17 +2989,19 @@ class StockApp {
         grid.innerHTML = html;
     }
 
+    // ✅ FIX #3.8: renderCabinetBlock escape
     renderCabinetBlock(cabinet) {
-        const counted = this.sessionItems.filter(i => i.location && i.location.includes(String(cabinet.id))).length;
+        const cabIdStr = String(cabinet.id);
+        const counted = this.sessionItems.filter(i => i.location && (i.location === 'cab_' + cabIdStr || i.location.startsWith('cab_' + cabIdStr + '_shelf_'))).length;
         const typeLabel = cabinet.type === 'front' ? '🏪 หน้าร้าน' : '📦 หลังร้าน';
         const typeClass = cabinet.type === 'front' ? 'front' : 'back';
-        return `<div class="cabinet-block ${this.selectedCabinetId === cabinet.id ? 'selected' : ''}" data-cabinet="${cabinet.id}" onclick="app.selectCabinet(${cabinet.id})" ondblclick="app.selectScanLocation('cab_${cabinet.id}'); app.switchTab('scan')">
+        return `<div class="cabinet-block ${String(this.selectedCabinetId) === cabIdStr ? 'selected' : ''}" data-cabinet="${escapeHtml(cabIdStr)}" onclick="app.selectCabinet('${escapeHtml(cabIdStr)}')" ondblclick="app.selectScanLocation('cab_${escapeHtml(cabIdStr)}'); app.switchTab('scan')">
             <div><i class="fas fa-archive" style="font-size:22px;color:var(--primary);"></i></div>
-            <div class="cabinet-name">${cabinet.name}</div>
+            <div class="cabinet-name">${escapeHtml(cabinet.name)}</div>
             <div><span class="cabinet-type ${typeClass}">${typeLabel}</span></div>
             <div style="font-size:10px;color:var(--text-muted);">${cabinet.shelves.length} ชั้นวาง</div>
             ${counted > 0 ? `<div style="font-size:9px;color:var(--success);margin-top:2px;font-weight:600;"><i class="fas fa-check-circle"></i> นับแล้ว ${counted}</div>` : ''}
-            <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); app.deleteCabinet(${cabinet.id})" style="margin-top:6px;width:100%;font-size:10px;padding:3px;min-height:28px;"><i class="fas fa-trash"></i> ลบตู้</button>
+            <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); app.deleteCabinet('${escapeHtml(cabIdStr)}')" style="margin-top:6px;width:100%;font-size:10px;padding:3px;min-height:28px;"><i class="fas fa-trash"></i> ลบตู้</button>
         </div>`;
     }
 
@@ -2542,13 +3009,13 @@ class StockApp {
         const parts = locationId.replace('cab_', '').split('_shelf_');
         const cabinetId = parts[0];
         const shelfId = parts.length > 1 ? parts[1] : null;
-        const cabinet = this.locations.find(l => l.id === parseInt(cabinetId));
+        const cabinet = this.locations.find(l => String(l.id) === String(cabinetId));
         if (cabinet) {
             document.getElementById('locationType').value = cabinet.type || 'front';
             this.updateLocationDropdowns();
             document.getElementById('locationCabinet').value = cabinet.id;
             this.updateShelfDropdown();
-            if (shelfId) document.getElementById('locationShelf').value = parseInt(shelfId);
+            if (shelfId) document.getElementById('locationShelf').value = shelfId;
         }
     }
 
@@ -2571,15 +3038,17 @@ class StockApp {
         event.target.value = '';
     }
 
+    // ✅ FIX #1: readFile ใช้ cellDates: true
     async readFile(file) {
         this.showToast('📂 กำลังอ่านไฟล์...', 'info');
         try {
             if (!file) throw new Error('ไม่พบไฟล์');
             const buffer = await file.arrayBuffer();
-            const wb = XLSX.read(new Uint8Array(buffer), { type: 'array', cellDates: false });
+            // ✅ FIX: cellDates: true ให้ XLSX parse วันที่ให้เลย
+            const wb = XLSX.read(new Uint8Array(buffer), { type: 'array', cellDates: true });
             if (!wb.SheetNames.length) throw new Error('ไม่พบ Sheet');
             const ws = wb.Sheets[wb.SheetNames[0]];
-            const json = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+            const json = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '', raw: true });
             const filtered = json.filter(row => Array.isArray(row) && row.some(v => String(v ?? '').trim() !== ''));
             if (filtered.length < 2) { this.showToast('❌ ไฟล์ไม่มีข้อมูล', 'error'); return; }
             this.pendingHeaders = filtered[0].map(h => String(h ?? '').trim());
@@ -2598,11 +3067,15 @@ class StockApp {
         const table = document.getElementById('previewTable');
         if (!table || !this.pendingHeaders) return;
         let html = '<table><thead><tr>';
-        this.pendingHeaders.forEach(h => html += '<th>' + h + '</th>');
+        this.pendingHeaders.forEach(h => html += '<th>' + escapeHtml(h) + '</th>');
         html += '</tr></thead><tbody>';
         this.pendingRows.slice(0, 5).forEach(row => {
             html += '<tr>';
-            this.pendingHeaders.forEach((_, i) => { html += '<td>' + (row[i] || '') + '</td>'; });
+            this.pendingHeaders.forEach((_, i) => { 
+                let v = row[i] || '';
+                if (v instanceof Date) v = v.toISOString().slice(0,10);
+                html += '<td>' + escapeHtml(v) + '</td>'; 
+            });
             html += '</tr>';
         });
         html += '</tbody></table>';
@@ -2632,16 +3105,21 @@ class StockApp {
             <label style="font-size:12px;font-weight:600;">${f.label}</label>
             <select class="input" id="map_${f.key}" style="font-size:13px;padding:6px 8px;min-height:38px;">
                 <option value="">-- เลือกคอลัมน์ --</option>
-                ${this.pendingHeaders.map(h => `<option value="${h}">${h}</option>`).join('')}
+                ${this.pendingHeaders.map(h => `<option value="${escapeHtml(h)}">${escapeHtml(h)}</option>`).join('')}
             </select>
         </div>`).join('');
     }
 
+    // ✅ FIX #1.7 + #4.5: confirmMapping with loading state + unique IDs
     async confirmMapping() {
         if (!this.pendingRows || this.pendingRows.length === 0) { this.showToast('⚠️ ไม่มีข้อมูล', 'warning'); return; }
         const mapping = {};
         ['code', 'name', 'lot', 'mfgDate', 'expiryDate', 'sellPrice', 'costPerUnit', 'stock', 'unit', 'supplier', 'barcode', 'minStock', 'maxStock'].forEach(f => { mapping[f] = document.getElementById('map_' + f).value; });
         if (!mapping.name) { this.showToast('⚠️ กรุณาเลือกคอลัมน์ "ชื่อสินค้า"', 'warning'); return; }
+        
+        const btn = document.getElementById('confirmMappingBtn');
+        if (btn) { btn.disabled = true; btn.innerHTML = '<span class="loading-inline"></span> กำลังนำเข้า...'; }
+        
         let errorCount = 0, successCount = 0;
         this.showToast('📥 กำลังนำเข้าข้อมูล...', 'info');
         try {
@@ -2671,16 +3149,20 @@ class StockApp {
                             successCount++;
                         } else { existingLot.stock += stock; successCount++; }
                     } else { product.stock = stock; successCount++; }
-                    if (barcode && !product.barcodes?.includes(barcode)) { if (!product.barcodes) product.barcodes = []; product.barcodes.push(barcode); }
+                    if (barcode && !(Array.isArray(product.barcodes) && product.barcodes.includes(barcode))) { 
+                        if (!Array.isArray(product.barcodes)) product.barcodes = []; 
+                        product.barcodes.push(barcode); 
+                    }
                     if (!product.primaryBarcode && barcode) product.primaryBarcode = barcode;
                     if (cost) product.costPerUnit = cost;
                     if (sellPrice) product.sellPrice1 = sellPrice;
                     if (supplier) product.supplier = supplier;
                     if (unit) product.unit = unit;
                     if (mfg) product.mfgDate = mfg;
-                    await this.saveProduct(product);
+                    try { await this.saveProduct(product); } catch(e) { console.warn('Save failed:', e); }
                 } else {
-                    const newId = code || ('PCO' + String(Date.now() + successCount).padStart(10, '0'));
+                    // ✅ FIX: unique ID
+                    const newId = code || ('PCO' + Date.now() + '_' + Math.random().toString(36).slice(2, 8));
                     const newProduct = {
                         id: newId, code: code || newId, name, supplier: supplier || '', primaryBarcode: barcode || '', barcodes: barcode ? [barcode] : [],
                         costPerUnit: cost || 0, sellPrice1: sellPrice || 0, unit: unit || 'ชิ้น', stock: stock || 0,
@@ -2688,7 +3170,7 @@ class StockApp {
                         lots: lot ? [{ lot, mfg, stock, cost, sellPrice, expiry, unit }] : [],
                         createdAt: new Date().toISOString()
                     };
-                    await this.saveProduct(newProduct);
+                    try { await this.saveProduct(newProduct); } catch(e) { console.warn('Save failed:', e); }
                     this.products.push(newProduct);
                     successCount++;
                 }
@@ -2702,9 +3184,14 @@ class StockApp {
             if (errorCount > 0) msg += `, ข้าม ${errorCount} รายการ`;
             this.updateStatus(msg);
             this.showToast(msg, 'success');
-        } catch (err) { this.showToast('❌ นำเข้าไม่สำเร็จ: ' + err.message, 'error'); }
+        } catch (err) { 
+            this.showToast('❌ นำเข้าไม่สำเร็จ: ' + err.message, 'error'); 
+        } finally {
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-check"></i> ยืนยันและนำเข้าข้อมูล'; }
+        }
     }
 
+    // ✅ FIX #2.7: Google Sheets endpoint ยืดหยุ่น
     async importFromGoogleSheets() {
         const url = document.getElementById('googleSheetsUrl').value.trim();
         if (!url) { this.showToast('⚠️ กรุณาใส่ URL', 'warning'); return; }
@@ -2715,7 +3202,15 @@ class StockApp {
         if (!apiKey) { this.showToast('⚠️ ต้องตั้งค่า API Key ก่อน', 'warning'); return; }
         this.showToast('📥 กำลังดึงข้อมูล...', 'info');
         try {
-            const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1?key=${apiKey}`;
+            // ✅ FIX: ดึงชื่อ sheet แรกก่อน
+            const metaUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?key=${apiKey}&fields=sheets.properties.title`;
+            const metaRes = await fetch(metaUrl);
+            let sheetName = 'Sheet1';
+            if (metaRes.ok) {
+                const meta = await metaRes.json();
+                sheetName = meta.sheets?.[0]?.properties?.title || 'Sheet1';
+            }
+            const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}?key=${apiKey}`;
             const response = await fetch(apiUrl);
             if (!response.ok) throw new Error('API error: ' + response.status);
             const data = await response.json();
@@ -2737,12 +3232,38 @@ class StockApp {
         this.showToast('📊 สรุปรายงานเรียบร้อย', 'success');
     }
 
+    // ✅ FIX #2.6: generateReport นับ uncounted ตาม LOT
     async generateReport() {
         const countedItems = this.sessionItems;
         const allProducts = this.products;
-        const countedIds = new Set(countedItems.map(item => item.productId || item.id));
-        const uncountedItems = allProducts.filter(p => !countedIds.has(p.id) && (p.stock || 0) > 0);
-        document.getElementById('rptTotalItems').textContent = allProducts.length;
+        
+        // ✅ FIX: countedKeys ตาม productId|lot
+        const countedKeys = new Set(
+            countedItems.map(i => `${i.productId}|${i.lotName || i.lot || ''}`)
+        );
+        
+        // ✅ FIX: uncounted นับตาม LOT
+        const uncountedItems = [];
+        allProducts.forEach(p => {
+            if (p.lots && p.lots.length > 0) {
+                p.lots.forEach(l => {
+                    if ((l.stock || 0) > 0 && !countedKeys.has(`${p.id}|${l.lot || ''}`)) {
+                        uncountedItems.push({ ...p, _lotData: l });
+                    }
+                });
+            } else if ((p.stock || 0) > 0 && !countedKeys.has(`${p.id}|`)) {
+                uncountedItems.push(p);
+            }
+        });
+        
+        // นับ total ตาม LOT
+        let totalLots = 0;
+        allProducts.forEach(p => {
+            if (p.lots && p.lots.length > 0) totalLots += p.lots.filter(l => (l.stock || 0) > 0).length;
+            else if ((p.stock || 0) > 0) totalLots += 1;
+        });
+        
+        document.getElementById('rptTotalItems').textContent = totalLots;
         document.getElementById('rptCounted').textContent = countedItems.length;
         document.getElementById('rptUncounted').textContent = uncountedItems.length;
         document.getElementById('rptTotal').textContent = countedItems.length;
@@ -2758,8 +3279,8 @@ class StockApp {
         if (diffBody) {
             if (diffItems.length > 0) {
                 diffBody.innerHTML = diffItems.map(i => `<tr>
-                    <td><strong>${i.name}</strong></td>
-                    <td>${i.lotName || i.lot || '-'}</td>
+                    <td><strong>${escapeHtml(i.name)}</strong></td>
+                    <td>${escapeHtml(i.lotName || i.lot || '-')}</td>
                     <td>${i.system_qty}</td>
                     <td>${i.counted_qty}</td>
                     <td style="color:${i.difference < 0 ? 'var(--danger)' : 'var(--success)'};font-weight:600;">${i.difference > 0 ? '+' : ''}${i.difference}</td>
@@ -2774,8 +3295,8 @@ class StockApp {
         const diffCard = document.getElementById('diffCard');
         if (overItems.length > 0 || shortItems.length > 0) {
             diffCard.style.display = 'block';
-            document.getElementById('overItems').innerHTML = overItems.length > 0 ? overItems.map(i => `<div style="padding:3px 0;border-bottom:1px dashed rgba(0,0,0,0.1);"><strong>${i.name}</strong> +${i.difference} ชิ้น</div>`).join('') : 'ไม่มี';
-            document.getElementById('shortItems').innerHTML = shortItems.length > 0 ? shortItems.map(i => `<div style="padding:3px 0;border-bottom:1px dashed rgba(0,0,0,0.1);"><strong>${i.name}</strong> ${i.difference} ชิ้น</div>`).join('') : 'ไม่มี';
+            document.getElementById('overItems').innerHTML = overItems.length > 0 ? overItems.map(i => `<div style="padding:3px 0;border-bottom:1px dashed rgba(0,0,0,0.1);"><strong>${escapeHtml(i.name)}</strong> +${i.difference} ชิ้น</div>`).join('') : 'ไม่มี';
+            document.getElementById('shortItems').innerHTML = shortItems.length > 0 ? shortItems.map(i => `<div style="padding:3px 0;border-bottom:1px dashed rgba(0,0,0,0.1);"><strong>${escapeHtml(i.name)}</strong> ${i.difference} ชิ้น</div>`).join('') : 'ไม่มี';
         } else diffCard.style.display = 'none';
         this.generateFrontBackSummary();
         this.sortReport();
@@ -2789,41 +3310,75 @@ class StockApp {
         if (!uncountedItems || uncountedItems.length === 0) {
             card.style.display = 'block';
             tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:16px;color:var(--text-muted);font-size:13px;"><i class="fas fa-check-circle" style="color:var(--success);font-size:18px;display:block;margin-bottom:6px;"></i>นับครบทุกชิ้นแล้ว! 🎉</td></tr>`;
+            const cardTitle = card.querySelector('.card-title');
+            if (cardTitle) cardTitle.innerHTML = `<i class="fas fa-exclamation-circle"></i> สินค้าที่ยังไม่ได้นับ (0 รายการ)`;
             return;
         }
         card.style.display = 'block';
-        const totalQty = uncountedItems.reduce((s, p) => (p.lots && p.lots.length ? s + p.lots.reduce((a, l) => a + (l.stock || 0), 0) : s + (p.stock || 0)), 0);
-        const totalValue = uncountedItems.reduce((s, p) => (p.lots && p.lots.length ? s + p.lots.reduce((a, l) => a + (l.stock || 0) * (l.cost || p.costPerUnit || 0), 0) : s + (p.stock || 0) * (p.costPerUnit || 0)), 0);
+        const totalQty = uncountedItems.reduce((s, p) => {
+            if (p._lotData) return s + (p._lotData.stock || 0);
+            return (p.lots && p.lots.length ? s + p.lots.reduce((a, l) => a + (l.stock || 0), 0) : s + (p.stock || 0));
+        }, 0);
+        const totalValue = uncountedItems.reduce((s, p) => {
+            if (p._lotData) return s + (p._lotData.stock || 0) * (p._lotData.cost || p.costPerUnit || 0);
+            return (p.lots && p.lots.length ? s + p.lots.reduce((a, l) => a + (l.stock || 0) * (l.cost || p.costPerUnit || 0), 0) : s + (p.stock || 0) * (p.costPerUnit || 0));
+        }, 0);
         const summaryHtml = `<div style="background:var(--danger-light);border-left:4px solid var(--danger);padding:8px 12px;margin-bottom:8px;border-radius:8px;font-size:12px;"><strong>⚠️ ${uncountedItems.length} รายการที่ยังไม่ได้นับ</strong> | รวม ${totalQty.toLocaleString()} ชิ้น | มูลค่า ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท</div>`;
         const rowsHtml = uncountedItems.map(p => {
             let stock = 0, cost = p.costPerUnit || 0;
             let lotDisplay = p.lot || '-', expiryDisplay = p.expiryDate ? this.formatDate(p.expiryDate) : '-';
-            if (p.lots && p.lots.length > 0) {
+            if (p._lotData) {
+                stock = p._lotData.stock || 0;
+                lotDisplay = p._lotData.lot || '-';
+                expiryDisplay = p._lotData.expiry ? this.formatDate(p._lotData.expiry) : '-';
+                cost = p._lotData.cost || cost;
+            } else if (p.lots && p.lots.length > 0) {
                 stock = p.lots.reduce((s, l) => s + (l.stock || 0), 0);
                 lotDisplay = p.lots.map(l => l.lot || '-').filter(Boolean).join(', ') || '-';
                 const expiries = p.lots.map(l => l.expiry).filter(Boolean).sort();
                 if (expiries.length > 0) expiryDisplay = this.formatDate(expiries[0]);
                 if (p.lots[0]) cost = p.lots[0].cost || cost;
             } else { stock = p.stock || 0; }
-            return `<tr><td><strong>${p.name}</strong></td><td>${lotDisplay}</td><td style="color:var(--danger);font-weight:600;">${stock}</td><td>${cost.toFixed(2)}</td><td>-</td><td style="font-weight:600;">${(stock*cost).toFixed(2)}</td><td>${expiryDisplay}</td></tr>`;
+            return `<tr><td><strong>${escapeHtml(p.name)}</strong></td><td>${escapeHtml(lotDisplay)}</td><td style="color:var(--danger);font-weight:600;">${stock}</td><td>${cost.toFixed(2)}</td><td>-</td><td style="font-weight:600;">${(stock*cost).toFixed(2)}</td><td>${expiryDisplay}</td></tr>`;
         }).join('');
         tbody.innerHTML = rowsHtml;
         const cardTitle = card.querySelector('.card-title');
         let summaryEl = card.querySelector('.uncounted-summary');
-        if (!summaryEl) { summaryEl = document.createElement('div'); summaryEl.className = 'uncounted-summary'; cardTitle.insertAdjacentElement('afterend', summaryEl); }
+        if (!summaryEl) { 
+            summaryEl = document.createElement('div'); 
+            summaryEl.className = 'uncounted-summary'; 
+            if (cardTitle) cardTitle.insertAdjacentElement('afterend', summaryEl); 
+        }
         summaryEl.innerHTML = summaryHtml;
-        cardTitle.innerHTML = `<i class="fas fa-exclamation-circle"></i> สินค้าที่ยังไม่ได้นับ (${uncountedItems.length} รายการ)`;
+        if (cardTitle) cardTitle.innerHTML = `<i class="fas fa-exclamation-circle"></i> สินค้าที่ยังไม่ได้นับ (${uncountedItems.length} รายการ)`;
     }
 
     exportUncountedItems() {
-        const countedIds = new Set(this.sessionItems.map(item => item.productId || item.id));
-        const uncountedItems = this.products.filter(p => !countedIds.has(p.id) && (p.stock || 0) > 0);
+        const countedKeys = new Set(this.sessionItems.map(item => `${item.productId}|${item.lotName || item.lot || ''}`));
+        const uncountedItems = [];
+        this.products.forEach(p => {
+            if (p.lots && p.lots.length > 0) {
+                p.lots.forEach(l => {
+                    if ((l.stock || 0) > 0 && !countedKeys.has(`${p.id}|${l.lot || ''}`)) {
+                        uncountedItems.push({ ...p, _lotData: l });
+                    }
+                });
+            } else if ((p.stock || 0) > 0 && !countedKeys.has(`${p.id}|`)) {
+                uncountedItems.push(p);
+            }
+        });
         if (uncountedItems.length === 0) { this.showToast('✅ นับครบทุกชิ้นแล้ว!', 'success'); return; }
         const headers = ['รหัสสินค้า', 'บาร์โค้ด', 'ชื่อสินค้า', 'Lot', 'จำนวน', 'ทุน/หน่วย', 'ขาย/หน่วย', 'มูลค่ารวม', 'หมดอายุ', 'ผู้จัดจำหน่าย'];
         const rows = uncountedItems.map(p => {
             let stock = 0, cost = p.costPerUnit || 0, sellPrice = p.sellPrice1 || 0;
             let lotDisplay = p.lot || '-', expiryDisplay = p.expiryDate || '-';
-            if (p.lots && p.lots.length > 0) {
+            if (p._lotData) {
+                stock = p._lotData.stock || 0;
+                lotDisplay = p._lotData.lot || '-';
+                expiryDisplay = p._lotData.expiry || '-';
+                cost = p._lotData.cost || cost;
+                sellPrice = p._lotData.sellPrice || sellPrice;
+            } else if (p.lots && p.lots.length > 0) {
                 stock = p.lots.reduce((s, l) => s + (l.stock || 0), 0);
                 lotDisplay = p.lots.map(l => l.lot || '-').filter(Boolean).join(', ') || '-';
                 const expiries = p.lots.map(l => l.expiry).filter(Boolean).sort();
@@ -2863,11 +3418,11 @@ class StockApp {
             const diffText = item.difference > 0 ? '+' + item.difference : item.difference;
             const typeLabel = item.locationType === 'front' ? '🏪 หน้าร้าน' : item.locationType === 'back' ? '📦 หลังร้าน' : '🌐';
             return `<tr>
-                <td>${item.barcode || '-'}</td>
-                <td><strong>${item.name}</strong></td>
-                <td>${item.lotName || item.lot || '-'}</td>
+                <td>${escapeHtml(item.barcode || '-')}</td>
+                <td><strong>${escapeHtml(item.name)}</strong></td>
+                <td>${escapeHtml(item.lotName || item.lot || '-')}</td>
                 <td><span class="badge ${item.locationType === 'front' ? 'badge-front' : 'badge-back'}">${typeLabel}</span></td>
-                <td>${item.locationName || '-'}</td>
+                <td>${escapeHtml(item.locationName || '-')}</td>
                 <td>${item.system_qty}</td>
                 <td>${item.counted_qty}</td>
                 <td><span class="badge ${diffClass}">${diffText}</span></td>
@@ -2876,7 +3431,7 @@ class StockApp {
                 <td style="color:${item.cost_diff < 0 ? 'var(--danger)' : 'var(--success)'};font-weight:600;">${item.cost_diff.toFixed(2)}</td>
                 <td style="color:${item.sell_diff < 0 ? 'var(--danger)' : 'var(--success)'};font-weight:600;">${item.sell_diff.toFixed(2)}</td>
                 <td>${item.age !== undefined && item.age !== null && item.age > 0 ? item.age.toFixed(1) : '-'}</td>
-                <td>${item.note || ''}</td>
+                <td>${escapeHtml(item.note || '')}</td>
             </tr>`;
         }).join('');
     }
@@ -2917,7 +3472,7 @@ class StockApp {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('landscape');
             doc.setFontSize(14);
-            doc.text('MediStock v5.1.4', 14, 20);
+            doc.text('MediStock v5.1.5', 14, 20);
             doc.autoTable({ head: [headers], body: rows.map(r => r.map(v => String(v ?? ''))), startY: 30, styles: { fontSize: 7 } });
             doc.save(`${type}_${Date.now()}.pdf`);
             this.showToast('✅ ดาวน์โหลด PDF สำเร็จ', 'success');
@@ -2925,7 +3480,7 @@ class StockApp {
     }
 
     exportBarcodeMaster() {
-        const data = this.products.filter(p => p.primaryBarcode || (p.barcodes && p.barcodes.length > 0));
+        const data = this.products.filter(p => p.primaryBarcode || (Array.isArray(p.barcodes) && p.barcodes.length > 0));
         if (data.length === 0) { this.showToast('⚠️ ไม่มีข้อมูล', 'warning'); return; }
         const headers = ['รหัส', 'ชื่อ', 'Lot', 'บาร์โค้ดหลัก', 'บาร์โค้ดทั้งหมด', 'ทุน', 'ขาย', 'หน่วย', 'ผู้จัดจำหน่าย'];
         const rows = data.map(p => [p.id, p.name, p.lots && p.lots.length ? p.lots.map(l => l.lot).join(', ') : (p.lot || ''), p.primaryBarcode || '', (p.barcodes || []).join('; '), p.costPerUnit || 0, p.sellPrice1 || 0, p.unit || '', p.supplier || '']);
@@ -2966,7 +3521,7 @@ class StockApp {
             tx.objectStore('products').clear();
             tx.objectStore('locations').clear();
             tx.objectStore('history').clear();
-            await new Promise(r => { tx.oncomplete = r; });
+            await new Promise(r => { tx.oncomplete = r; tx.onerror = r; });
             for (const p of data.products) await this.saveProduct(p);
             this.locations = data.locations;
             await this.saveLocations();
@@ -2987,6 +3542,7 @@ class StockApp {
         event.target.value = '';
     }
 
+    // ✅ FIX #1.8: clearAllData เฉพาะสาขาปัจจุบัน
     async clearAllData() {
         if (!confirm('⚠️ ลบข้อมูลทั้งหมด?')) return;
         if (!confirm('🚨 ยืนยันครั้งสุดท้าย!')) return;
@@ -3000,9 +3556,12 @@ class StockApp {
             this.sessionItems = [];
             this.offlineQueue = [];
             this.history = [];
-            for (const key of Object.keys(localStorage)) {
-                if (/^(offlineQueue|barcodeHistory_|countHistory_|sessionItems_|emergency_backup_)/.test(key)) localStorage.removeItem(key);
-            }
+            // ✅ FIX: ลบเฉพาะของสาขาปัจจุบัน
+            const storeId = CONFIG.STORE_ID;
+            ['offlineQueue', `barcodeHistory_${storeId}`, `countHistory_${storeId}`, 
+             `sessionItems_${storeId}`, `emergency_backup_${this.branchId}`].forEach(k => {
+                localStorage.removeItem(k);
+            });
             this.unitMap = { 'ชิ้น': 1, 'โหล': 12, 'ลัง': 12, 'กล่อง': 1, 'แผง': 10, 'ขวด': 1, 'หลอด': 1, 'ซอง': 1, 'แพ็ค': 1, 'แผ่น': 1, 'กระปุก': 1, 'ขีด': 1, 'ถุง': 1, 'ตลับ': 1 };
             this.renderMap();
             this.updateLocationDropdowns();
@@ -3052,18 +3611,21 @@ class StockApp {
         this.exportGenericCSV(headers, rows, 'expiry_report');
     }
 
-    closeQRCodeModal() { document.getElementById('qrCodeModal').classList.remove('show'); this._qrProduct = null; }
+    closeQRCodeModal() { document.getElementById('qrCodeModal')?.classList.remove('show'); this._qrProduct = null; }
     downloadQRCode() { this.showToast('ℹ️ กรุณาใช้ Show QR แทน', 'info'); }
     printProductLabel() { this.showToast('ℹ️ ยังไม่พร้อมใช้งาน', 'info'); }
     closeEditProductModal() { document.getElementById('editProductModal').classList.remove('show'); }
 
+    // ✅ FIX #1.3: runAnalytics DOM-safe
     runAnalytics() {
         if (this.products.length === 0) return;
-        this.updateAnalyticsDashboard();
-        this.calculateABC();
-        this.findDeadStock();
-        this.findMinStock();
-        this.findMaxStock();
+        try {
+            this.updateAnalyticsDashboard();
+            this.calculateABC();
+            this.findDeadStock();
+            this.findMinStock();
+            this.findMaxStock();
+        } catch (e) { console.warn('Analytics error:', e); }
     }
 
     updateAnalyticsDashboard() {
@@ -3075,9 +3637,12 @@ class StockApp {
             } else { totalValue += (p.stock || 0) * cpu; }
         });
         const zeroStock = this.products.filter(p => (p.lots && p.lots.length > 0) ? p.lots.every(l => (l.stock || 0) === 0) : (p.stock || 0) === 0).length;
-        document.getElementById('analyticsTotalItems').textContent = this.products.length;
-        document.getElementById('analyticsTotalValue').textContent = totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        document.getElementById('analyticsZeroStock').textContent = zeroStock;
+        const el1 = document.getElementById('analyticsTotalItems');
+        const el2 = document.getElementById('analyticsTotalValue');
+        const el3 = document.getElementById('analyticsZeroStock');
+        if (el1) el1.textContent = this.products.length;
+        if (el2) el2.textContent = totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        if (el3) el3.textContent = zeroStock;
     }
 
     calculateABC() {
@@ -3110,6 +3675,25 @@ class StockApp {
             <div style="background:#f59e0b;color:#fff;padding:8px;border-radius:var(--radius-sm);text-align:center;"><div style="font-size:18px;font-weight:800;">${bItems.length}</div><div style="font-size:11px;">กลุ่ม B</div></div>
             <div style="background:#10b981;color:#fff;padding:8px;border-radius:var(--radius-sm);text-align:center;"><div style="font-size:18px;font-weight:800;">${cItems.length}</div><div style="font-size:11px;">กลุ่ม C</div></div>
         </div>`;
+        
+        // ✅ FIX #4.4: สร้าง chart จริง
+        try {
+            const canvas = document.getElementById('abcChart');
+            if (canvas && typeof Chart !== 'undefined') {
+                if (this.abcChart) this.abcChart.destroy();
+                this.abcChart = new Chart(canvas, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['A (70%)', 'B (20%)', 'C (10%)'],
+                        datasets: [{
+                            data: [aItems.length, bItems.length, cItems.length],
+                            backgroundColor: ['#dc2626', '#f59e0b', '#10b981']
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                });
+            }
+        } catch(e) { console.warn('Chart error:', e); }
     }
 
     findDeadStock() {
@@ -3128,7 +3712,7 @@ class StockApp {
         if (items.length === 0) { container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:16px;font-size:13px;"><i class="fas fa-check-circle" style="color:var(--success);font-size:20px;display:block;margin-bottom:6px;"></i>ไม่มีสินค้าที่มีความเสี่ยง</p>'; return; }
         container.innerHTML = items.map(p => {
             const diff = Math.ceil((new Date(p.expiryDate) - now) / (1000 * 60 * 60 * 24));
-            return `<div class="dead-stock-item"><div><div style="font-weight:600;">${p.name}</div><div style="font-size:12px;color:var(--text-muted);">หมดอายุใน ${diff} วัน</div></div><span class="badge badge-red">⚠️ เสี่ยง</span></div>`;
+            return `<div class="dead-stock-item"><div><div style="font-weight:600;">${escapeHtml(p.name)}</div><div style="font-size:12px;color:var(--text-muted);">หมดอายุใน ${diff} วัน</div></div><span class="badge badge-red">⚠️ เสี่ยง</span></div>`;
         }).join('');
     }
 
@@ -3146,7 +3730,7 @@ class StockApp {
             let totalStock = 0;
             if (p.lots && p.lots.length > 0) p.lots.forEach(l => { totalStock += l.stock || 0; });
             else totalStock = p.stock || 0;
-            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid var(--border-color);"><span>${p.name}</span><span class="badge badge-warning">${totalStock} ชิ้น</span></div>`;
+            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid var(--border-color);"><span>${escapeHtml(p.name)}</span><span class="badge badge-warning">${totalStock} ชิ้น</span></div>`;
         }).join('');
     }
 
@@ -3164,7 +3748,7 @@ class StockApp {
             let totalStock = 0;
             if (p.lots && p.lots.length > 0) p.lots.forEach(l => { totalStock += l.stock || 0; });
             else totalStock = p.stock || 0;
-            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid var(--border-color);"><span>${p.name}</span><span class="badge badge-warning">${totalStock} ชิ้น ⚠️</span></div>`;
+            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid var(--border-color);"><span>${escapeHtml(p.name)}</span><span class="badge badge-warning">${totalStock} ชิ้น ⚠️</span></div>`;
         }).join('');
     }
 
@@ -3191,7 +3775,7 @@ class StockApp {
         const fileName = localStorage.getItem('gs_file_name') || 'Google Sheet';
         const spreadsheetId = localStorage.getItem('gs_spreadsheet_id');
         const apiKey = localStorage.getItem('gs_api_key');
-        if (spreadsheetId && apiKey) { el.innerHTML = `✅ เชื่อมต่อกับ "${fileName}"`; el.style.color = 'var(--success)'; }
+        if (spreadsheetId && apiKey) { el.innerHTML = `✅ เชื่อมต่อกับ "${escapeHtml(fileName)}"`; el.style.color = 'var(--success)'; }
         else { el.innerHTML = '⚠️ ยังไม่ได้ตั้งค่า'; el.style.color = 'var(--text-muted)'; }
     }
 
@@ -3208,28 +3792,47 @@ class StockApp {
         this.updateGoogleSheetsStatus();
     }
 
+    // ✅ FIX #2.9: checkGoogleSheetsStatus update UI
     async checkGoogleSheetsStatus() {
         const config = this.googleSheetsConfig();
         const el = document.getElementById('googleSheetsStatus');
-        if (!config.apiKey || !config.spreadsheetId) { if (el) el.innerHTML = '⚠️ ยังไม่ได้ตั้งค่า'; return; }
+        if (!config.apiKey || !config.spreadsheetId) { 
+            if (el) el.innerHTML = '⚠️ ยังไม่ได้ตั้งค่า'; 
+            this.showToast('⚠️ กรุณาตั้งค่า API Key และ Spreadsheet ID', 'warning');
+            return; 
+        }
+        if (el) el.innerHTML = '⏳ กำลังทดสอบ...';
         try {
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${config.spreadsheetId}/values/A1:A1?key=${config.apiKey}`;
             const res = await fetch(url);
-            if (res.ok) { el.innerHTML = '✅ เชื่อมต่อสำเร็จ'; this.showToast('✅ เชื่อมต่อได้', 'success'); }
-            else { el.innerHTML = '⚠️ ไม่สามารถเชื่อมต่อได้'; }
-        } catch (e) { el.innerHTML = '❌ เชื่อมต่อไม่ได้'; }
+            if (res.ok) { 
+                if (el) el.innerHTML = '✅ เชื่อมต่อสำเร็จ'; 
+                this.showToast('✅ เชื่อมต่อได้', 'success'); 
+            } else { 
+                if (el) el.innerHTML = '⚠️ ไม่สามารถเชื่อมต่อได้ (HTTP ' + res.status + ')'; 
+                this.showToast('⚠️ เชื่อมต่อไม่สำเร็จ', 'warning');
+            }
+        } catch (e) { 
+            if (el) el.innerHTML = '❌ เชื่อมต่อไม่ได้: ' + e.message; 
+            this.showToast('❌ ' + e.message, 'error');
+        }
     }
 
+    // ✅ FIX #2.8: syncSessionToGoogleSheets ไม่ซ้ำ
     async syncSessionToGoogleSheets() {
         if (this.sessionItems.length === 0) { this.showToast('⚠️ ไม่มีข้อมูล', 'warning'); return; }
         const config = this.googleSheetsConfig();
         if (!config.apiKey || !config.spreadsheetId) { this.showToast('⚠️ กรุณาตั้งค่าก่อน', 'warning'); return; }
+        if (!confirm('⚠️ จะเขียนทับข้อมูลใน Sheet1 ทั้งหมด\n\nยืนยัน?')) return;
         this.showToast('🔄 กำลังซิงค์...', 'info');
         try {
-            const headers = [['วันที่', 'บาร์โค้ด', 'ชื่อสินค้า', 'Lot', 'ระบบ', 'นับ', 'ต่าง', 'ตำแหน่ง', 'หมายเหตุ']];
+            const headers = ['วันที่', 'บาร์โค้ด', 'ชื่อสินค้า', 'Lot', 'ระบบ', 'นับ', 'ต่าง', 'ตำแหน่ง', 'หมายเหตุ'];
             const rows = this.sessionItems.map(item => [new Date().toLocaleString('th-TH'), item.barcode || '', item.name, item.lotName || item.lot || '', item.system_qty, item.counted_qty, item.difference, item.locationName || '', item.note || '']);
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${config.spreadsheetId}/values/Sheet1!A:Z:append?valueInputOption=USER_ENTERED&key=${config.apiKey}`;
-            const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ values: [...headers, ...rows] }) });
+            // ✅ FIX: clear ก่อน append
+            const clearUrl = `https://sheets.googleapis.com/v4/spreadsheets/${config.spreadsheetId}/values/Sheet1!A:Z:clear?key=${config.apiKey}`;
+            await fetch(clearUrl, { method: 'POST' });
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${config.spreadsheetId}/values/Sheet1!A1:append?valueInputOption=USER_ENTERED&key=${config.apiKey}`;
+            const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ values: [headers, ...rows] }) });
             if (res.ok) this.showToast(`✅ ซิงค์ ${rows.length} รายการ สำเร็จ!`, 'success');
             else throw new Error('HTTP ' + res.status);
         } catch (e) { this.showToast('❌ ซิงค์ไม่สำเร็จ: ' + e.message, 'error'); }
@@ -3237,23 +3840,16 @@ class StockApp {
 
     async loadFromGoogleSheets() { this.showToast('ℹ️ ใช้ Google Sheets URL ในหน้า Import', 'info'); }
 
-    confirmUnknownUnit() { document.getElementById('unknownUnitModal').classList.remove('show'); }
-    skipUnknownUnit() { document.getElementById('unknownUnitModal').classList.remove('show'); }
-    processPendingRow() {}
-
-    v5GetAll(storeName) { return new Promise((resolve, reject) => { try { const req = this.db.transaction(storeName, 'readonly').objectStore(storeName).getAll(); req.onsuccess = () => resolve(req.result || []); req.onerror = () => reject(req.error); } catch (e) { reject(e); } }); }
-    v5Put(storeName, value) { return new Promise((resolve, reject) => { try { const req = this.db.transaction(storeName, 'readwrite').objectStore(storeName).put(value); req.onsuccess = () => resolve(value); req.onerror = () => reject(req.error); } catch (e) { reject(e); } }); }
-
     async v5LoadActiveCycle() {
         if (!this.db?.objectStoreNames.contains('v5_countCycles')) return null;
-        const cycles = await this.v5GetAll('v5_countCycles').catch(() => []);
+        const cycles = await this.v5GetAll('v5_countCycles');
         this.v5ActiveCycle = cycles.filter(c => c.branchId === this.branchId && c.status === 'active').sort((a,b) => String(b.startedAt).localeCompare(String(a.startedAt)))[0] || null;
         return this.v5ActiveCycle;
     }
 
     async v5LoadSnapshotItems() {
         if (!this.v5ActiveCycle) { this.v5SnapshotItems = []; return []; }
-        const all = await this.v5GetAll('v5_snapshotItems').catch(() => []);
+        const all = await this.v5GetAll('v5_snapshotItems');
         this.v5SnapshotItems = all.filter(x => x.cycleId === this.v5ActiveCycle.id);
         return this.v5SnapshotItems;
     }
@@ -3285,7 +3881,7 @@ class StockApp {
         banner.className = 'card';
         banner.style.cssText = 'border:2px solid var(--primary);background:linear-gradient(135deg,rgba(14,165,233,.10),rgba(99,102,241,.08));padding:10px;';
         banner.innerHTML = `<div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;">
-            <div><div style="font-weight:800;color:var(--primary-dark);font-size:13px;">🧾 MediStock v5.1.4</div><div id="v5CycleStatus" style="font-size:11px;color:var(--text-muted);margin-top:2px;">กำลังตรวจสอบ...</div></div>
+            <div><div style="font-weight:800;color:var(--primary-dark);font-size:13px;">🧾 MediStock v5.1.5</div><div id="v5CycleStatus" style="font-size:11px;color:var(--text-muted);margin-top:2px;">กำลังตรวจสอบ...</div></div>
             <div style="display:flex;gap:5px;"><button class="btn btn-primary btn-sm" id="v5StartCycleBtn" style="min-height:34px;font-size:11px;">🧾 เริ่มรอบนับใหม่</button><button class="btn btn-outline btn-sm" id="v5CycleReportBtn" style="min-height:34px;font-size:11px;">📊 ตรวจผลต่าง</button></div>
         </div>`;
         firstCard?.parentNode.insertBefore(banner, firstCard);
@@ -3339,17 +3935,14 @@ class StockApp {
 }
 
 // ================================================================
-// GLOBAL FUNCTIONS - ทำงานได้แม้ app ยังไม่พร้อม
+// GLOBAL FUNCTIONS
 // ================================================================
 let app = null;
 
 function switchTab(name) {
-    // ลองใช้ app ก่อน
     if (app && typeof app.switchTab === 'function') {
         try { app.switchTab(name); return; } catch (e) { console.error('app.switchTab failed:', e); }
     }
-    // Fallback: ทำงานได้แม้ app ยังไม่พร้อม
-    console.warn('⚠️ ใช้ fallback switchTab:', name);
     try {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -3403,7 +3996,7 @@ function closeAddShelfScanModal() { if (app) app.closeAddShelfScanModal(); }
 function confirmScanAddShelf() { if (app) app.confirmScanAddShelf(); }
 function backupData() { if (app) app.backupData(); }
 function restoreData(event) { if (app) app.restoreData(event); }
-function showQRCode() { if (app) app.showQRCode(app.currentProduct); }
+function showQRCode() { if (app) app.showQRCode && app.showQRCode(app.currentProduct); }
 function closeQRCodeModal() { if (app) app.closeQRCodeModal(); }
 function downloadQRCode() { if (app) app.downloadQRCode(); }
 function printProductLabel() { if (app) app.printProductLabel(); }
@@ -3418,7 +4011,7 @@ window.selectProductFromSearch = function(productId) { if (app) app.selectProduc
 window.clearPendingBarcode = function() { if (app) app.clearPendingBarcode(); };
 
 // ================================================================
-// BOOTSTRAP - FIXED v3
+// BOOTSTRAP
 // ================================================================
 document.addEventListener('DOMContentLoaded', function () {
     const loadingEl = document.getElementById('appLoadingOverlay');
@@ -3448,18 +4041,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     try {
         if (typeof StockApp === 'undefined') {
-            throw new Error('ไม่พบ StockApp class — ไฟล์อาจถูกตัด');
+            throw new Error('ไม่พบ StockApp class');
         }
         app = new StockApp();
         window.app = app;
-        console.log('✅ MediStock v5.1.4 booted');
+        console.log('✅ MediStock v5.1.5 booted');
 
         const checkReady = setInterval(() => {
             if (window.app && window.app.db) {
                 clearInterval(checkReady);
                 clearTimeout(bootTimeout);
                 hideLoading();
-                console.log('🎉 MediStock พร้อมใช้งาน');
+                console.log('🎉 MediStock v5.1.5 พร้อมใช้งาน');
             }
         }, 200);
 
