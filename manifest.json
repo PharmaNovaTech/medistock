@@ -1,115 +1,77 @@
 {
   "name": "MediStock - ระบบนับสต็อกสินค้ายา",
   "short_name": "MediStock",
-  "description": "ระบบนับสต็อกสินค้ายาและเวชภัณฑ์ ใช้งานได้แบบออฟไลน์ รองรับการสแกนบาร์โค้ดหลาย LOT และซิงค์ข้อมูลผ่าน Google Sheets",
-  "version": "5.1.3",
-  "id": "/?source=pwa",
+  "description": "ระบบนับสต็อกสินค้ายา ใช้งานง่าย รองรับบาร์โค้ด Excel และ Google Sheets",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui", "browser"],
   "orientation": "portrait",
+  "background_color": "#0ea5e9",
   "theme_color": "#0ea5e9",
-  "background_color": "#f0f9ff",
   "lang": "th",
   "dir": "ltr",
-  "categories": ["business", "productivity", "medical", "utilities"],
-  "prefer_related_applications": false,
+  "categories": ["business", "productivity", "medical"],
   "icons": [
     {
-      "src": "./favicon-16x16.png",
-      "sizes": "16x16",
+      "src": "./android-chrome-192x192.png",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./favicon-32x32.png",
-      "sizes": "32x32",
+      "src": "./android-chrome-512x512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "./android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "./apple-touch-icon.png",
       "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "./icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./icon-192-maskable.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "./icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./icon-512-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "./screenshot-mobile.png",
-      "sizes": "1080x1920",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "หน้าจอนับสต็อกบนมือถือ"
-    },
-    {
-      "src": "./screenshot-desktop.png",
-      "sizes": "1920x1080",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "หน้าจอรายงานบนเดสก์ท็อป"
+      "src": "./favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
     }
   ],
   "shortcuts": [
     {
-      "name": "สแกนบาร์โค้ด",
-      "short_name": "สแกน",
-      "description": "เปิดกล้องสแกนบาร์โค้ดทันที",
-      "url": "./index.html?tab=scan&action=scanner",
-      "icons": [{ "src": "./favicon-32x32.png", "sizes": "32x32" }]
+      "name": "นับสต็อก",
+      "short_name": "นับ",
+      "description": "เริ่มนับสต็อกทันที",
+      "url": "./index.html#scan",
+      "icons": [
+        {
+          "src": "./android-chrome-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
-      "name": "นำเข้าข้อมูล",
-      "short_name": "นำเข้า",
-      "description": "นำเข้าสินค้าจาก Excel/CSV",
-      "url": "./index.html?tab=import",
-      "icons": [{ "src": "./favicon-32x32.png", "sizes": "32x32" }]
-    },
-    {
-      "name": "ดูรายงาน",
+      "name": "รายงาน",
       "short_name": "รายงาน",
-      "description": "ดูรายงานสรุปการนับสต็อก",
-      "url": "./index.html?tab=report",
-      "icons": [{ "src": "./favicon-32x32.png", "sizes": "32x32" }]
+      "description": "ดูรายงานสรุป",
+      "url": "./index.html#report",
+      "icons": [
+        {
+          "src": "./android-chrome-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ],
-  "file_handlers": [
-    {
-      "action": "./index.html?tab=import",
-      "accept": {
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
-        "application/vnd.ms-excel": [".xls"],
-        "text/csv": [".csv"],
-        "application/json": [".json"]
-      }
-    }
-  ],
-  "launch_handler": {
-    "client_mode": ["focus-existing", "auto"]
-  }
+  "prefer_related_applications": false
 }
