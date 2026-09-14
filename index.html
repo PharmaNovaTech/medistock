@@ -8,8 +8,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="MediStock">
     <meta name="theme-color" content="#0ea5e9">
-    <meta name="medistock-core" content="v5.1.5-schema13">
-    <title>MediStock v5.1.5</title>
+    <meta name="medistock-core" content="v5.1.6-schema13">
+    <title>MediStock v5.1.6</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -132,7 +132,7 @@
         .product-name{font-family:'Outfit',sans-serif;font-size:var(--font-xl);font-weight:700;margin-bottom:4px;color:#065f46}
         .product-info{font-size:15px;color:#047857;margin-bottom:2px;font-weight:500;word-break:normal;overflow-wrap:break-word;line-height:1.6}
         .product-info .highlight-stock{font-size:var(--font-xxl);font-weight:800;color:var(--primary);background:var(--info-light);padding:2px 18px;border-radius:8px;display:inline-block}
-        .product-info .highlight-cost{font-size:var(--font-xl);font-weight:700;color:var(--primary);background:var(--info-light);padding:2px 14px;border-radius:8px;display:inline-block}
+        .product-info .highlight-cost{font-size:15px;font-weight:700;color:var(--primary);background:var(--info-light);padding:2px 10px;border-radius:8px;display:inline-block}
         .expiry-warning{background:var(--danger-light);border:1px solid var(--danger);border-radius:var(--radius-sm);padding:8px 12px;margin:6px 0;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--danger)}
         .qty-control{display:flex;align-items:center;gap:10px;margin:12px 0}
         .qty-btn{width:46px;height:46px;border-radius:50%;border:2px solid var(--border-color);background:var(--bg-card);font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--primary);transition:var(--transition);flex-shrink:0}
@@ -278,7 +278,7 @@
             <div class="logo-text">
                 <span class="brand">
                     <span class="main">MediStock</span>
-                    <span class="version">v5.1.5</span>
+                    <span class="version">v5.1.6</span>
                 </span>
                 <span class="tagline"><i class="fas fa-circle" style="font-size:4px;color:#34d399;margin-right:3px;"></i>ระบบนับสต็อกสินค้ายา</span>
             </div>
@@ -1822,10 +1822,27 @@ class StockApp {
             
             // ========== ตรวจสอบผลลัพธ์ ==========
             if (result) {
-                const clean = String(result).replace(/[^0-9]/g, '');
+                const raw = String(result).trim();
+                const clean = raw.replace(/[^0-9]/g, '');
                 let finalBarcode = clean;
                 const v = this.validateBarcode(clean);
-                
+
+                // ✅ FIX: รองรับ Code-128 (บาร์โค้ดที่มีตัวอักษร) — ถ้า match กับ product โดยตรง
+                const directMatch = this.products.find(p =>
+                    (Array.isArray(p.barcodes) && p.barcodes.includes(raw)) ||
+                    p.primaryBarcode === raw
+                );
+                if (directMatch) {
+                    finalBarcode = raw;
+                    if (statusEl) {
+                        statusEl.textContent = `✅ อ่านสำเร็จ! (${method})`;
+                        statusEl.className = 'scanner-status success';
+                    }
+                    this.showToast(`✅ อ่านบาร์โค้ดได้! (${method})`, 'success');
+                    this.processScannedBarcode(finalBarcode, method);
+                    return;
+                }
+
                 if (!v.valid && clean.length >= 8 && clean.length <= 13) {
                     // Checksum ไม่ตรงแต่ความยาวถูก → ถามผู้ใช้
                     if (confirm(`⚠️ อ่านได้: ${clean}\nแต่ Checksum ไม่ถูกต้อง\n\nใช้งานต่อหรือไม่?`)) {
@@ -1842,7 +1859,7 @@ class StockApp {
                         statusEl.textContent = `❌ ${v.message}`;
                         statusEl.className = 'scanner-status error';
                     }
-                    this.showToast(`❌ อ่านได้ "${clean}" แต่รูปแบบไม่ถูกต้อง`, 'error');
+                    this.showToast(`❌ อ่านได้ "${raw}" แต่รูปแบบไม่ถูกต้อง`, 'error');
                     return;
                 }
                 
@@ -1903,29 +1920,129 @@ class StockApp {
             try { await this.html5Scanner.stop(); this.html5Scanner.clear(); } catch(e) {}
             this.html5Scanner = null;
         }
+
+        // ✅ FIX SCANNER BLUR: debounce ป้องกัน decode ซ้ำซ้อนเร็วเกิน
+        let lastDecoded = '';
+        let lastDecodedTime = 0;
+        const DECODE_COOLDOWN = 1500; // ms
+
+        const onDecodeSuccess = (decodedText) => {
+            const now = Date.now();
+            // ✅ ป้องกัน decode barcode เดิมซ้ำๆ ภายใน 1.5 วิ
+            if (decodedText === lastDecoded && (now - lastDecodedTime) < DECODE_COOLDOWN) return;
+            lastDecoded = decodedText;
+            lastDecodedTime = now;
+
+            // ✅ รองรับทั้ง EAN-13, EAN-8, Code-128 (มีตัวอักษร)
+            // ไม่ strip อักษรทิ้งทั้งหมด — เก็บค่าดิบไว้ก่อน แล้ว validate
+            const clean = String(decodedText).trim();
+            const numericOnly = clean.replace(/[^0-9]/g, '');
+
+            let barcodeToUse = clean;
+            let v = this.validateBarcode(numericOnly);
+
+            // ถ้า numeric valid ให้ใช้ numeric, ถ้าไม่ให้ลอง raw
+            if (v.valid) {
+                barcodeToUse = v.barcode;
+            } else {
+                // ลอง match กับ products โดยตรง (สำหรับ Code-128 ที่มีตัวอักษร)
+                const directMatch = this.products.find(p =>
+                    (Array.isArray(p.barcodes) && p.barcodes.includes(clean)) ||
+                    p.primaryBarcode === clean
+                );
+                if (directMatch) {
+                    barcodeToUse = clean;
+                    v = { valid: true, barcode: clean };
+                } else if (!v.valid) {
+                    statusFull.textContent = '⚠️ ' + (v.message || 'รูปแบบไม่ถูกต้อง');
+                    statusFull.className = 'scanner-status-full error';
+                    return;
+                }
+            }
+
+            statusFull.textContent = '✅ อ่านสำเร็จ!';
+            statusFull.className = 'scanner-status-full success';
+            // Flash effect
+            const flash = document.getElementById('scanFlash');
+            if (flash) { flash.classList.add('active'); setTimeout(() => flash.classList.remove('active'), 200); }
+            this.processScannedBarcode(barcodeToUse, 'Camera');
+        };
+
         try {
             this.html5Scanner = new Html5Qrcode("reader-fullscreen");
+
+            // ✅ FIX BLUR: ใช้ constrains กล้องความละเอียดสูงขึ้น + เปิด advanced scanning
+            const videoConstraints = {
+                facingMode: "environment",
+                // ขอ resolution สูงขึ้นเพื่อให้อ่านบาร์โค้ดเล็กได้ชัดขึ้น
+                width: { ideal: 1920, min: 1280 },
+                height: { ideal: 1080, min: 720 },
+                // เปิด focusMode continuous ถ้า browser รองรับ
+                advanced: [{ focusMode: "continuous" }]
+            };
+
             await this.html5Scanner.start(
-                { facingMode: "environment" },
-                { fps: 20, qrbox: { width: 280, height: 170 } },
-                (decodedText) => {
-                    const clean = String(decodedText).replace(/[^0-9]/g, '');
-                    const v = this.validateBarcode(clean);
-                    if (!v.valid) {
-                        statusFull.textContent = v.message;
-                        statusFull.className = 'scanner-status-full error';
-                        return;
-                    }
-                    this.processScannedBarcode(v.barcode, 'Camera');
+                videoConstraints,
+                {
+                    // ✅ FIX: ลด fps ลงเล็กน้อย ให้กล้องมีเวลา focus ก่อน decode
+                    fps: 12,
+                    // ✅ FIX: qrbox เล็กลง บังคับให้ผู้ใช้จ่อบาร์โค้ดชัดขึ้น
+                    qrbox: { width: 260, height: 140 },
+                    // ✅ เปิด aspectRatio 16:9 ให้ภาพกว้าง อ่าน barcode แนวนอนได้ดีขึ้น
+                    aspectRatio: 1.777,
+                    // ✅ รองรับหลายประเภทบาร์โค้ด
+                    formatsToSupport: [
+                        Html5QrcodeSupportedFormats?.EAN_13,
+                        Html5QrcodeSupportedFormats?.EAN_8,
+                        Html5QrcodeSupportedFormats?.CODE_128,
+                        Html5QrcodeSupportedFormats?.CODE_39,
+                        Html5QrcodeSupportedFormats?.UPC_A,
+                        Html5QrcodeSupportedFormats?.UPC_E,
+                        Html5QrcodeSupportedFormats?.QR_CODE,
+                    ].filter(Boolean),
+                    // ✅ เปิด experimental features สำหรับ barcode เล็ก
+                    experimentalFeatures: { useBarCodeDetectorIfSupported: true }
                 },
-                () => {}
+                onDecodeSuccess,
+                (errorMsg) => {
+                    // ไม่ทำอะไรกับ error ปกติ (scanning miss)
+                }
             );
-            statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ';
+
+            // ✅ FIX: เพิ่ม focus-on-tap สำหรับกล้องที่ autofocus ช้า
+            const readerEl = document.getElementById('reader-fullscreen');
+            if (readerEl) {
+                readerEl.addEventListener('click', async () => {
+                    statusFull.textContent = '🎯 กำลัง Focus...';
+                    statusFull.className = 'scanner-status-full focusing';
+                    try {
+                        const track = this.html5Scanner?.getRunningTrack?.();
+                        if (track && track.getCapabilities) {
+                            const caps = track.getCapabilities();
+                            if (caps.focusMode && caps.focusMode.includes('single-shot')) {
+                                await track.applyConstraints({ advanced: [{ focusMode: 'single-shot' }] });
+                                setTimeout(() => track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }), 500);
+                            }
+                        }
+                    } catch(e) { /* ไม่รองรับ focus API */ }
+                    setTimeout(() => {
+                        if (statusFull.className.includes('focusing')) {
+                            statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ';
+                            statusFull.className = 'scanner-status-full';
+                        }
+                    }, 1000);
+                }, { once: false });
+            }
+
+            statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ | 👆 แตะเพื่อโฟกัส';
             statusFull.className = 'scanner-status-full';
+            statusFull.style.display = 'block';
+
         } catch (err) {
+            console.error('Scanner error:', err);
             statusFull.textContent = '❌ เปิดกล้องไม่สำเร็จ';
             statusFull.className = 'scanner-status-full error';
-            this.showToast('❌ เปิดกล้องไม่สำเร็จ', 'error');
+            this.showToast('❌ เปิดกล้องไม่สำเร็จ — ลองใช้ "ถ่ายรูปบาร์โค้ด" แทน', 'error');
         }
     }
 
@@ -2078,13 +2195,35 @@ class StockApp {
     }
 
     onScan(barcode) {
+        // ✅ FIX PRODUCT SWITCH: validate ก่อน
         const result = this.validateBarcode(barcode);
-        if (!result.valid) { this.showToast(result.message, 'warning'); return; }
-        this.resetScanState();
-        this.currentBarcode = result.barcode;
-        this.pendingBarcode = result.barcode;
+        // อนุญาตให้ Code-128 (มีตัวอักษร) ผ่านได้ ถ้า match กับ product โดยตรง
+        const rawMatch = !result.valid && this.products.find(p =>
+            (Array.isArray(p.barcodes) && p.barcodes.includes(barcode)) ||
+            p.primaryBarcode === barcode
+        );
+        if (!result.valid && !rawMatch) {
+            this.showToast(result.message, 'warning');
+            return;
+        }
+        const finalBarcode = result.valid ? result.barcode : barcode;
+
+        // ✅ FIX: รีเซ็ต state ก่อนทุกครั้ง — ป้องกัน selectedLotIndex ค้าง
+        this.currentProduct = null;
+        this.selectedLotIndex = 0;
+        // ซ่อน panel ทันทีเพื่อ force re-render
+        const detail = document.getElementById('productDetail');
+        if (detail) detail.style.display = 'none';
+        // ล้าง lotList ป้องกัน LOT เก่าค้าง
+        const lotList = document.getElementById('lotList');
+        if (lotList) lotList.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:8px;font-size:13px;">กำลังโหลด LOT...</div>';
+
+        this.currentBarcode = finalBarcode;
+        this.pendingBarcode = finalBarcode;
         this.updatePendingDisplay();
-        this.lookupProduct(result.barcode);
+
+        // ใช้ setTimeout(0) เพื่อให้ DOM update ก่อน ค่อย lookup
+        setTimeout(() => this.lookupProduct(finalBarcode), 0);
     }
 
     updatePendingDisplay() {
@@ -2262,40 +2401,83 @@ class StockApp {
     showProduct(product) {
         const detail = document.getElementById('productDetail');
         if (!detail) return;
+
+        // ✅ FIX PRODUCT DISPLAY: รีเซ็ต DOM ทุก field ก่อนเขียนใหม่
+        // ป้องกันข้อมูลสินค้าเก่าค้างอยู่เมื่อสแกนสินค้าตัวที่ 2
+        const safeSet = (id, val) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = val;
+        };
+        const safeSetHTML = (id, val) => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = val;
+        };
+        const safeShow = (id, show) => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = show ? 'block' : 'none';
+        };
+
+        // แสดง panel ก่อน
         detail.style.display = 'block';
-        document.getElementById('productName').textContent = '📦 ' + product.name;
-        const barcodeDisplay = Array.isArray(product.barcodes) && product.barcodes.length > 0 ? product.barcodes.join(', ') : (product.primaryBarcode || '-');
-        document.getElementById('productBarcode').textContent = '🏷️ บาร์โค้ด: ' + barcodeDisplay;
-        let stock = product.stock || 0, cost = product.costPerUnit || 0, sellPrice = product.sellPrice1 || 0;
-        let expiry = product.expiryDate || '', mfg = product.mfgDate || '';
+
+        // ชื่อและบาร์โค้ด
+        safeSet('productName', '📦 ' + product.name);
+        const barcodeDisplay = Array.isArray(product.barcodes) && product.barcodes.length > 0
+            ? product.barcodes.join(', ')
+            : (product.primaryBarcode || '-');
+        safeSet('productBarcode', '🏷️ บาร์โค้ด: ' + barcodeDisplay);
+
+        // ดึงข้อมูลจาก LOT ที่เลือก หรือจาก product โดยตรง
+        let stock = product.stock || 0;
+        let cost = product.costPerUnit || 0;
+        let sellPrice = product.sellPrice1 || 0;
+        let expiry = product.expiryDate || '';
+        let mfg = product.mfgDate || '';
+
         if (product.lots && product.lots.length > 0) {
-            const lot = product.lots[this.selectedLotIndex] || product.lots[0];
-            if (lot) { 
-                stock = lot.stock || 0; 
-                cost = lot.cost || product.costPerUnit || 0; 
-                sellPrice = lot.sellPrice || product.sellPrice1 || 0; 
-                expiry = lot.expiry || ''; 
-                mfg = lot.mfg || product.mfgDate || ''; 
+            const lotIdx = (this.selectedLotIndex < product.lots.length) ? this.selectedLotIndex : 0;
+            const lot = product.lots[lotIdx];
+            if (lot) {
+                stock = (lot.stock !== undefined && lot.stock !== null) ? lot.stock : (product.stock || 0);
+                cost = lot.cost || product.costPerUnit || 0;
+                sellPrice = lot.sellPrice || product.sellPrice1 || 0;
+                expiry = lot.expiry || product.expiryDate || '';
+                mfg = lot.mfg || product.mfgDate || '';
             }
         }
-        const age = this.calculateProductAge(mfg, expiry);
-        document.getElementById('stockHighlight').textContent = stock;
-        document.getElementById('costDisplay').textContent = cost.toFixed(2);
-        document.getElementById('productStock').innerHTML = `📊 ในระบบ: <span class="highlight-stock">${stock}</span> ชิ้น | 💰 ทุน: <span class="highlight-cost">${cost.toFixed(2)}</span>`;
+
+        // อัปเดต stock และ cost
+        safeSet('stockHighlight', stock);
+        safeSet('costDisplay', cost.toFixed(2));
+        safeSetHTML('productStock',
+            `📊 ในระบบ: <span class="highlight-stock">${stock}</span> ชิ้น | 💰 ทุน: <span class="highlight-cost">${cost.toFixed(2)}</span>`
+        );
+
+        // ราคาขาย + กำไร
         const profit = sellPrice - cost;
-        document.getElementById('productSellPrice').textContent = '💰 ราคาขาย: ' + sellPrice.toFixed(2) + ' บาท';
-        document.getElementById('productSellPrice').style.display = sellPrice > 0 ? 'block' : 'none';
-        document.getElementById('productProfit').textContent = '📈 กำไรต่อหน่วย: ' + profit.toFixed(2) + ' บาท';
-        document.getElementById('productProfit').style.display = sellPrice > 0 ? 'block' : 'none';
-        if (age !== null && age > 0) { 
-            document.getElementById('productAge').textContent = `📅 อายุสินค้า: ${age.toFixed(1)} ปี`; 
-            document.getElementById('productAge').style.display = 'block'; 
-        } else { 
-            document.getElementById('productAge').style.display = 'none'; 
+        safeSet('productSellPrice', '💰 ราคาขาย: ' + sellPrice.toFixed(2) + ' บาท');
+        safeShow('productSellPrice', sellPrice > 0);
+        safeSet('productProfit', '📈 กำไรต่อหน่วย: ' + profit.toFixed(2) + ' บาท');
+        safeShow('productProfit', sellPrice > 0);
+
+        // อายุสินค้า
+        const age = this.calculateProductAge(mfg, expiry);
+        if (age !== null && age > 0) {
+            safeSet('productAge', `📅 อายุสินค้า: ${age.toFixed(1)} ปี`);
+            safeShow('productAge', true);
+        } else {
+            safeShow('productAge', false);
         }
-        document.getElementById('qtyInput').value = 1;
+
+        // รีเซ็ตจำนวน
+        const qtyInput = document.getElementById('qtyInput');
+        if (qtyInput) qtyInput.value = 1;
+
+        // แจ้งเตือนหมดอายุ + รายการ LOT
         this.showExpiryWarning(product);
         this.renderLotList(product);
+
+        // เลื่อนหน้าจอมาที่ panel
         detail.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
@@ -2329,12 +2511,13 @@ class StockApp {
         }
     }
 
-    // ✅ FIX #2.4: selectLot update display ทั้งหมด
+    // ✅ FIX: selectLot อัปเดต index แล้ว re-render ทั้ง panel
     selectLot(index) {
         this.selectedLotIndex = index;
+        // อัปเดต UI lot-item เดี๋ยวนั้น
         document.querySelectorAll('.lot-item').forEach((el, i) => el.classList.toggle('selected', i === index));
         if (this.currentProduct) {
-            // Re-render เพื่อ update stock/cost/sellPrice/expiry display
+            // ✅ showProduct จะ re-read selectedLotIndex ที่อัปเดตแล้ว
             this.showProduct(this.currentProduct);
         }
     }
@@ -2345,8 +2528,20 @@ class StockApp {
         const warning = document.getElementById('expiryWarning');
         const text = document.getElementById('expiryWarningText');
         if (expiryDate) {
-            const diff = Math.ceil((new Date(expiryDate) - new Date()) / (1000 * 60 * 60 * 24));
+            // ✅ FIX EXPIRY: ใช้ UTC เพื่อป้องกัน timezone offset ทำให้วันหายไป 1 วัน
+            const m = String(expiryDate).match(/^(\d{4})-(\d{2})-(\d{2})/);
+            let expiryMs;
+            if (m) {
+                // parse เป็น local midnight เพื่อเทียบกับวันนี้ตรงๆ
+                expiryMs = new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3])).getTime();
+            } else {
+                expiryMs = new Date(expiryDate).getTime();
+            }
+            const todayMs = new Date();
+            todayMs.setHours(0, 0, 0, 0);
+            const diff = Math.ceil((expiryMs - todayMs.getTime()) / (1000 * 60 * 60 * 24));
             if (diff < 0) { warning.style.display = 'flex'; text.textContent = '🚫 สินค้าหมดอายุแล้ว!'; }
+            else if (diff === 0) { warning.style.display = 'flex'; text.textContent = '🚫 หมดอายุวันนี้!'; }
             else if (diff <= CONFIG.EXPIRY_WARNING_DAYS) { warning.style.display = 'flex'; text.textContent = '⚠️ หมดอายุใน ' + diff + ' วัน'; }
             else { warning.style.display = 'none'; }
         } else { warning.style.display = 'none'; }
@@ -4045,14 +4240,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         app = new StockApp();
         window.app = app;
-        console.log('✅ MediStock v5.1.5 booted');
+        console.log('✅ MediStock v5.1.6 booted');
 
         const checkReady = setInterval(() => {
             if (window.app && window.app.db) {
                 clearInterval(checkReady);
                 clearTimeout(bootTimeout);
                 hideLoading();
-                console.log('🎉 MediStock v5.1.5 พร้อมใช้งาน');
+                console.log('🎉 MediStock v5.1.6 พร้อมใช้งาน');
             }
         }, 200);
 
