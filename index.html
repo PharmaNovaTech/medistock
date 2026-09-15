@@ -8,8 +8,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="MediStock">
     <meta name="theme-color" content="#0ea5e9">
-    <meta name="medistock-core" content="v5.1.6-schema13">
-    <title>MediStock v5.1.6</title>
+    <meta name="medistock-core" content="v5.1.8-schema13">
+    <title>MediStock v5.1.8</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -132,7 +132,7 @@
         .product-name{font-family:'Outfit',sans-serif;font-size:var(--font-xl);font-weight:700;margin-bottom:4px;color:#065f46}
         .product-info{font-size:15px;color:#047857;margin-bottom:2px;font-weight:500;word-break:normal;overflow-wrap:break-word;line-height:1.6}
         .product-info .highlight-stock{font-size:var(--font-xxl);font-weight:800;color:var(--primary);background:var(--info-light);padding:2px 18px;border-radius:8px;display:inline-block}
-        .product-info .highlight-cost{font-size:15px;font-weight:700;color:var(--primary);background:var(--info-light);padding:2px 10px;border-radius:8px;display:inline-block}
+        .product-info .highlight-cost{font-size:13px;font-weight:700;color:var(--primary);background:var(--info-light);padding:2px 10px;border-radius:8px;display:inline-block}
         .expiry-warning{background:var(--danger-light);border:1px solid var(--danger);border-radius:var(--radius-sm);padding:8px 12px;margin:6px 0;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--danger)}
         .qty-control{display:flex;align-items:center;gap:10px;margin:12px 0}
         .qty-btn{width:46px;height:46px;border-radius:50%;border:2px solid var(--border-color);background:var(--bg-card);font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--primary);transition:var(--transition);flex-shrink:0}
@@ -252,7 +252,7 @@
         .uncounted-summary{margin-bottom:8px}
         @keyframes spin{to{transform:rotate(360deg)}}
         .loading-inline{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:6px}
-        @media(max-width:480px){.logo-icon{width:34px;height:34px;font-size:15px}.logo-text .brand .main{font-size:14px}.logo-text .brand .version{font-size:8px}.logo-text .tagline{font-size:8px}.tab-btn{min-width:36px;padding:4px 2px}.tab-btn i{font-size:12px}.tab-btn .tab-label{font-size:7px}.card{padding:10px}.qty-btn{width:40px;height:40px;font-size:18px}.qty-input{font-size:var(--font-xl);height:40px}.scanner-overlay-full{width:70%;height:20%}.scanner-overlay-full .scan-label{font-size:10px;padding:4px 12px;bottom:-32px}.scanner-fullscreen .scanner-help-btn{padding:10px 18px;font-size:13px}.scanner-fullscreen .focus-tip{bottom:130px;font-size:9px}.scanner-controls{grid-template-columns:1fr 1fr}.scanner-controls .btn-full{grid-column:1/-1}.dashboard-grid{grid-template-columns:1fr 1fr}.btn{font-size:13px;padding:10px 16px;min-height:42px}.edit-product-grid{grid-template-columns:1fr}.product-info .highlight-stock{font-size:var(--font-xl);padding:2px 12px}.product-info .highlight-cost{font-size:var(--font-large);padding:2px 10px}}
+        @media(max-width:480px){.logo-icon{width:34px;height:34px;font-size:15px}.logo-text .brand .main{font-size:14px}.logo-text .brand .version{font-size:8px}.logo-text .tagline{font-size:8px}.tab-btn{min-width:36px;padding:4px 2px}.tab-btn i{font-size:12px}.tab-btn .tab-label{font-size:7px}.card{padding:10px}.qty-btn{width:40px;height:40px;font-size:18px}.qty-input{font-size:var(--font-xl);height:40px}.scanner-overlay-full{width:70%;height:20%}.scanner-overlay-full .scan-label{font-size:10px;padding:4px 12px;bottom:-32px}.scanner-fullscreen .scanner-help-btn{padding:10px 18px;font-size:13px}.scanner-fullscreen .focus-tip{bottom:130px;font-size:9px}.scanner-controls{grid-template-columns:1fr 1fr}.scanner-controls .btn-full{grid-column:1/-1}.dashboard-grid{grid-template-columns:1fr 1fr}.btn{font-size:13px;padding:10px 16px;min-height:42px}.edit-product-grid{grid-template-columns:1fr}.product-info .highlight-stock{font-size:var(--font-xl);padding:2px 12px}.product-info .highlight-cost{font-size:13px;padding:2px 8px}}
     </style>
 </head>
 <body>
@@ -260,7 +260,7 @@
 <!-- LOADING OVERLAY -->
 <div id="appLoadingOverlay" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#0ea5e9 0%,#6366f1 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:opacity 0.3s;">
     <div style="width:60px;height:60px;border:5px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;"></div>
-    <div style="margin-top:16px;font-size:16px;font-weight:600;">กำลังโหลด MediStock v5.1.5...</div>
+    <div style="margin-top:16px;font-size:16px;font-weight:600;">กำลังโหลด MediStock v5.1.8...</div>
     <div style="margin-top:6px;font-size:12px;opacity:0.8;">กรุณารอสักครู่</div>
 </div>
 
@@ -278,7 +278,7 @@
             <div class="logo-text">
                 <span class="brand">
                     <span class="main">MediStock</span>
-                    <span class="version">v5.1.6</span>
+                    <span class="version">v5.1.8</span>
                 </span>
                 <span class="tagline"><i class="fas fa-circle" style="font-size:4px;color:#34d399;margin-right:3px;"></i>ระบบนับสต็อกสินค้ายา</span>
             </div>
@@ -847,7 +847,7 @@
 <div class="toast-container" id="toastContainer"></div>
 <script>
 // ================================================================
-// MediStock v5.1.5 - Service Worker Early Registration
+// MediStock v5.1.8 - Service Worker Early Registration
 // ================================================================
 (function registerSWEarly() {
     if (!('serviceWorker' in navigator)) return;
@@ -874,7 +874,7 @@
     });
 })();
 
-console.log('✅ MediStock v5.1.5 กำลังเริ่มต้น...');
+console.log('✅ MediStock v5.1.8 กำลังเริ่มต้น...');
 
 // ================================================================
 // Utility: num - แปลงเป็น number ปลอดภัย
@@ -891,7 +891,7 @@ function escapeHtml(s) {
 }
 
 const CONFIG = {
-    APP_NAME: 'MediStock', VERSION: '5.1.5',
+    APP_NAME: 'MediStock', VERSION: '5.1.8',
     STORE_ID: localStorage.getItem('storeId') || 'default',
     EXPIRY_WARNING_DAYS: 90, MIN_STOCK_ALERT: 5, MAX_STOCK_ALERT: 100,
     DEAD_STOCK_DAYS: 90, ABC_A_PERCENT: 70, ABC_B_PERCENT: 90, 
@@ -1073,9 +1073,10 @@ class StockApp {
         this.v51EnsureSettingsUI();
         this.v51LoadIdentity();
         this.v51UpdateSyncStatus();
-        if (this.v51SyncConfig().endpoint && this.v51SyncConfig().token) this.v51StartSync();
+        const v51Config = this.v51SyncConfig();
+        if ((v51Config.spreadsheetId && v51Config.apiKey) || (v51Config.endpoint && v51Config.token)) this.v51StartSync();
         this.v51RenderConflicts();
-        console.log('✅ MediStock v5.1.5 พร้อมใช้งาน!');
+        console.log('✅ MediStock v5.1.8 พร้อมใช้งาน!');
         if (this.products.length === 0) {
             this.updateStatus('📥 กรุณานำเข้าข้อมูลสินค้าก่อนใช้งาน');
             this.showToast('📥 กรุณานำเข้าข้อมูลสินค้าจาก Excel หรือ Google Sheets', 'info');
@@ -1141,7 +1142,7 @@ class StockApp {
                 make('v5_syncQueue', { keyPath: 'id' });
                 make('v5_organizations', { keyPath: 'id' });
                 if (db.objectStoreNames.contains('v5_meta')) {
-                    try { tx.objectStore('v5_meta').put({ key: 'schema', version: '5.1.5', schema: 13, migratedAt: new Date().toISOString(), branchId: this.branchId }); } catch (_) {}
+                    try { tx.objectStore('v5_meta').put({ key: 'schema', version: '5.1.8', schema: 13, migratedAt: new Date().toISOString(), branchId: this.branchId }); } catch (_) {}
                 }
             };
             request.onsuccess = (e) => { this.db = e.target.result; resolve(); };
@@ -1520,17 +1521,39 @@ class StockApp {
         else badge.style.display = 'none';
     }
 
-    // ✅ FIX #3.2: formatDate timezone UTC
+    // ✅ FIX EXPIRY ALL: helper parse date แบบ local timezone (ไม่เสีย 1 วัน)
+    // ใช้แทน new Date(dateStr) ทุกที่ที่เทียบวันหมดอายุ
+    parseLocalDate(dateStr) {
+        if (!dateStr) return null;
+        const m = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (m) {
+            // new Date(year, month-1, day) = local midnight ไม่มี timezone shift
+            return new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]));
+        }
+        // fallback: dd/mm/yyyy
+        const m2 = String(dateStr).match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+        if (m2) return new Date(parseInt(m2[3]), parseInt(m2[2]) - 1, parseInt(m2[1]));
+        const d = new Date(dateStr);
+        return isNaN(d.getTime()) ? null : d;
+    }
+
+    // คืนค่า diff วัน (บวก = ยังไม่หมด, ลบ = หมดแล้ว)
+    diffDaysFromToday(dateStr) {
+        const d = this.parseLocalDate(dateStr);
+        if (!d) return null;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return Math.ceil((d.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    }
+
+    // ✅ FIX #3.2: formatDate ใช้ local parse
     formatDate(dateStr) {
         if (!dateStr) return '-';
-        // ลอง parse เป็น yyyy-mm-dd ก่อน
         const m = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})/);
         if (m) return `${m[3]}/${m[2]}/${m[1]}`;
-        try {
-            const d = new Date(dateStr);
-            if (isNaN(d.getTime())) return String(dateStr);
-            return `${String(d.getUTCDate()).padStart(2,'0')}/${String(d.getUTCMonth()+1).padStart(2,'0')}/${d.getUTCFullYear()}`;
-        } catch(e) { return String(dateStr); }
+        const d = this.parseLocalDate(dateStr);
+        if (!d) return String(dateStr);
+        return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
     }
 
     download(blob, name) {
@@ -1681,10 +1704,22 @@ class StockApp {
     }
 
     async syncOfflineQueue() {
-        if (this.v51SyncConfig().endpoint && this.v51SyncConfig().token) {
-            await this.v51SyncNow();
-            this.offlineQueue = [];
+        const c = this.v51SyncConfig();
+        if (c.endpoint && c.token && this.offlineQueue.length > 0) {
+            const pending = [...this.offlineQueue];
+            const remaining = [];
+            for (const item of pending) {
+                const ok = await this.v51PushItemToSheet(item);
+                if (!ok) remaining.push(item);
+            }
+            this.offlineQueue = remaining;
             localStorage.setItem('offlineQueue', JSON.stringify(this.offlineQueue));
+            if (c.spreadsheetId && c.apiKey) await this.v51SyncNow();
+            return;
+        }
+        if (c.spreadsheetId && c.apiKey && this.offlineQueue.length > 0) {
+            await this.v51SyncNow();
+            // Read-only API credentials cannot safely flush the local write queue.
         }
     }
 
@@ -1968,70 +2003,103 @@ class StockApp {
             this.processScannedBarcode(barcodeToUse, 'Camera');
         };
 
-        try {
-            this.html5Scanner = new Html5Qrcode("reader-fullscreen");
-
-            // ✅ FIX BLUR: ใช้ constrains กล้องความละเอียดสูงขึ้น + เปิด advanced scanning
-            const videoConstraints = {
-                facingMode: "environment",
-                // ขอ resolution สูงขึ้นเพื่อให้อ่านบาร์โค้ดเล็กได้ชัดขึ้น
-                width: { ideal: 1920, min: 1280 },
-                height: { ideal: 1080, min: 720 },
-                // เปิด focusMode continuous ถ้า browser รองรับ
-                advanced: [{ focusMode: "continuous" }]
+        // ✅ FIX CAMERA NOT READY: แยก start ออกเป็น fallback หลายระดับ
+        // ปัญหา: advanced:[{focusMode}] และ width min:1280 ทำให้บางมือถือ reject constraints
+        const startScanner = async (constraintLevel) => {
+            const constraintSets = [
+                // Level 0: High-res + continuous focus (ideal)
+                {
+                    facingMode: "environment",
+                    width: { ideal: 1280, min: 640 },
+                    height: { ideal: 720, min: 480 }
+                },
+                // Level 1: Standard environment camera (fallback)
+                { facingMode: "environment" },
+                // Level 2: Any camera (last resort)
+                true
+            ];
+            const videoConstraints = constraintSets[constraintLevel] || { facingMode: "environment" };
+            
+            const scanConfig = {
+                fps: 10,
+                qrbox: { width: 260, height: 140 },
+                aspectRatio: 1.777,
+                experimentalFeatures: { useBarCodeDetectorIfSupported: true }
             };
+
+            // เพิ่ม formatsToSupport เฉพาะถ้า Html5QrcodeSupportedFormats มีอยู่
+            if (typeof Html5QrcodeSupportedFormats !== 'undefined') {
+                scanConfig.formatsToSupport = [
+                    Html5QrcodeSupportedFormats.EAN_13,
+                    Html5QrcodeSupportedFormats.EAN_8,
+                    Html5QrcodeSupportedFormats.CODE_128,
+                    Html5QrcodeSupportedFormats.CODE_39,
+                    Html5QrcodeSupportedFormats.UPC_A,
+                    Html5QrcodeSupportedFormats.UPC_E,
+                    Html5QrcodeSupportedFormats.QR_CODE,
+                ].filter(v => v !== undefined);
+            }
 
             await this.html5Scanner.start(
                 videoConstraints,
-                {
-                    // ✅ FIX: ลด fps ลงเล็กน้อย ให้กล้องมีเวลา focus ก่อน decode
-                    fps: 12,
-                    // ✅ FIX: qrbox เล็กลง บังคับให้ผู้ใช้จ่อบาร์โค้ดชัดขึ้น
-                    qrbox: { width: 260, height: 140 },
-                    // ✅ เปิด aspectRatio 16:9 ให้ภาพกว้าง อ่าน barcode แนวนอนได้ดีขึ้น
-                    aspectRatio: 1.777,
-                    // ✅ รองรับหลายประเภทบาร์โค้ด
-                    formatsToSupport: [
-                        Html5QrcodeSupportedFormats?.EAN_13,
-                        Html5QrcodeSupportedFormats?.EAN_8,
-                        Html5QrcodeSupportedFormats?.CODE_128,
-                        Html5QrcodeSupportedFormats?.CODE_39,
-                        Html5QrcodeSupportedFormats?.UPC_A,
-                        Html5QrcodeSupportedFormats?.UPC_E,
-                        Html5QrcodeSupportedFormats?.QR_CODE,
-                    ].filter(Boolean),
-                    // ✅ เปิด experimental features สำหรับ barcode เล็ก
-                    experimentalFeatures: { useBarCodeDetectorIfSupported: true }
-                },
+                scanConfig,
                 onDecodeSuccess,
-                (errorMsg) => {
-                    // ไม่ทำอะไรกับ error ปกติ (scanning miss)
-                }
+                () => {} // ไม่สนใจ miss errors
             );
+        };
 
-            // ✅ FIX: เพิ่ม focus-on-tap สำหรับกล้องที่ autofocus ช้า
+        try {
+            this.html5Scanner = new Html5Qrcode("reader-fullscreen");
+
+            // ลอง start แบบ progressive fallback
+            let started = false;
+            for (let level = 0; level < 3; level++) {
+                try {
+                    await startScanner(level);
+                    started = true;
+                    console.log(`✅ Scanner started at constraint level ${level}`);
+                    break;
+                } catch (e) {
+                    console.warn(`⚠️ Scanner level ${level} failed:`, e.message);
+                    if (level < 2) {
+                        // reset scanner instance ก่อน retry
+                        try { await this.html5Scanner.stop(); this.html5Scanner.clear(); } catch(_) {}
+                        this.html5Scanner = new Html5Qrcode("reader-fullscreen");
+                    }
+                }
+            }
+
+            if (!started) throw new Error('ไม่สามารถเปิดกล้องได้ในทุก mode');
+
+            // ✅ เพิ่ม focus-on-tap หลัง start สำเร็จ (ไม่ block การ start)
             const readerEl = document.getElementById('reader-fullscreen');
             if (readerEl) {
                 readerEl.addEventListener('click', async () => {
                     statusFull.textContent = '🎯 กำลัง Focus...';
                     statusFull.className = 'scanner-status-full focusing';
                     try {
-                        const track = this.html5Scanner?.getRunningTrack?.();
-                        if (track && track.getCapabilities) {
-                            const caps = track.getCapabilities();
-                            if (caps.focusMode && caps.focusMode.includes('single-shot')) {
-                                await track.applyConstraints({ advanced: [{ focusMode: 'single-shot' }] });
-                                setTimeout(() => track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }), 500);
+                        // ลอง apply focusMode ผ่าน applyConstraints หลัง start
+                        const videoEl = readerEl.querySelector('video');
+                        if (videoEl && videoEl.srcObject) {
+                            const track = videoEl.srcObject.getVideoTracks()[0];
+                            if (track) {
+                                const caps = track.getCapabilities ? track.getCapabilities() : {};
+                                if (caps.focusMode && caps.focusMode.includes('single-shot')) {
+                                    await track.applyConstraints({ advanced: [{ focusMode: 'single-shot' }] });
+                                    setTimeout(() => {
+                                        try { track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }); } catch(_) {}
+                                    }, 600);
+                                }
                             }
                         }
-                    } catch(e) { /* ไม่รองรับ focus API */ }
+                    } catch(e) { /* browser ไม่รองรับ focus API — ไม่เป็นไร */ }
                     setTimeout(() => {
                         if (statusFull.className.includes('focusing')) {
-                            statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ';
+                            statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ | 👆 แตะโฟกัส';
                             statusFull.className = 'scanner-status-full';
                         }
-                    }, 1000);
-                }, { once: false });
+                    }, 800);
+                });
             }
 
             statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ | 👆 แตะเพื่อโฟกัส';
@@ -2039,9 +2107,10 @@ class StockApp {
             statusFull.style.display = 'block';
 
         } catch (err) {
-            console.error('Scanner error:', err);
+            console.error('Scanner failed all levels:', err);
             statusFull.textContent = '❌ เปิดกล้องไม่สำเร็จ';
             statusFull.className = 'scanner-status-full error';
+            statusFull.style.display = 'block';
             this.showToast('❌ เปิดกล้องไม่สำเร็จ — ลองใช้ "ถ่ายรูปบาร์โค้ด" แทน', 'error');
         }
     }
@@ -2524,25 +2593,18 @@ class StockApp {
 
     showExpiryWarning(product) {
         let expiryDate = product.expiryDate;
-        if (product.lots && product.lots[this.selectedLotIndex]) expiryDate = product.lots[this.selectedLotIndex].expiry || product.expiryDate;
+        if (product.lots && product.lots[this.selectedLotIndex]) {
+            expiryDate = product.lots[this.selectedLotIndex].expiry || product.expiryDate;
+        }
         const warning = document.getElementById('expiryWarning');
         const text = document.getElementById('expiryWarningText');
+        if (!warning || !text) return;
         if (expiryDate) {
-            // ✅ FIX EXPIRY: ใช้ UTC เพื่อป้องกัน timezone offset ทำให้วันหายไป 1 วัน
-            const m = String(expiryDate).match(/^(\d{4})-(\d{2})-(\d{2})/);
-            let expiryMs;
-            if (m) {
-                // parse เป็น local midnight เพื่อเทียบกับวันนี้ตรงๆ
-                expiryMs = new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3])).getTime();
-            } else {
-                expiryMs = new Date(expiryDate).getTime();
-            }
-            const todayMs = new Date();
-            todayMs.setHours(0, 0, 0, 0);
-            const diff = Math.ceil((expiryMs - todayMs.getTime()) / (1000 * 60 * 60 * 24));
-            if (diff < 0) { warning.style.display = 'flex'; text.textContent = '🚫 สินค้าหมดอายุแล้ว!'; }
-            else if (diff === 0) { warning.style.display = 'flex'; text.textContent = '🚫 หมดอายุวันนี้!'; }
-            else if (diff <= CONFIG.EXPIRY_WARNING_DAYS) { warning.style.display = 'flex'; text.textContent = '⚠️ หมดอายุใน ' + diff + ' วัน'; }
+            const diff = this.diffDaysFromToday(expiryDate);
+            if (diff === null) { warning.style.display = 'none'; return; }
+            if (diff < 0) { warning.style.display = 'flex'; text.textContent = '🚫 สินค้าหมดอายุแล้ว! (' + this.formatDate(expiryDate) + ')'; }
+            else if (diff === 0) { warning.style.display = 'flex'; text.textContent = '🚫 หมดอายุวันนี้! (' + this.formatDate(expiryDate) + ')'; }
+            else if (diff <= CONFIG.EXPIRY_WARNING_DAYS) { warning.style.display = 'flex'; text.textContent = '⚠️ หมดอายุใน ' + diff + ' วัน (' + this.formatDate(expiryDate) + ')'; }
             else { warning.style.display = 'none'; }
         } else { warning.style.display = 'none'; }
     }
@@ -2766,6 +2828,16 @@ class StockApp {
         this.offlineQueue.push(item);
         localStorage.setItem('offlineQueue', JSON.stringify(this.offlineQueue));
         await this.saveCountHistory(item);
+        // v5.1.8: immediately append the confirmed count when Google Sheets Sync is configured.
+        // Failure never blocks local counting; the item remains in offlineQueue for retry.
+        if (typeof this.v51PushItemToSheet === 'function') {
+            this.v51PushItemToSheet(item).then(ok => {
+                if (ok) {
+                    this.offlineQueue = this.offlineQueue.filter(x => x.id !== item.id);
+                    localStorage.setItem('offlineQueue', JSON.stringify(this.offlineQueue));
+                }
+            }).catch(err => console.warn('MultiUserSync push failed:', err));
+        }
         this.resetScanState();
         this.renderRecentScans();
         this.updateProgress();
@@ -3667,7 +3739,7 @@ class StockApp {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('landscape');
             doc.setFontSize(14);
-            doc.text('MediStock v5.1.5', 14, 20);
+            doc.text('MediStock v5.1.8', 14, 20);
             doc.autoTable({ head: [headers], body: rows.map(r => r.map(v => String(v ?? ''))), startY: 30, styles: { fontSize: 7 } });
             doc.save(`${type}_${Date.now()}.pdf`);
             this.showToast('✅ ดาวน์โหลด PDF สำเร็จ', 'success');
@@ -3773,11 +3845,10 @@ class StockApp {
 
     updateAlerts() {
         const zeroStock = this.products.filter(p => (p.stock || 0) === 0);
-        const now = new Date();
         const expiring = this.products.filter(p => {
             if (!p.expiryDate) return false;
-            const diff = Math.ceil((new Date(p.expiryDate) - now) / (1000 * 60 * 60 * 24));
-            return diff >= 0 && diff <= CONFIG.EXPIRY_WARNING_DAYS;
+            const diff = this.diffDaysFromToday(p.expiryDate);
+            return diff !== null && diff >= 0 && diff <= CONFIG.EXPIRY_WARNING_DAYS;
         });
         const zc = document.getElementById('zeroStockCount');
         const ec = document.getElementById('expiryCount');
@@ -3794,21 +3865,31 @@ class StockApp {
     }
 
     exportExpiryReport() {
-        const now = new Date();
         const expiring = this.products.filter(p => {
             if (!p.expiryDate) return false;
-            const diff = Math.ceil((new Date(p.expiryDate) - now) / (1000 * 60 * 60 * 24));
-            return diff >= 0 && diff <= CONFIG.EXPIRY_WARNING_DAYS;
+            const diff = this.diffDaysFromToday(p.expiryDate);
+            return diff !== null && diff >= 0 && diff <= CONFIG.EXPIRY_WARNING_DAYS;
         });
         if (expiring.length === 0) { this.showToast('✅ ไม่มีสินค้าหมดอายุ', 'success'); return; }
-        const headers = ['รหัส', 'ชื่อ', 'Lot', 'หมดอายุ', 'จำนวน', 'ทุน', 'ขาย', 'มูลค่ารวม'];
-        const rows = expiring.map(p => [p.id, p.name, p.lot || '', p.expiryDate, p.stock || 0, p.costPerUnit || 0, p.sellPrice1 || 0, ((p.stock || 0) * (p.sellPrice1 || 0)).toFixed(2)]);
+        const headers = ['รหัส', 'ชื่อ', 'Lot', 'หมดอายุ', 'คงเหลือ(วัน)', 'จำนวน', 'ทุน', 'ขาย', 'มูลค่ารวม'];
+        const rows = expiring.map(p => {
+            const diff = this.diffDaysFromToday(p.expiryDate);
+            return [p.id, p.name, p.lot || '', this.formatDate(p.expiryDate), diff, p.stock || 0, p.costPerUnit || 0, p.sellPrice1 || 0, ((p.stock || 0) * (p.sellPrice1 || 0)).toFixed(2)];
+        });
         this.exportGenericCSV(headers, rows, 'expiry_report');
     }
 
     closeQRCodeModal() { document.getElementById('qrCodeModal')?.classList.remove('show'); this._qrProduct = null; }
     downloadQRCode() { this.showToast('ℹ️ กรุณาใช้ Show QR แทน', 'info'); }
-    printProductLabel() { this.showToast('ℹ️ ยังไม่พร้อมใช้งาน', 'info'); }
+    printProductLabel() {
+        const p = this.currentProduct || this.selectedProduct || this.currentScanProduct;
+        if (!p) { this.showToast('⚠️ กรุณาเลือกสินค้าก่อนพิมพ์ฉลาก', 'warning'); return; }
+        const barcode = p.barcode || p.code || '';
+        const html = `<!doctype html><html lang="th"><head><meta charset="utf-8"><title>ฉลากสินค้า</title><style>body{font-family:Arial,sans-serif;margin:0;padding:8mm;text-align:center}.label{width:70mm;min-height:35mm;border:1px solid #333;padding:5mm;box-sizing:border-box}.name{font-size:16px;font-weight:700}.lot,.expiry,.price{font-size:12px;margin-top:4px}.barcode{font-family:monospace;font-size:18px;letter-spacing:2px;margin-top:7px}@media print{body{padding:0}.label{border:0}}</style></head><body><div class="label"><div class="name">${escapeHtml(p.name || 'สินค้า')}</div><div class="barcode">${escapeHtml(barcode)}</div><div class="lot">LOT: ${escapeHtml(p.lot || '')}</div><div class="expiry">หมดอายุ: ${escapeHtml(p.expiryDate || '')}</div><div class="price">ราคา: ${num(p.sellPrice1).toFixed(2)}</div></div><script>window.onload=()=>{window.print();setTimeout(()=>window.close(),500)}<\/script></body></html>`;
+        const w = window.open('', '_blank', 'width=420,height=300');
+        if (!w) { this.showToast('⚠️ เบราว์เซอร์บล็อกหน้าต่างพิมพ์', 'warning'); return; }
+        w.document.write(html); w.document.close();
+    }
     closeEditProductModal() { document.getElementById('editProductModal').classList.remove('show'); }
 
     // ✅ FIX #1.3: runAnalytics DOM-safe
@@ -3894,11 +3975,10 @@ class StockApp {
     findDeadStock() {
         const container = document.getElementById('deadStockList');
         if (!container) return;
-        const now = new Date();
         const items = this.products.filter(p => {
             if (!p.expiryDate) return false;
-            const diff = Math.ceil((new Date(p.expiryDate) - now) / (1000 * 60 * 60 * 24));
-            if (diff < 0 || diff > 90) return false;
+            const diff = this.diffDaysFromToday(p.expiryDate);
+            if (diff === null || diff < 0 || diff > 90) return false;
             let totalStock = 0;
             if (p.lots && p.lots.length > 0) p.lots.forEach(l => { totalStock += l.stock || 0; });
             else totalStock = p.stock || 0;
@@ -3906,8 +3986,8 @@ class StockApp {
         });
         if (items.length === 0) { container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:16px;font-size:13px;"><i class="fas fa-check-circle" style="color:var(--success);font-size:20px;display:block;margin-bottom:6px;"></i>ไม่มีสินค้าที่มีความเสี่ยง</p>'; return; }
         container.innerHTML = items.map(p => {
-            const diff = Math.ceil((new Date(p.expiryDate) - now) / (1000 * 60 * 60 * 24));
-            return `<div class="dead-stock-item"><div><div style="font-weight:600;">${escapeHtml(p.name)}</div><div style="font-size:12px;color:var(--text-muted);">หมดอายุใน ${diff} วัน</div></div><span class="badge badge-red">⚠️ เสี่ยง</span></div>`;
+            const diff = this.diffDaysFromToday(p.expiryDate);
+            return `<div class="dead-stock-item"><div><div style="font-weight:600;">${escapeHtml(p.name)}</div><div style="font-size:12px;color:var(--text-muted);">หมดอายุใน ${diff} วัน (${this.formatDate(p.expiryDate)})</div></div><span class="badge badge-red">⚠️ เสี่ยง</span></div>`;
         }).join('');
     }
 
@@ -4059,6 +4139,44 @@ class StockApp {
         return product;
     }
 
+    async v5StartNewCycle() {
+        if (!this.db) { this.showToast('❌ ฐานข้อมูลยังไม่พร้อม', 'error'); return; }
+        const active = this.v5ActiveCycle;
+        if (active && !confirm(`มีรอบนับ ${active.id.slice(-8)} กำลังทำงานอยู่\nต้องการปิดรอบเดิมและสร้างรอบใหม่หรือไม่?`)) return;
+        try {
+            if (active) {
+                active.status = 'closed';
+                active.closedAt = new Date().toISOString();
+                await this.v5Put('v5_countCycles', active);
+            }
+            const cycleId = 'cycle_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+            const startedAt = new Date().toISOString();
+            const cycle = { id: cycleId, branchId: this.branchId || '', status: 'active', startedAt, createdBy: this.v5UserName || '' };
+            await this.v5Put('v5_countCycles', cycle);
+            const products = (this.products || []).map(p => this.v5NormalizeProduct(p));
+            const snapshot = { id: 'snapshot_' + cycleId, cycleId, branchId: this.branchId || '', createdAt: startedAt, itemCount: products.length };
+            await this.v5Put('v5_snapshots', snapshot);
+            for (const p of products) {
+                const lots = p.lots.length ? p.lots : [{ lot: p.lot || '', stock: num(p.stock), cost: num(p.costPerUnit), sellPrice: num(p.sellPrice1), expiry: p.expiryDate || '', unit: p.unit || 'ชิ้น', mfg: p.mfgDate || '' }];
+                for (const lot of lots) {
+                    await this.v5Put('v5_snapshotItems', {
+                        id: `snapitem_${cycleId}_${p.id}_${lot.lot || 'default'}`.replace(/[^a-zA-Z0-9_-]/g, '_'),
+                        cycleId, productId: p.id, barcode: p.barcode || '', name: p.name || '', lot: lot.lot || '',
+                        stock: num(lot.stock), cost: num(lot.cost, num(p.costPerUnit)), sellPrice: num(lot.sellPrice, num(p.sellPrice1)),
+                        expiry: lot.expiry || p.expiryDate || '', unit: lot.unit || p.unit || 'ชิ้น'
+                    });
+                }
+            }
+            this.v5ActiveCycle = cycle;
+            await this.v5LoadSnapshotItems();
+            this.v5RefreshCycleBanner();
+            this.showToast(`✅ สร้าง Snapshot สำเร็จ ${products.length} รายการ`, 'success');
+        } catch (e) {
+            console.error('v5StartNewCycle error:', e);
+            this.showToast('❌ สร้างรอบนับไม่สำเร็จ: ' + e.message, 'error');
+        }
+    }
+
     v5RefreshCycleBanner() {
         const s = document.getElementById('v5CycleStatus'), b = document.getElementById('v5StartCycleBtn');
         if (!s) return;
@@ -4076,24 +4194,259 @@ class StockApp {
         banner.className = 'card';
         banner.style.cssText = 'border:2px solid var(--primary);background:linear-gradient(135deg,rgba(14,165,233,.10),rgba(99,102,241,.08));padding:10px;';
         banner.innerHTML = `<div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;">
-            <div><div style="font-weight:800;color:var(--primary-dark);font-size:13px;">🧾 MediStock v5.1.5</div><div id="v5CycleStatus" style="font-size:11px;color:var(--text-muted);margin-top:2px;">กำลังตรวจสอบ...</div></div>
+            <div><div style="font-weight:800;color:var(--primary-dark);font-size:13px;">🧾 MediStock v5.1.8</div><div id="v5CycleStatus" style="font-size:11px;color:var(--text-muted);margin-top:2px;">กำลังตรวจสอบ...</div></div>
             <div style="display:flex;gap:5px;"><button class="btn btn-primary btn-sm" id="v5StartCycleBtn" style="min-height:34px;font-size:11px;">🧾 เริ่มรอบนับใหม่</button><button class="btn btn-outline btn-sm" id="v5CycleReportBtn" style="min-height:34px;font-size:11px;">📊 ตรวจผลต่าง</button></div>
         </div>`;
         firstCard?.parentNode.insertBefore(banner, firstCard);
-        document.getElementById('v5StartCycleBtn').onclick = () => { this.showToast('ℹ️ ฟีเจอร์นี้อยู่ในเวอร์ชันถัดไป', 'info'); };
+        document.getElementById('v5StartCycleBtn').onclick = () => this.v5StartNewCycle();
         document.getElementById('v5CycleReportBtn').onclick = () => { this.generateReport(); this.switchTab('report'); };
     }
 
-    v51SyncConfig() { return { endpoint: localStorage.getItem('v51_sync_endpoint') || '', token: localStorage.getItem('v51_sync_token') || '' }; }
-    v51UpdateSyncStatus(text) { const el = document.getElementById('v51SyncStatus'); if (!el) return; if (text) el.textContent = text; else { const c = this.v51SyncConfig(); el.textContent = (c.endpoint && c.token) ? '🟢 Shared Sync เปิด' : '⚪ Shared Sync ปิด'; } }
-    v51StartSync() {}
-    v51StopSync() {}
-    v51LoadIdentity() { const el = document.getElementById('v51UserName'); if (el) el.value = this.v5UserName; const st = document.getElementById('v51IdentityStatus'); if (st) st.textContent = this.v5UserName ? `👤 ${this.v5UserName}` : '⚠️ ยังไม่ได้ตั้งชื่อ'; }
-    v51SaveIdentity() { const name = (document.getElementById('v51UserName')?.value || '').trim(); if (!name) { this.showToast('⚠️ กรุณาตั้งชื่อ', 'warning'); return; } this.v5UserName = name; localStorage.setItem('medistock_user_name', name); this.v51LoadIdentity(); this.showToast('✅ บันทึกชื่อสำเร็จ', 'success'); }
-    v51SaveSyncConfig() { const ep = (document.getElementById('v51SyncEndpoint')?.value || '').trim(); const t = (document.getElementById('v51SyncToken')?.value || '').trim(); localStorage.setItem('v51_sync_endpoint', ep); localStorage.setItem('v51_sync_token', t); this.v51UpdateSyncStatus(); this.showToast('✅ บันทึกแล้ว', 'success'); }
-    v51RenderConflicts() { const box = document.getElementById('v51ConflictList'); if (box) box.innerHTML = '<div style="font-size:12px;color:var(--text-muted);">✅ ไม่มี Conflict</div>'; }
-    async v51SyncNow() {}
-    async v51ResolveConflict() {}
+    // ================================================================
+    // MULTI-USER REAL-TIME SYNC via Google Sheets Append API
+    // ================================================================
+    v51SyncConfig() {
+        return {
+            endpoint: localStorage.getItem('v51_sync_endpoint') || '',
+            spreadsheetId: localStorage.getItem('gs_spreadsheet_id') || '',
+            apiKey: localStorage.getItem('gs_api_key') || '',
+            token: localStorage.getItem('v51_sync_token') || ''
+        };
+    }
+
+    v51UpdateSyncStatus(text) {
+        const el = document.getElementById('v51SyncStatus');
+        if (!el) return;
+        if (text) { el.textContent = text; return; }
+        const c = this.v51SyncConfig();
+        if (c.spreadsheetId && c.apiKey) {
+            el.textContent = '🟢 Multi-user Sync พร้อม (Google Sheets)';
+            el.style.color = 'var(--success)';
+        } else {
+            el.textContent = '⚪ ยังไม่ได้ตั้งค่า Google Sheets';
+            el.style.color = 'var(--text-muted)';
+        }
+    }
+
+    v51LoadIdentity() {
+        const el = document.getElementById('v51UserName');
+        if (el) el.value = this.v5UserName;
+        const st = document.getElementById('v51IdentityStatus');
+        if (st) st.textContent = this.v5UserName ? `👤 ${this.v5UserName}` : '⚠️ ยังไม่ได้ตั้งชื่อ';
+    }
+
+    v51SaveIdentity() {
+        const name = (document.getElementById('v51UserName')?.value || '').trim();
+        if (!name) { this.showToast('⚠️ กรุณาตั้งชื่อ', 'warning'); return; }
+        this.v5UserName = name;
+        localStorage.setItem('medistock_user_name', name);
+        this.v51LoadIdentity();
+        this.showToast('✅ บันทึกชื่อสำเร็จ', 'success');
+    }
+
+    v51SaveSyncConfig() {
+        const ep = (document.getElementById('v51SyncEndpoint')?.value || '').trim();
+        const t = (document.getElementById('v51SyncToken')?.value || '').trim();
+        localStorage.setItem('v51_sync_endpoint', ep);
+        localStorage.setItem('v51_sync_token', t);
+        this.v51UpdateSyncStatus();
+        this.showToast('✅ บันทึกแล้ว', 'success');
+    }
+
+    // ✅ MULTI-USER: sync item นับได้ไป Google Sheets ทันที (append mode)
+    // ทุกคนเห็นข้อมูลเดียวกันผ่าน sheet เดียวกัน - ไม่ทับกัน
+    async v51PushItemToSheet(item) {
+        const c = this.v51SyncConfig();
+        const sheetName = 'MultiUserSync';
+        const row = [
+            new Date().toISOString(),
+            new Date().toLocaleString('th-TH'),
+            this.v5UserName || 'ไม่ระบุ',
+            this.branchId || '',
+            item?.barcode || '',
+            item?.name || '',
+            item?.lotName || item?.lot || '',
+            item?.system_qty ?? '',
+            item?.counted_qty ?? '',
+            item?.difference ?? '',
+            item?.locationName || '',
+            item?.note || ''
+        ];
+        try {
+            // Browser-safe write path: Apps Script endpoint + shared token.
+            // A Google API key alone is not sufficient for Sheets write operations.
+            if (c.endpoint && c.token) {
+                const res = await fetch(c.endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'append', sheet: sheetName, token: c.token, values: [row], item })
+                });
+                if (!res.ok) {
+                    const body = await res.text().catch(() => '');
+                    throw new Error(`Sync endpoint HTTP ${res.status}${body ? ': ' + body.slice(0,160) : ''}`);
+                }
+                return true;
+            }
+            // No write credentials: keep local queue intact.
+            if (!c.spreadsheetId || !c.apiKey) return false;
+            console.warn('MultiUserSync write skipped: Google Sheets API key is read-only for this browser flow; configure Apps Script Endpoint + Token.');
+            return false;
+        } catch (e) {
+            console.warn('v51PushItemToSheet error:', e.message);
+            return false;
+        }
+    }
+
+    // สร้าง sheet MultiUserSync พร้อม header ถ้ายังไม่มี
+    async v51EnsureSheetExists(c, sheetName) {
+        try {
+            // ดึง spreadsheet metadata
+            const metaUrl = `https://sheets.googleapis.com/v4/spreadsheets/${c.spreadsheetId}?key=${c.apiKey}`;
+            const metaRes = await fetch(metaUrl);
+            if (!metaRes.ok) return;
+            const meta = await metaRes.json();
+            const exists = (meta.sheets || []).some(s => s.properties?.title === sheetName);
+            if (!exists) {
+                // ต้องใช้ OAuth token เพื่อสร้าง sheet — แจ้งผู้ใช้
+                console.warn(`Sheet "${sheetName}" ไม่มี — กรุณาสร้าง sheet ชื่อ "${sheetName}" ใน spreadsheet ด้วยตนเอง`);
+                this.showToast(`⚠️ กรุณาสร้าง sheet ชื่อ "${sheetName}" ใน Google Sheets ก่อน`, 'warning');
+            }
+        } catch(e) { console.warn('ensureSheet error:', e); }
+    }
+
+    // ✅ MULTI-USER: ดึงข้อมูลจาก sheet มาแสดง (อ่านอย่างเดียว ไม่ต้องการ OAuth)
+    async v51SyncNow() {
+        const c = this.v51SyncConfig();
+        if (!c.spreadsheetId || !c.apiKey) {
+            this.showToast('⚠️ กรุณาตั้งค่า Google Sheets ก่อน (ตั้งค่า > Google Sheets)', 'warning');
+            return;
+        }
+        const statusEl = document.getElementById('v51SyncStatus');
+        if (statusEl) { statusEl.textContent = '⏳ กำลังโหลดข้อมูลทีม...'; statusEl.style.color = 'var(--warning)'; }
+        try {
+            const sheetName = 'MultiUserSync';
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${c.spreadsheetId}/values/${sheetName}!A:L?key=${c.apiKey}`;
+            const res = await fetch(url);
+            if (!res.ok) {
+                const errBody = await res.json().catch(() => ({}));
+                throw new Error(errBody?.error?.message || 'HTTP ' + res.status);
+            }
+            const data = await res.json();
+            const rows = data.values || [];
+            if (rows.length <= 1) {
+                if (statusEl) { statusEl.textContent = '✅ ยังไม่มีข้อมูลทีม'; statusEl.style.color = 'var(--success)'; }
+                this.showToast('ℹ️ ยังไม่มีข้อมูลจากทีม', 'info');
+                return;
+            }
+            // rows[0] = header, rows[1..] = data
+            const dataRows = rows.slice(1);
+            // กรองเฉพาะสาขาเดียวกัน
+            const myBranch = this.branchId || '';
+            const teamRows = dataRows.filter(r => !myBranch || (r[3] || '') === myBranch || myBranch === '');
+            
+            this._v51LastTeamRows = teamRows;
+            this.v51RenderTeamData(teamRows);
+            this.v51RenderConflicts(teamRows);
+            if (statusEl) { statusEl.textContent = `🟢 โหลดข้อมูลทีม ${teamRows.length} รายการ สำเร็จ`; statusEl.style.color = 'var(--success)'; }
+            this.showToast(`✅ โหลดข้อมูลทีม ${teamRows.length} รายการ`, 'success');
+        } catch (e) {
+            if (statusEl) { statusEl.textContent = '❌ โหลดไม่สำเร็จ: ' + e.message; statusEl.style.color = 'var(--danger)'; }
+            this.showToast('❌ ' + e.message, 'error');
+        }
+    }
+
+    // แสดงข้อมูลทีมใน UI
+    v51RenderTeamData(rows) {
+        let box = document.getElementById('v51TeamDataBox');
+        if (!box) {
+            box = document.createElement('div');
+            box.id = 'v51TeamDataBox';
+            box.style.cssText = 'margin-top:10px;max-height:300px;overflow-y:auto;border:1px solid var(--border-color);border-radius:var(--radius-sm);';
+            const card = document.getElementById('v51UserCard');
+            if (card) card.appendChild(box);
+        }
+        if (rows.length === 0) { box.innerHTML = '<div style="padding:8px;font-size:12px;color:var(--text-muted);">ไม่มีข้อมูล</div>'; return; }
+        // จัดกลุ่มตามผู้ใช้
+        const byUser = {};
+        rows.forEach(r => {
+            const user = r[2] || 'ไม่ระบุ';
+            if (!byUser[user]) byUser[user] = 0;
+            byUser[user]++;
+        });
+        const summaryHtml = Object.entries(byUser).map(([u, n]) =>
+            `<span style="display:inline-block;background:var(--primary);color:#fff;border-radius:10px;padding:2px 8px;font-size:11px;margin:2px;">👤 ${escapeHtml(u)}: ${n} รายการ</span>`
+        ).join('');
+        const recentRows = rows.slice(-20).reverse();
+        const tableHtml = recentRows.map(r => {
+            const [ts, tsThai, user, branch, barcode, name, lot, sys, counted, diff] = r;
+            const diffNum = parseInt(diff) || 0;
+            const diffColor = diffNum === 0 ? 'var(--success)' : diffNum > 0 ? 'var(--primary)' : 'var(--danger)';
+            return `<tr style="font-size:11px;border-bottom:1px solid var(--border-color);">
+                <td style="padding:4px 6px;white-space:nowrap;">${escapeHtml(tsThai || ts || '').substring(0,16)}</td>
+                <td style="padding:4px 6px;font-weight:600;color:var(--primary);">${escapeHtml(user || '')}</td>
+                <td style="padding:4px 6px;">${escapeHtml(name || barcode || '')}</td>
+                <td style="padding:4px 6px;">${escapeHtml(lot || '')}</td>
+                <td style="padding:4px 6px;text-align:center;">${counted ?? ''}</td>
+                <td style="padding:4px 6px;text-align:center;color:${diffColor};font-weight:700;">${diffNum > 0 ? '+' : ''}${diff ?? ''}</td>
+            </tr>`;
+        }).join('');
+        box.innerHTML = `
+            <div style="padding:8px;background:var(--bg-body);border-bottom:1px solid var(--border-color);">
+                <div style="font-size:11px;font-weight:700;margin-bottom:4px;">👥 สรุปทีม</div>
+                ${summaryHtml}
+            </div>
+            <table style="width:100%;border-collapse:collapse;">
+                <thead><tr style="background:var(--bg-body);font-size:10px;color:var(--text-muted);">
+                    <th style="padding:4px 6px;text-align:left;">เวลา</th>
+                    <th style="padding:4px 6px;text-align:left;">ผู้นับ</th>
+                    <th style="padding:4px 6px;text-align:left;">สินค้า</th>
+                    <th style="padding:4px 6px;text-align:left;">LOT</th>
+                    <th style="padding:4px 6px;text-align:center;">นับ</th>
+                    <th style="padding:4px 6px;text-align:center;">ต่าง</th>
+                </tr></thead>
+                <tbody>${tableHtml}</tbody>
+            </table>`;
+    }
+
+    // ✅ Auto-sync ทุก 30 วิ ถ้าตั้งค่าไว้
+    v51StartSync() {
+        if (this._syncInterval) clearInterval(this._syncInterval);
+        const c = this.v51SyncConfig();
+        if (!((c.endpoint && c.token) || (c.spreadsheetId && c.apiKey))) return;
+        this._syncInterval = setInterval(() => {
+            this.v51SyncNow().catch(() => {});
+        }, 30000);
+        console.log('✅ Auto-sync เริ่มแล้ว (ทุก 30 วิ)');
+    }
+
+    v51StopSync() {
+        if (this._syncInterval) { clearInterval(this._syncInterval); this._syncInterval = null; }
+    }
+
+    v51RenderConflicts(rows = this._v51LastTeamRows || []) {
+        const box = document.getElementById('v51ConflictList');
+        if (!box) return;
+        const groups = {};
+        rows.forEach(r => {
+            const key = [r[3] || '', r[4] || '', r[6] || ''].join('|');
+            if (!groups[key]) groups[key] = [];
+            groups[key].push(r);
+        });
+        const conflicts = Object.values(groups).filter(g => new Set(g.map(r => String(r[8] ?? ''))).size > 1);
+        if (!conflicts.length) {
+            box.innerHTML = '<div style="font-size:12px;color:var(--success);">✅ ไม่พบ Conflict ของสินค้า/LOT เดียวกัน</div>';
+            return;
+        }
+        box.innerHTML = conflicts.slice(0, 10).map(g => {
+            const first = g[0];
+            const vals = g.map(r => `${escapeHtml(r[2] || 'ไม่ระบุ')}: ${escapeHtml(String(r[8] ?? ''))}`).join(' · ');
+            return `<div style="font-size:11px;padding:5px;margin:3px 0;border-radius:6px;background:var(--danger-light);color:var(--danger);">⚠️ ${escapeHtml(first[5] || first[4] || '')} ${first[6] ? '(LOT ' + escapeHtml(first[6]) + ')' : ''}<br>${vals}</div>`;
+        }).join('');
+    }
+
+    async v51ResolveConflict() {
+        this.showToast('⚠️ ตรวจพบข้อมูลต่างกัน — ระบบ Append-only จะไม่เลือกผู้ชนะหรือลบข้อมูลอัตโนมัติ เพื่อป้องกันข้อมูลสูญหาย', 'warning');
+    }
 
     v51EnsureSettingsUI() {
         if (document.getElementById('v51UserCard')) return;
@@ -4110,7 +4463,7 @@ class StockApp {
             <div id="v51IdentityStatus" style="font-size:11px;margin-top:6px;color:var(--text-muted);"></div>
             <hr style="border:0;border-top:1px solid var(--border-color);margin:10px 0;">
             <div class="card-title" style="font-size:13px;"><i class="fas fa-cloud"></i> Shared Sync</div>
-            <p style="font-size:11px;color:var(--text-muted);">ไม่บังคับ — ระบบทำงาน Offline ได้ปกติ</p>
+            <p style="font-size:11px;color:var(--text-muted);">อ่านข้อมูลทีม: API Key + Spreadsheet ID จากเมนู Google Sheets; ส่งข้อมูลเขียนจริง: Apps Script Endpoint + Shared Token</p>
             <input id="v51SyncEndpoint" class="input" placeholder="https://script.google.com/macros/s/.../exec" style="margin-bottom:6px;min-height:38px;">
             <input id="v51SyncToken" class="input" type="password" placeholder="Shared token" style="margin-bottom:6px;min-height:38px;">
             <div style="display:flex;gap:6px;"><button class="btn btn-primary btn-sm" id="v51SaveSync" style="flex:1;">บันทึก Sync</button></div>
@@ -4240,14 +4593,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         app = new StockApp();
         window.app = app;
-        console.log('✅ MediStock v5.1.6 booted');
+        console.log('✅ MediStock v5.1.8 booted');
 
         const checkReady = setInterval(() => {
             if (window.app && window.app.db) {
                 clearInterval(checkReady);
                 clearTimeout(bootTimeout);
                 hideLoading();
-                console.log('🎉 MediStock v5.1.6 พร้อมใช้งาน');
+                console.log('🎉 MediStock v5.1.8 พร้อมใช้งาน');
             }
         }, 200);
 
