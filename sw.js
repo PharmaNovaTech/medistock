@@ -1,238 +1,237 @@
-// ================================================================
-// MediStock v5.1.5 - Service Worker
-// Offline-first PWA with smart caching
-// ================================================================
+/**
+ * ================================================================
+ * MediStock v5.3.0 — Service Worker (PWA Offline)
+ * ================================================================
+ */
 
-const SW_VERSION = '5.1.5';
+const SW_VERSION = '5.3.0';
 const CACHE_NAME = `medistock-v${SW_VERSION}`;
 const RUNTIME_CACHE = `medistock-runtime-v${SW_VERSION}`;
 
-// ไฟล์ที่ต้อง cache ตอน install
+// Assets to pre-cache
 const PRECACHE_URLS = [
     './',
     './index.html',
+    './MediStock_v5.3.0.html',
     './manifest.json',
     './favicon.ico',
-    './favicon-96x96.png',
+    './favicon-16x16.png',
+    './favicon-32x32.png',
     './apple-touch-icon.png',
-    './android-chrome-192x192.png',
-    './android-chrome-512x512.png'
-];
-
-// CDN ที่ควร cache (runtime)
-const CDN_PATTERNS = [
-    'cdnjs.cloudflare.com',
-    'unpkg.com',
-    'cdn.jsdelivr.net',
-    'fonts.googleapis.com',
-    'fonts.gstatic.com'
+    // CDN Libraries
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js',
+    'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js',
+    'https://unpkg.com/@zxing/library@0.19.1/umd/index.min.js',
+    'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js',
+    'https://cdn.jsdelivr.net/npm/chart.js'
 ];
 
 // ================================================================
-// INSTALL — Precache ไฟล์หลัก
+// INSTALL
 // ================================================================
 self.addEventListener('install', (event) => {
-    console.log(`[SW ${SW_VERSION}] Installing...`);
+    console.log(`[SW v${SW_VERSION}] Installing...`);
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then((cache) => {
-                console.log(`[SW] Precaching ${PRECACHE_URLS.length} files`);
-                return cache.addAll(PRECACHE_URLS.map(url => new Request(url, { cache: 'reload' })));
+            .then(cache => {
+                console.log(`[SW v${SW_VERSION}] Pre-caching ${PRECACHE_URLS.length} assets`);
+                // ใช้ individual add เพื่อไม่ให้ fail ทั้งหมดถ้ามีบางตัว fail
+                return Promise.all(
+                    PRECACHE_URLS.map(url => 
+                        cache.add(url).catch(err => 
+                            console.warn(`[SW] Failed to cache: ${url}`, err.message)
+                        )
+                    )
+                );
             })
             .then(() => {
-                console.log('[SW] Precache complete');
+                console.log(`[SW v${SW_VERSION}] Installed`);
                 return self.skipWaiting();
-            })
-            .catch((err) => {
-                console.error('[SW] Precache failed:', err);
             })
     );
 });
 
 // ================================================================
-// ACTIVATE — ลบ cache เก่า
+// ACTIVATE
 // ================================================================
 self.addEventListener('activate', (event) => {
-    console.log(`[SW ${SW_VERSION}] Activating...`);
+    console.log(`[SW v${SW_VERSION}] Activating...`);
     event.waitUntil(
         caches.keys()
-            .then((cacheNames) => {
+            .then(cacheNames => {
                 return Promise.all(
                     cacheNames
-                        .filter((name) => name.startsWith('medistock-') && name !== CACHE_NAME && name !== RUNTIME_CACHE)
-                        .map((name) => {
+                        .filter(name => name.startsWith('medistock-') && 
+                                       name !== CACHE_NAME && 
+                                       name !== RUNTIME_CACHE)
+                        .map(name => {
                             console.log(`[SW] Deleting old cache: ${name}`);
                             return caches.delete(name);
                         })
                 );
             })
             .then(() => {
-                console.log('[SW] Activation complete');
+                console.log(`[SW v${SW_VERSION}] Activated`);
                 return self.clients.claim();
             })
     );
 });
 
 // ================================================================
-// FETCH — กลยุทธ์ caching
+// FETCH (Network-first for API, Cache-first for assets)
 // ================================================================
 self.addEventListener('fetch', (event) => {
-    const { request } = event;
-    const url = new URL(request.url);
+    const req = event.request;
+    const url = new URL(req.url);
 
-    // ข้าม non-GET
-    if (request.method !== 'GET') return;
+    // Skip non-GET
+    if (req.method !== 'GET') return;
 
-    // ข้าม request ที่ไม่ใช่ http/https (เช่น chrome-extension)
-    if (!url.protocol.startsWith('http')) return;
+    // Skip chrome extensions / devtools
+    if (url.protocol === 'chrome-extension:' || url.protocol === 'devtools:') return;
 
-    // ข้าม Google Sheets API (ต้อง real-time เสมอ)
-    if (url.hostname === 'sheets.googleapis.com') return;
-
-    // ข้าม Drive API
-    if (url.hostname === 'www.googleapis.com') return;
-
-    // ✅ ไฟล์ของเราเอง → Cache First (offline priority)
-    if (url.origin === self.location.origin) {
-        event.respondWith(cacheFirst(request));
+    // ========== API calls: Network-first ==========
+    if (url.hostname.includes('script.google.com') ||
+        url.hostname.includes('sheets.googleapis.com') ||
+        url.hostname.includes('googleapis.com')) {
+        event.respondWith(networkFirst(req, RUNTIME_CACHE));
         return;
     }
 
-    // ✅ CDN (library, font) → Stale While Revalidate
-    if (CDN_PATTERNS.some(pattern => url.hostname.includes(pattern))) {
-        event.respondWith(staleWhileRevalidate(request));
+    // ========== Same-origin HTML/JS/CSS: Network-first (เพื่ออัปเดตได้) ==========
+    if (url.origin === location.origin && 
+        (url.pathname.endsWith('.html') || 
+         url.pathname.endsWith('.js') || 
+         url.pathname.endsWith('.css') ||
+         url.pathname === '/' || 
+         url.pathname.endsWith('/'))) {
+        event.respondWith(networkFirst(req, CACHE_NAME));
         return;
     }
 
-    // ✅ อื่นๆ → Network First (fallback cache)
-    event.respondWith(networkFirst(request));
+    // ========== CDN / Fonts / Images: Cache-first ==========
+    event.respondWith(cacheFirst(req, CACHE_NAME));
 });
 
 // ================================================================
-// Cache Strategies
+// STRATEGIES
 // ================================================================
-
-// Cache First — ใช้ cache ก่อน ถ้าไม่มีค่อย fetch
-async function cacheFirst(request) {
+async function networkFirst(request, cacheName) {
     try {
-        const cached = await caches.match(request);
-        if (cached) {
-            return cached;
+        const networkResponse = await fetch(request);
+        // Cache successful responses
+        if (networkResponse && networkResponse.ok && networkResponse.status === 200) {
+            const cache = await caches.open(cacheName);
+            cache.put(request, networkResponse.clone()).catch(() => {});
         }
-        const response = await fetch(request);
-        if (response && response.status === 200) {
-            const cache = await caches.open(CACHE_NAME);
-            cache.put(request, response.clone());
-        }
-        return response;
+        return networkResponse;
     } catch (err) {
-        console.warn('[SW] cacheFirst failed:', err);
-        // Fallback: ลองหา index.html ถ้าเป็น navigation
-        if (request.mode === 'navigate') {
-            const cached = await caches.match('./index.html');
-            if (cached) return cached;
-        }
-        return new Response('Offline', { status: 503, statusText: 'Offline' });
-    }
-}
-
-// Stale While Revalidate — คืน cache ทันที + update background
-async function staleWhileRevalidate(request) {
-    const cache = await caches.open(RUNTIME_CACHE);
-    const cached = await cache.match(request);
-    
-    const fetchPromise = fetch(request)
-        .then((response) => {
-            if (response && response.status === 200) {
-                cache.put(request, response.clone());
-            }
-            return response;
-        })
-        .catch((err) => {
-            console.warn('[SW] SWR fetch failed:', err);
-            return null;
-        });
-
-    return cached || await fetchPromise || new Response('Offline', { status: 503 });
-}
-
-// Network First — ลอง network ก่อน ถ้า fail ค่อยใช้ cache
-async function networkFirst(request) {
-    try {
-        const response = await fetch(request);
-        if (response && response.status === 200) {
-            const cache = await caches.open(RUNTIME_CACHE);
-            cache.put(request, response.clone());
-        }
-        return response;
-    } catch (err) {
+        console.log(`[SW] Network failed, falling back to cache: ${request.url}`);
         const cached = await caches.match(request);
         if (cached) return cached;
-        return new Response('Offline', { status: 503, statusText: 'Offline' });
+        
+        // Fallback สำหรับ HTML
+        if (request.destination === 'document') {
+            const fallback = await caches.match('./index.html') || 
+                            await caches.match('./MediStock_v5.3.0.html');
+            if (fallback) return fallback;
+        }
+        
+        throw err;
+    }
+}
+
+async function cacheFirst(request, cacheName) {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+
+    try {
+        const networkResponse = await fetch(request);
+        if (networkResponse && networkResponse.ok && networkResponse.status === 200) {
+            const cache = await caches.open(cacheName);
+            cache.put(request, networkResponse.clone()).catch(() => {});
+        }
+        return networkResponse;
+    } catch (err) {
+        console.warn(`[SW] Fetch failed for: ${request.url}`, err.message);
+        throw err;
     }
 }
 
 // ================================================================
-// MESSAGE — รับข้อความจาก client
+// MESSAGE HANDLERS
 // ================================================================
 self.addEventListener('message', (event) => {
-    const { type, payload } = event.data || {};
+    if (!event.data) return;
 
-    if (type === 'SKIP_WAITING') {
-        console.log('[SW] Skip waiting — activating new version');
+    if (event.data.type === 'SKIP_WAITING') {
+        console.log(`[SW v${SW_VERSION}] SKIP_WAITING received`);
         self.skipWaiting();
-        return;
     }
 
-    if (type === 'GET_VERSION') {
-        event.ports[0]?.postMessage({ version: SW_VERSION });
-        return;
-    }
-
-    if (type === 'CLEAR_CACHE') {
+    if (event.data.type === 'CLEAR_CACHE') {
         event.waitUntil(
-            caches.keys().then((names) => {
+            caches.keys().then(names => {
                 return Promise.all(
-                    names
-                        .filter(n => n.startsWith('medistock-'))
-                        .map(n => caches.delete(n))
+                    names.filter(n => n.startsWith('medistock-')).map(n => caches.delete(n))
                 );
             }).then(() => {
-                event.ports[0]?.postMessage({ success: true });
+                if (event.ports && event.ports[0]) {
+                    event.ports[0].postMessage({ ok: true });
+                }
             })
         );
-        return;
     }
 
-    if (type === 'CACHE_URLS') {
-        const urls = payload?.urls || [];
-        event.waitUntil(
-            caches.open(RUNTIME_CACHE).then((cache) => {
-                return cache.addAll(urls);
-            }).then(() => {
-                event.ports[0]?.postMessage({ success: true, count: urls.length });
-            }).catch((err) => {
-                event.ports[0]?.postMessage({ success: false, error: err.message });
-            })
-        );
-        return;
+    if (event.data.type === 'GET_VERSION') {
+        if (event.ports && event.ports[0]) {
+            event.ports[0].postMessage({ version: SW_VERSION });
+        }
     }
 });
 
 // ================================================================
-// SYNC — Background Sync (ถ้ารองรับ)
+// PUSH NOTIFICATIONS (optional)
 // ================================================================
-self.addEventListener('sync', (event) => {
-    if (event.tag === 'medistock-sync') {
-        console.log('[SW] Background sync triggered');
-        event.waitUntil(
-            self.clients.matchAll().then((clients) => {
-                clients.forEach((client) => {
-                    client.postMessage({ type: 'TRIGGER_SYNC' });
-                });
-            })
-        );
+self.addEventListener('push', (event) => {
+    if (!event.data) return;
+    
+    try {
+        const data = event.data.json();
+        const title = data.title || 'MediStock';
+        const options = {
+            body: data.body || '',
+            icon: './apple-touch-icon.png',
+            badge: './favicon-32x32.png',
+            vibrate: [200, 100, 200],
+            data: data.data || {}
+        };
+        
+        event.waitUntil(self.registration.showNotification(title, options));
+    } catch (e) {
+        console.warn('[SW] Push parse failed:', e.message);
     }
 });
 
-console.log(`[SW ${SW_VERSION}] Service Worker loaded`);
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    event.waitUntil(
+        self.clients.matchAll({ type: 'window' }).then(clients => {
+            // ถ้ามี tab อยู่แล้ว ให้ focus
+            for (const client of clients) {
+                if (client.url.includes('MediStock') && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+            // ถ้าไม่มี เปิดใหม่
+            if (self.clients.openWindow) {
+                return self.clients.openWindow('./');
+            }
+        })
+    );
+});
+
+console.log(`[SW v${SW_VERSION}] Service Worker loaded`);
