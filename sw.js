@@ -1,10 +1,10 @@
 /**
  * ================================================================
- * MediStock v5.3.0 — Service Worker (PWA Offline)
+ * MediStock v5.3.1 — Service Worker (PWA Offline)
  * ================================================================
  */
 
-const SW_VERSION = '5.3.0';
+const SW_VERSION = '5.3.1';
 const CACHE_NAME = `medistock-v${SW_VERSION}`;
 const RUNTIME_CACHE = `medistock-runtime-v${SW_VERSION}`;
 
@@ -12,7 +12,7 @@ const RUNTIME_CACHE = `medistock-runtime-v${SW_VERSION}`;
 const PRECACHE_URLS = [
     './',
     './index.html',
-    './MediStock_v5.3.0.html',
+    './MediStock_v5.3.1.html',
     './manifest.json',
     './favicon.ico',
     './favicon-16x16.png',
@@ -136,7 +136,7 @@ async function networkFirst(request, cacheName) {
         // Fallback สำหรับ HTML
         if (request.destination === 'document') {
             const fallback = await caches.match('./index.html') || 
-                            await caches.match('./MediStock_v5.3.0.html');
+                            await caches.match('./MediStock_v5.3.1.html');
             if (fallback) return fallback;
         }
         
