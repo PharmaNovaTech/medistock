@@ -5223,179 +5223,307 @@ class StockApp {
     // ================================================================
     // Fullscreen Camera Scanner
     // ================================================================
-    async openFullscreenScanner() {
-        console.log('📷 เปิด Scanner...');
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-            stream.getTracks().forEach(track => track.stop());
-        } catch (err) {
-            this.showToast('❌ ไม่สามารถเปิดกล้องได้: ' + err.message, 'error');
-            return;
+async openFullscreenScanner() {
+    console.log('📷 เปิด Scanner v5.3.1...');
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: "environment" } 
+        });
+        stream.getTracks().forEach(track => track.stop());
+    } catch (err) {
+        this.showToast('❌ ไม่สามารถเปิดกล้องได้: ' + err.message, 'error');
+        return;
+    }
+    
+    document.getElementById('scannerFullscreen').classList.add('show');
+    const statusFull = document.getElementById('scannerStatusFull');
+    statusFull.textContent = '📷 กำลังเปิดกล้อง...';
+    statusFull.className = 'scanner-status-full info';
+    statusFull.style.display = 'block';
+    
+    if (this.html5Scanner) {
+        try { 
+            await this.html5Scanner.stop(); 
+            this.html5Scanner.clear(); 
+        } catch(e) {}
+        this.html5Scanner = null;
+    }
+
+    let lastDecoded = '';
+    let lastDecodedTime = 0;
+    const DECODE_COOLDOWN = 1200;  // ⭐ ลดจาก 1500 → 1200
+
+    const onDecodeSuccess = (decodedText) => {
+        const now = Date.now();
+        if (decodedText === lastDecoded && (now - lastDecodedTime) < DECODE_COOLDOWN) return;
+        lastDecoded = decodedText;
+        lastDecodedTime = now;
+
+        const clean = String(decodedText).trim();
+        const numericOnly = clean.replace(/[^0-9]/g, '');
+
+        let barcodeToUse = clean;
+        let v = this.validateBarcode(numericOnly);
+
+        if (v.valid) {
+            barcodeToUse = v.barcode;
+        } else {
+            const directMatch = this.products.find(p =>
+                (Array.isArray(p.barcodes) && p.barcodes.includes(clean)) ||
+                p.primaryBarcode === clean
+            );
+            if (directMatch) {
+                barcodeToUse = clean;
+                v = { valid: true, barcode: clean };
+            } else if (!v.valid) {
+                statusFull.textContent = '⚠️ ' + (v.message || 'รูปแบบไม่ถูกต้อง');
+                statusFull.className = 'scanner-status-full error';
+                return;
+            }
         }
-        document.getElementById('scannerFullscreen').classList.add('show');
-        const statusFull = document.getElementById('scannerStatusFull');
-        statusFull.textContent = '📷 กำลังเปิดกล้อง...';
-        statusFull.className = 'scanner-status-full info';
-        statusFull.style.display = 'block';
-        if (this.html5Scanner) {
+
+        statusFull.textContent = '✅ อ่านสำเร็จ!';
+        statusFull.className = 'scanner-status-full success';
+        const flash = document.getElementById('scanFlash');
+        if (flash) {
+            flash.classList.add('active');
+            setTimeout(() => flash.classList.remove('active'), 200);
+        }
+        this.processScannedBarcode(barcodeToUse, 'Camera');
+    };
+
+    const startScanner = async (constraintLevel) => {
+        const constraintSets = [
+            { 
+                facingMode: "environment", 
+                width: { ideal: 1920 },     // ⭐ เพิ่มความละเอียด
+                height: { ideal: 1080 },
+                focusMode: "continuous",     // ⭐ บังคับ continuous focus
+                advanced: [
+                    { focusMode: "continuous" },
+                    { exposureMode: "continuous" }
+                ]
+            },
+            { 
+                facingMode: "environment",
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+            },
+            { facingMode: "environment" },
+            true
+        ];
+        const videoConstraints = constraintSets[constraintLevel] || { facingMode: "environment" };
+
+        // ⭐ v5.3.1: Dynamic qrbox + เพิ่ม format
+        const scanConfig = {
+            fps: 20,                                    // ⭐ 20 fps
+            qrbox: function(viewfinderWidth, viewfinderHeight) {
+                const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+                const qrboxWidth = Math.floor(minEdge * 0.85);
+                return {
+                    width: qrboxWidth,
+                    height: Math.floor(qrboxWidth * 0.55)
+                };
+            },
+            aspectRatio: 1.0,
+            disableFlip: false,
+            experimentalFeatures: { 
+                useBarCodeDetectorIfSupported: true 
+            }
+        };
+
+        // ⭐ v5.3.1: เพิ่ม formats
+        if (typeof Html5QrcodeSupportedFormats !== 'undefined') {
+            scanConfig.formatsToSupport = [
+                // 1D Barcodes
+                Html5QrcodeSupportedFormats.EAN_13,
+                Html5QrcodeSupportedFormats.EAN_8,
+                Html5QrcodeSupportedFormats.CODE_128,
+                Html5QrcodeSupportedFormats.CODE_39,
+                Html5QrcodeSupportedFormats.CODE_93,
+                Html5QrcodeSupportedFormats.ITF,
+                Html5QrcodeSupportedFormats.UPC_A,
+                Html5QrcodeSupportedFormats.UPC_E,
+                Html5QrcodeSupportedFormats.CODABAR,
+                // 2D Barcodes
+                Html5QrcodeSupportedFormats.QR_CODE,
+                Html5QrcodeSupportedFormats.DATA_MATRIX,
+                Html5QrcodeSupportedFormats.PDF_417,
+                Html5QrcodeSupportedFormats.AZTEC,
+            ].filter(v => v !== undefined);
+        }
+
+        await this.html5Scanner.start(videoConstraints, scanConfig, onDecodeSuccess, () => {});
+    };
+
+    try {
+        this.html5Scanner = new Html5Qrcode("reader-fullscreen");
+
+        let started = false;
+        for (let level = 0; level < 4; level++) {
             try {
-                await this.html5Scanner.stop();
-                this.html5Scanner.clear();
-            } catch (e) {}
-            this.html5Scanner = null;
+                await startScanner(level);
+                started = true;
+                console.log(`✅ Scanner started at level ${level}`);
+                break;
+            } catch (e) {
+                console.warn(`⚠️ Scanner level ${level} failed:`, e.message);
+                if (level < 3) {
+                    try { 
+                        await this.html5Scanner.stop(); 
+                        this.html5Scanner.clear(); 
+                    } catch (_) {}
+                    this.html5Scanner = new Html5Qrcode("reader-fullscreen");
+                }
+            }
         }
 
-        let lastDecoded = '';
-        let lastDecodedTime = 0;
-        const DECODE_COOLDOWN = 1500;
+        if (!started) throw new Error('ไม่สามารถเปิดกล้องได้ในทุก mode');
 
-        const onDecodeSuccess = (decodedText) => {
-            const now = Date.now();
-            if (decodedText === lastDecoded && (now - lastDecodedTime) < DECODE_COOLDOWN) return;
-            lastDecoded = decodedText;
-            lastDecodedTime = now;
-
-            const clean = String(decodedText).trim();
-            const numericOnly = clean.replace(/[^0-9]/g, '');
-
-            let barcodeToUse = clean;
-            let v = this.validateBarcode(numericOnly);
-
-            if (v.valid) {
-                barcodeToUse = v.barcode;
-            } else {
-                const directMatch = this.products.find(p =>
-                    (Array.isArray(p.barcodes) && p.barcodes.includes(clean)) ||
-                    p.primaryBarcode === clean
-                );
-                if (directMatch) {
-                    barcodeToUse = clean;
-                    v = { valid: true, barcode: clean };
-                } else if (!v.valid) {
-                    statusFull.textContent = '⚠️ ' + (v.message || 'รูปแบบไม่ถูกต้อง');
-                    statusFull.className = 'scanner-status-full error';
-                    return;
-                }
-            }
-
-            statusFull.textContent = '✅ อ่านสำเร็จ!';
-            statusFull.className = 'scanner-status-full success';
-            const flash = document.getElementById('scanFlash');
-            if (flash) {
-                flash.classList.add('active');
-                setTimeout(() => flash.classList.remove('active'), 200);
-            }
-            this.processScannedBarcode(barcodeToUse, 'Camera');
-        };
-
-        const startScanner = async (constraintLevel) => {
-            const constraintSets = [
-                { facingMode: "environment", width: { ideal: 1280, min: 640 }, height: { ideal: 720, min: 480 } },
-                { facingMode: "environment" },
-                true
-            ];
-            const videoConstraints = constraintSets[constraintLevel] || { facingMode: "environment" };
-
-            const scanConfig = {
-                fps: 10,
-                qrbox: { width: 260, height: 140 },
-                aspectRatio: 1.777,
-                experimentalFeatures: { useBarCodeDetectorIfSupported: true }
-            };
-
-            if (typeof Html5QrcodeSupportedFormats !== 'undefined') {
-                scanConfig.formatsToSupport = [
-                    Html5QrcodeSupportedFormats.EAN_13,
-                    Html5QrcodeSupportedFormats.EAN_8,
-                    Html5QrcodeSupportedFormats.CODE_128,
-                    Html5QrcodeSupportedFormats.CODE_39,
-                    Html5QrcodeSupportedFormats.UPC_A,
-                    Html5QrcodeSupportedFormats.UPC_E,
-                    Html5QrcodeSupportedFormats.QR_CODE,
-                ].filter(v => v !== undefined);
-            }
-
-            await this.html5Scanner.start(videoConstraints, scanConfig, onDecodeSuccess, () => {});
-        };
-
-        try {
-            this.html5Scanner = new Html5Qrcode("reader-fullscreen");
-
-            let started = false;
-            for (let level = 0; level < 3; level++) {
-                try {
-                    await startScanner(level);
-                    started = true;
-                    console.log(`✅ Scanner started at constraint level ${level}`);
-                    break;
-                } catch (e) {
-                    console.warn(`⚠️ Scanner level ${level} failed:`, e.message);
-                    if (level < 2) {
+        // ⭐ v5.3.1: Auto Focus + Zoom + Tap to Focus
+        const readerEl = document.getElementById('reader-fullscreen');
+        if (readerEl) {
+            const videoEl = readerEl.querySelector('video');
+            if (videoEl && videoEl.srcObject) {
+                const track = videoEl.srcObject.getVideoTracks()[0];
+                if (track) {
+                    const caps = track.getCapabilities ? track.getCapabilities() : {};
+                    
+                    // ⭐ Auto Focus ทันที
+                    setTimeout(async () => {
                         try {
-                            await this.html5Scanner.stop();
-                            this.html5Scanner.clear();
-                        } catch (_) {}
-                        this.html5Scanner = new Html5Qrcode("reader-fullscreen");
-                    }
-                }
-            }
-
-            if (!started) throw new Error('ไม่สามารถเปิดกล้องได้ในทุก mode');
-
-            const readerEl = document.getElementById('reader-fullscreen');
-            if (readerEl) {
-                readerEl.addEventListener('click', async () => {
-                    statusFull.textContent = '🎯 กำลัง Focus...';
-                    statusFull.className = 'scanner-status-full focusing';
-                    try {
-                        const videoEl = readerEl.querySelector('video');
-                        if (videoEl && videoEl.srcObject) {
-                            const track = videoEl.srcObject.getVideoTracks()[0];
-                            if (track) {
-                                const caps = track.getCapabilities ? track.getCapabilities() : {};
-                                if (caps.focusMode && caps.focusMode.includes('single-shot')) {
-                                    await track.applyConstraints({ advanced: [{ focusMode: 'single-shot' }] });
-                                    setTimeout(() => {
-                                        try {
-                                            track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] });
-                                        } catch (_) {}
-                                    }, 600);
+                            if (caps.focusMode && caps.focusMode.includes('single-shot')) {
+                                await track.applyConstraints({ 
+                                    advanced: [{ focusMode: 'single-shot' }] 
+                                });
+                                setTimeout(async () => {
+                                    try {
+                                        await track.applyConstraints({ 
+                                            advanced: [{ focusMode: 'continuous' }] 
+                                        });
+                                    } catch(_) {}
+                                }, 1000);
+                            }
+                            
+                            // ⭐ Zoom 1.5x ถ้ารองรับ (ช่วยบาร์โค้ดเล็ก)
+                            if (caps.zoom) {
+                                const minZ = caps.zoom.min || 1;
+                                const maxZ = caps.zoom.max || 1;
+                                if (maxZ > 1) {
+                                    const targetZ = Math.min(maxZ, Math.max(minZ, 1.5));
+                                    await track.applyConstraints({ 
+                                        advanced: [{ zoom: targetZ }] 
+                                    });
                                 }
                             }
-                        }
-                    } catch (e) {}
-                    setTimeout(() => {
-                        if (statusFull.className.includes('focusing')) {
-                            statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ | 👆 แตะโฟกัส';
-                            statusFull.className = 'scanner-status-full';
+                            
+                            // ⭐ ลด Exposure ถ้ารองรับ (ช่วยแสงสะท้อน)
+                            if (caps.exposureCompensation) {
+                                const expMin = caps.exposureCompensation.min || -2;
+                                const expMax = caps.exposureCompensation.max || 2;
+                                const expValue = Math.max(expMin, Math.min(expMax, -0.3));
+                                await track.applyConstraints({ 
+                                    advanced: [{ exposureCompensation: expValue }] 
+                                });
+                            }
+                        } catch(e) { 
+                            console.warn('Camera tuning failed:', e); 
                         }
                     }, 800);
-                });
+                    
+                    // ⭐ Tap to Focus
+                    readerEl.addEventListener('click', async () => {
+                        statusFull.textContent = '🎯 กำลัง Focus...';
+                        statusFull.className = 'scanner-status-full focusing';
+                        try {
+                            if (caps.focusMode && caps.focusMode.includes('single-shot')) {
+                                await track.applyConstraints({ 
+                                    advanced: [{ focusMode: 'single-shot' }] 
+                                });
+                                setTimeout(async () => {
+                                    try {
+                                        await track.applyConstraints({ 
+                                            advanced: [{ focusMode: 'continuous' }] 
+                                        });
+                                    } catch(_) {}
+                                }, 1000);
+                            }
+                        } catch(e) {}
+                        setTimeout(() => {
+                            if (statusFull.className.includes('focusing')) {
+                                statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ | 👆 แตะเพื่อโฟกัส';
+                                statusFull.className = 'scanner-status-full';
+                            }
+                        }, 1200);
+                    });
+                    
+                    // ⭐ ตรวจแสงทุก 2 วิ
+                    this._brightnessTimer = setInterval(() => {
+                        const b = this.checkFrameBrightness(videoEl);
+                        if (b === null) return;
+                        if (b < 60) {
+                            statusFull.textContent = '💡 แสงน้อย — ลองย้ายไปที่สว่าง';
+                            statusFull.className = 'scanner-status-full focusing';
+                        } else if (b > 200) {
+                            statusFull.textContent = '☀️ แสงจ้า — ระวังแสงสะท้อน';
+                            statusFull.className = 'scanner-status-full focusing';
+                        } else if (statusFull.className.includes('focusing')) {
+                            statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ';
+                            statusFull.className = 'scanner-status-full';
+                        }
+                    }, 2000);
+                }
             }
-
-            statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ | 👆 แตะเพื่อโฟกัส';
-            statusFull.className = 'scanner-status-full';
-            statusFull.style.display = 'block';
-
-        } catch (err) {
-            console.error('Scanner failed all levels:', err);
-            statusFull.textContent = '❌ เปิดกล้องไม่สำเร็จ';
-            statusFull.className = 'scanner-status-full error';
-            statusFull.style.display = 'block';
-            this.showToast('❌ เปิดกล้องไม่สำเร็จ — ลองใช้ "ถ่ายรูปบาร์โค้ด" แทน', 'error');
         }
-    }
 
+        statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ | 👆 แตะเพื่อโฟกัส';
+        statusFull.className = 'scanner-status-full';
+        statusFull.style.display = 'block';
+
+    } catch (err) {
+        console.error('Scanner failed all levels:', err);
+        statusFull.textContent = '❌ เปิดกล้องไม่สำเร็จ';
+        statusFull.className = 'scanner-status-full error';
+        statusFull.style.display = 'block';
+        this.showToast('❌ เปิดกล้องไม่สำเร็จ — ลองใช้ "ถ่ายรูปบาร์โค้ด" แทน', 'error');
+    }
+}
+
+// ⭐ v5.3.1: ตรวจแสงในเฟรม
+checkFrameBrightness(videoEl) {
+    if (!videoEl || !videoEl.videoWidth) return null;
+    try {
+        const canvas = document.createElement('canvas');
+        canvas.width = 80;
+        canvas.height = 80;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(videoEl, 0, 0, 80, 80);
+        const data = ctx.getImageData(0, 0, 80, 80).data;
+        let sum = 0;
+        for (let i = 0; i < data.length; i += 4) {
+            sum += (data[i] + data[i+1] + data[i+2]) / 3;
+        }
+        return sum / (data.length / 4);
+    } catch(e) {
+        return null;
+    }
+}
     async closeFullscreenScanner() {
-        document.getElementById('scannerFullscreen')?.classList.remove('show');
-        if (this.html5Scanner) {
-            try {
-                await this.html5Scanner.stop();
-                this.html5Scanner.clear();
-            } catch (e) {}
-            this.html5Scanner = null;
-        }
+    // ⭐ ล้าง brightness timer
+    if (this._brightnessTimer) {
+        clearInterval(this._brightnessTimer);
+        this._brightnessTimer = null;
     }
+    
+    document.getElementById('scannerFullscreen')?.classList.remove('show');
+    if (this.html5Scanner) {
+        try { 
+            await this.html5Scanner.stop(); 
+            this.html5Scanner.clear(); 
+        } catch(e) {}
+        this.html5Scanner = null;
+       }
+   }
 
     showScannerHelp() {
         const old = document.getElementById('scannerHelpOverlay');
