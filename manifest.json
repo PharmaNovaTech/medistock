@@ -1,8 +1,8 @@
 {
-    "name": "MediStock v5.3.0 — ระบบนับสต็อกสินค้ายา",
+    "name": "MediStock v5.3.1 — ระบบนับสต็อกสินค้ายา",
     "short_name": "MediStock",
     "description": "ระบบนับสต็อกสินค้ายาแบบ Multi-device พร้อม Dedup Engine, Session Manager, รายงาน 18 Sheets",
-    "version": "5.3.0",
+    "version": "5.3.1",
     "start_url": "./",
     "scope": "./",
     "display": "standalone",
