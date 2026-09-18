@@ -13,9 +13,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta
-
-+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -3106,7 +3104,7 @@ sm);color:#991b1b;font-weight:600;">-</div>
                 <option value="อื่นๆ">อื่นๆ (พิมพ์ด้านล่าง)</option>
             </select>
         </div>
-        <div style="margin-bottom:8px;" id="expiryReasonOtherBox" style="display:none;">
+        <div style="margin-bottom:8px;display:none;" id="expiryReasonOtherBox">
             <input type="text" class="input" id="expiryReasonOther" placeholder="ระบุเหตุผล..." style="font-size:13px;padding:8px 12px;min-
 
 height:38px;">
@@ -5508,7 +5506,7 @@ checkFrameBrightness(videoEl) {
         return null;
     }
 }
-    async closeFullscreenScanner() {
+async closeFullscreenScanner() {
     // ⭐ ล้าง brightness timer
     if (this._brightnessTimer) {
         clearInterval(this._brightnessTimer);
@@ -5522,8 +5520,8 @@ checkFrameBrightness(videoEl) {
             this.html5Scanner.clear(); 
         } catch(e) {}
         this.html5Scanner = null;
-       }
-   }
+    }
+}
 
     showScannerHelp() {
         const old = document.getElementById('scannerHelpOverlay');
