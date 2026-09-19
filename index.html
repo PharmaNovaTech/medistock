@@ -5469,9 +5469,7 @@ async closeFullscreenScanner() {
             searchResults.innerHTML = '';
         }
         const lotList = document.getElementById('lotList');
-        if (lotList) lotList.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:8px;font-size:13px;">กำลังโหลดข้อมูล 
-
-LOT...</div>';
+        if (lotList) lotList.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:8px;font-size:13px;">กำลังโหลดข้อมูล LOT...</div>';
     }
 
     onScan(barcode) {
@@ -5491,9 +5489,7 @@ LOT...</div>';
         const detail = document.getElementById('productDetail');
         if (detail) detail.style.display = 'none';
         const lotList = document.getElementById('lotList');
-        if (lotList) lotList.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:8px;font-size:13px;">กำลังโหลด 
-
-LOT...</div>';
+        if (lotList) lotList.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:8px;font-size:13px;">กำลังโหลด LOT...</div>';
 
         this.currentBarcode = finalBarcode;
         this.pendingBarcode = finalBarcode;
