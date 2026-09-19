@@ -1908,9 +1908,7 @@ width:100px;font-size:13px;padding:8px 12px;min-height:42px;">
         <div class="card" id="mappingCard" style="display:none;">
             <div class="card-title"><i class="fas fa-cog"></i> กำหนดคอลัมน์</div>
             <div class="mapping-grid" id="mappingFields"></div>
-            <button class="btn btn-primary btn-block" id="confirmMappingBtn" onclick="confirmMapping()" style="margin-top:8px;font-
-
-size:14px;padding:12px;">
+            <button class="btn btn-primary btn-block" id="confirmMappingBtn" onclick="confirmMapping()" style="margin-top:8px;font-size:14px;padding:12px;">
                 <i class="fas fa-check"></i> ยืนยันและนำเข้าข้อมูล
             </button>
         </div>
@@ -2135,21 +2133,15 @@ id="costDisplay">0.00</span>
             <!-- Note -->
             <div style="margin:8px 0;">
                 <label style="font-weight:600;font-size:13px;"><i class="fas fa-pen"></i> หมายเหตุ</label>
-                <input type="text" class="input" id="noteInput" placeholder="เช่น สินค้าชำรุด, หมดอายุ" style="font-size:13px;padding:8px 12px;min-
-
-height:38px;margin-top:4px;">
+                <input type="text" class="input" id="noteInput" placeholder="เช่น สินค้าชำรุด, หมดอายุ" style="font-size:13px;padding:8px 12px;min-height:38px;margin-top:4px;">
             </div>
 
             <!-- Action Buttons -->
             <div style="display:flex;gap:6px;margin:8px 0;flex-wrap:wrap;">
-                <button class="btn btn-outline btn-sm" onclick="app && app.editProductInfo(app.currentProduct?.id)" style="flex:1;font-
-
-size:12px;padding:6px 12px;min-height:36px;">
+                <button class="btn btn-outline btn-sm" onclick="app && app.editProductInfo(app.currentProduct?.id)" style="flex:1;font-size:12px;padding:6px 12px;min-height:36px;">
                     <i class="fas fa-pencil-alt"></i> แก้ไขสินค้า
                 </button>
-                <button class="btn btn-warning btn-sm" onclick="app && app.recountProduct()" style="flex:1;font-size:12px;padding:6px 
-
-12px;min-height:36px;color:#fff;">
+                <button class="btn btn-warning btn-sm" onclick="app && app.recountProduct()" style="flex:1;font-size:12px;padding:6px 12px;min-height:36px;color:#fff;">
                     <i class="fas fa-undo"></i> นับใหม่
                 </button>
             </div>
@@ -2158,9 +2150,7 @@ size:12px;padding:6px 12px;min-height:36px;">
             <button class="btn btn-success btn-block" onclick="confirmItem()" style="font-size:16px;padding:14px;min-height:52px;">
                 <i class="fas fa-check-circle"></i> ยืนยันการนับ
             </button>
-            <button class="btn btn-outline btn-block" onclick="app && app.addMoreCount()" style="margin-top:6px;font-
-
-size:15px;padding:12px;min-height:44px;border-color:var(--success);color:var(--success);">
+            <button class="btn btn-outline btn-block" onclick="app && app.addMoreCount()" style="margin-top:6px;font-size:15px;padding:12px;min-height:44px;border-color:var(--success);color:var(--success);">
                 <i class="fas fa-plus-circle"></i> นับเพิ่ม
             </button>
         </div>
@@ -2171,9 +2161,7 @@ size:15px;padding:12px;min-height:44px;border-color:var(--success);color:var(--s
                 <span class="card-title" style="margin:0;font-size:14px;">
                     <i class="fas fa-list"></i> รายการนับล่าสุด
                 </span>
-                <span id="scanCount" style="background:var(--primary);color:#fff;padding:2px 10px;border-radius:14px;font-size:12px;font-
-
-weight:700;">0</span>
+                <span id="scanCount" style="background:var(--primary);color:#fff;padding:2px 10px;border-radius:14px;font-size:12px;font-weight:700;">0</span>
             </div>
             <div id="recentScans">
                 <p style="text-align:center;color:var(--text-muted);padding:16px;font-size:13px;">
@@ -2185,14 +2173,10 @@ weight:700;">0</span>
                 <button class="btn btn-outline btn-sm" onclick="undoLast()" style="flex:1;font-size:12px;padding:8px 12px;min-height:36px;">
                     <i class="fas fa-undo"></i> ยกเลิก
                 </button>
-                <button class="btn btn-danger btn-sm" onclick="clearSession()" style="flex:1;font-size:12px;padding:8px 12px;min-
-
-height:36px;">
+                <button class="btn btn-danger btn-sm" onclick="clearSession()" style="flex:1;font-size:12px;padding:8px 12px;min-height:36px;">
                     <i class="fas fa-trash"></i> ล้าง
                 </button>
-                <button class="btn btn-primary btn-sm" onclick="finishCount()" style="flex:1;font-size:12px;padding:8px 12px;min-
-
-height:36px;">
+                <button class="btn btn-primary btn-sm" onclick="finishCount()" style="flex:1;font-size:12px;padding:8px 12px;min-height:36px;">
                     <i class="fas fa-flag-checkered"></i> สรุปผล
                 </button>
             </div>
@@ -2210,29 +2194,21 @@ height:36px;">
 
             <!-- Summary -->
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-                <div style="padding:6px;background:var(--success-light);border-radius:var(--radius-sm);text-align:center;font-size:12px;font-
-
-weight:600;color:#065f46;">
+                <div style="padding:6px;background:var(--success-light);border-radius:var(--radius-sm);text-align:center;font-size:12px;font-weight:600;color:#065f46;">
                     <i class="fas fa-store"></i> หน้าร้าน
                 </div>
-                <div style="padding:6px;background:var(--warning-light);border-radius:var(--radius-sm);text-align:center;font-size:12px;font-
-
-weight:600;color:#92400e;">
+                <div style="padding:6px;background:var(--warning-light);border-radius:var(--radius-sm);text-align:center;font-size:12px;font-weight:600;color:#92400e;">
                     <i class="fas fa-warehouse"></i> หลังร้าน
                 </div>
             </div>
 
             <!-- Add Cabinet -->
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
-                <select id="newCabinetType" style="flex:1;padding:8px 10px;border:2px solid var(--border-color);border-radius:var(--radius-
-
-sm);font-size:13px;background:var(--bg-card);color:var(--text-main);min-height:42px;">
+                <select id="newCabinetType" style="flex:1;padding:8px 10px;border:2px solid var(--border-color);border-radius:var(--radius-sm);font-size:13px;background:var(--bg-card);color:var(--text-main);min-height:42px;">
                     <option value="front">🏪 หน้าร้าน</option>
                     <option value="back">📦 หลังร้าน</option>
                 </select>
-                <input type="text" class="input" id="newCabinetName" placeholder="ชื่อตู้ใหม่" style="flex:2;font-size:13px;padding:8px 12px;min-
-
-height:42px;">
+                <input type="text" class="input" id="newCabinetName" placeholder="ชื่อตู้ใหม่" style="flex:2;font-size:13px;padding:8px 12px;min-height:42px;">
                 <button class="btn btn-primary" onclick="addCabinet()" style="flex-shrink:0;font-size:13px;padding:8px 14px;min-height:42px;">
                     <i class="fas fa-plus"></i> เพิ่มตู้
                 </button>
@@ -2269,9 +2245,7 @@ height:42px;">
                 <i class="fas fa-layer-group"></i> จัดการชั้นในตู้
             </div>
             <div style="display:flex;gap:6px;margin-bottom:8px;">
-                <input type="text" class="input" id="newShelfName" placeholder="ชื่อชั้น" style="flex:2;font-size:13px;padding:8px 12px;min-
-
-height:42px;">
+                <input type="text" class="input" id="newShelfName" placeholder="ชื่อชั้น" style="flex:2;font-size:13px;padding:8px 12px;min-height:42px;">
                 <button class="btn btn-primary" onclick="addShelfToCabinet()" style="flex:1;font-size:13px;padding:8px 14px;min-height:42px;">
                     <i class="fas fa-plus"></i> เพิ่มชั้น
                 </button>
@@ -2298,9 +2272,7 @@ height:42px;">
         </div>
 
         <!-- Mode Info Banner -->
-        <div id="reportModeInfo" style="padding:8px 12px;background:var(--info-light);border-left:4px solid var(--info);border-
-
-radius:8px;margin-bottom:10px;font-size:12px;color:#1e40af;">
+        <div id="reportModeInfo" style="padding:8px 12px;background:var(--info-light);border-left:4px solid var(--info);border-radius:8px;margin-bottom:10px;font-size:12px;color:#1e40af;">
             <i class="fas fa-info-circle"></i>
             <span id="reportModeText">กำลังแสดง: ข้อมูลของเครื่องนี้</span>
         </div>
@@ -2352,9 +2324,7 @@ radius:8px;margin-bottom:10px;font-size:12px;color:#1e40af;">
         </div>
 
         <!-- Summary Overview -->
-        <div class="card" style="background:linear-gradient(135deg,var(--success-light) 0%,#d1fae5 100%);border:2px solid 
-
-#6ee7b7;padding:14px;">
+        <div class="card" style="background:linear-gradient(135deg,var(--success-light) 0%,#d1fae5 100%);border:2px solid #6ee7b7;padding:14px;">
             <div class="card-title" style="color:#065f46;font-size:15px;margin-bottom:6px;">
                 <i class="fas fa-chart-pie"></i> สรุปภาพรวม
             </div>
@@ -2387,9 +2357,7 @@ id="rptUncounted">0</div>
                 <div style="background:var(--danger-light);border-radius:var(--radius-md);padding:8px;">
                     <div style="font-weight:700;font-size:12px;color:#991b1b;"><i class="fas fa-box"></i> สต็อก 0</div>
                     <div id="zeroStockCount" style="font-size:18px;font-weight:800;color:#991b1b;">0</div>
-                    <button class="btn btn-sm btn-outline-danger" onclick="exportZeroStock()" style="font-size:10px;padding:4px 8px;min-
-
-height:28px;margin-top:4px;">
+                    <button class="btn btn-sm btn-outline-danger" onclick="exportZeroStock()" style="font-size:10px;padding:4px 8px;min-height:28px;margin-top:4px;">
                         <i class="fas fa-file-export"></i> Export
                     </button>
                 </div>
@@ -2496,44 +2464,28 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
                     <i class="fas fa-table"></i> รายละเอียดการนับ
                 </span>
                 <div style="display:flex;gap:4px;flex-wrap:wrap;">
-                    <button class="btn btn-primary btn-sm" onclick="app.exportFullReportXLSX()" style="font-size:11px;padding:4px 10px;min-
-
-height:30px;background:#10b981;color:#fff;">
+                    <button class="btn btn-primary btn-sm" onclick="app.exportFullReportXLSX()" style="font-size:11px;padding:4px 10px;min-height:30px;background:#10b981;color:#fff;">
                         <i class="fas fa-file-excel"></i> Excel 18 Sheets
                     </button>
-                    <button class="btn btn-danger btn-sm" onclick="app.printFullReport()" style="font-size:11px;padding:4px 10px;min-
-
-height:30px;">
+                    <button class="btn btn-danger btn-sm" onclick="app.printFullReport()" style="font-size:11px;padding:4px 10px;min-height:30px;">
                         <i class="fas fa-print"></i> พิมพ์/PDF
                     </button>
-                    <button class="btn btn-outline btn-sm" onclick="app.exportBarcodeMasterXLSX()" style="font-size:11px;padding:4px 
-
-10px;min-height:30px;">
+                    <button class="btn btn-outline btn-sm" onclick="app.exportBarcodeMasterXLSX()" style="font-size:11px;padding:4px 10px;min-height:30px;">
                         <i class="fas fa-barcode"></i> Barcode XLSX
                     </button>
-                    <button class="btn btn-outline btn-sm" onclick="exportData('csv')" style="font-size:11px;padding:4px 10px;min-
-
-height:30px;">
+                    <button class="btn btn-outline btn-sm" onclick="exportData('csv')" style="font-size:11px;padding:4px 10px;min-height:30px;">
                         <i class="fas fa-file-csv"></i> CSV
                     </button>
-                    <button class="btn btn-outline btn-sm" onclick="exportData('xlsx')" style="font-size:11px;padding:4px 10px;min-
-
-height:30px;">
+                    <button class="btn btn-outline btn-sm" onclick="exportData('xlsx')" style="font-size:11px;padding:4px 10px;min-height:30px;">
                         <i class="fas fa-file-excel"></i> Excel
                     </button>
-                    <button class="btn btn-outline btn-sm" onclick="exportData('pdf')" style="font-size:11px;padding:4px 10px;min-
-
-height:30px;">
+                    <button class="btn btn-outline btn-sm" onclick="exportData('pdf')" style="font-size:11px;padding:4px 10px;min-height:30px;">
                         <i class="fas fa-file-pdf"></i> PDF
                     </button>
-                    <button class="btn btn-outline btn-sm" onclick="exportLocationReport()" style="font-size:11px;padding:4px 10px;min-
-
-height:30px;">
+                    <button class="btn btn-outline btn-sm" onclick="exportLocationReport()" style="font-size:11px;padding:4px 10px;min-height:30px;">
                         <i class="fas fa-map-pin"></i> ตู้/ชั้น
                     </button>
-                    <button class="btn btn-outline btn-sm" onclick="exportBarcodeMaster()" style="font-size:11px;padding:4px 10px;min-
-
-height:30px;">
+                    <button class="btn btn-outline btn-sm" onclick="exportBarcodeMaster()" style="font-size:11px;padding:4px 10px;min-height:30px;">
                         <i class="fas fa-barcode"></i> Master
                     </button>
                     <button class="btn btn-outline btn-sm" onclick="exportHistory()" style="font-size:11px;padding:4px 10px;min-height:30px;">
@@ -2690,9 +2642,7 @@ height:30px;">
                 <button class="btn btn-primary btn-sm" onclick="backupData()" style="flex:1;font-size:12px;padding:8px 12px;min-height:38px;">
                     <i class="fas fa-download"></i> สำรองข้อมูล
                 </button>
-                <button class="btn btn-outline btn-sm" onclick="document.getElementById('restoreInput').click()" style="flex:1;font-
-
-size:12px;padding:8px 12px;min-height:38px;">
+                <button class="btn btn-outline btn-sm" onclick="document.getElementById('restoreInput').click()" style="flex:1;font-size:12px;padding:8px 12px;min-height:38px;">
                     <i class="fas fa-upload"></i> กู้คืนข้อมูล
                 </button>
             </div>
@@ -2705,12 +2655,8 @@ size:12px;padding:8px 12px;min-height:38px;">
         <div class="card">
             <div class="card-title"><i class="fas fa-weight-scale"></i> จัดการหน่วยนับ</div>
             <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
-                <input type="text" class="input" id="newUnitName" placeholder="ชื่อหน่วย" style="flex:1;font-size:13px;padding:8px 12px;min-
-
-height:38px;">
-                <input type="number" class="input" id="newUnitFactor" placeholder="เท่ากับกี่ชิ้น" style="flex:1;font-size:13px;padding:8px 12px;min-
-
-height:38px;" value="12">
+                <input type="text" class="input" id="newUnitName" placeholder="ชื่อหน่วย" style="flex:1;font-size:13px;padding:8px 12px;min-height:38px;">
+                <input type="number" class="input" id="newUnitFactor" placeholder="เท่ากับกี่ชิ้น" style="flex:1;font-size:13px;padding:8px 12px;min-height:38px;" value="12">
                 <button class="btn btn-primary" onclick="addUnit()" style="font-size:13px;padding:8px 14px;min-height:38px;">
                     <i class="fas fa-plus"></i> เพิ่ม
                 </button>
@@ -2735,9 +2681,7 @@ height:38px;" value="12">
                 <label style="font-weight:600;font-size:12px;display:block;margin-bottom:3px;">
                     <i class="fas fa-table"></i> Spreadsheet ID
                 </label>
-                <input type="text" class="input" id="gsSpreadsheetId" placeholder="Spreadsheet ID" style="font-size:13px;padding:8px 
-
-12px;min-height:38px;">
+                <input type="text" class="input" id="gsSpreadsheetId" placeholder="Spreadsheet ID" style="font-size:13px;padding:8px 12px;min-height:38px;">
             </div>
             <div style="margin-bottom:8px;">
                 <label style="font-weight:600;font-size:12px;display:block;margin-bottom:3px;">
@@ -2746,32 +2690,22 @@ height:38px;" value="12">
                 <input type="text" class="input" id="gsFileName" placeholder="ชื่อไฟล์" style="font-size:13px;padding:8px 12px;min-height:38px;">
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                <button class="btn btn-primary btn-sm" onclick="app && app.saveGoogleSheetsSettings()" style="flex:1;background:#4285F4;font-
-
-size:12px;padding:8px 12px;min-height:38px;">
+                <button class="btn btn-primary btn-sm" onclick="app && app.saveGoogleSheetsSettings()" style="flex:1;background:#4285F4;font-size:12px;padding:8px 12px;min-height:38px;">
                     <i class="fas fa-save"></i> บันทึก
                 </button>
-                <button class="btn btn-outline btn-sm" onclick="app && app.checkGoogleSheetsStatus()" style="flex:1;font-size:12px;padding:8px 
-
-12px;min-height:38px;">
+                <button class="btn btn-outline btn-sm" onclick="app && app.checkGoogleSheetsStatus()" style="flex:1;font-size:12px;padding:8px 12px;min-height:38px;">
                     <i class="fas fa-plug"></i> ทดสอบ
                 </button>
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
-                <button class="btn btn-success btn-sm" onclick="app && app.syncSessionToGoogleSheets()" style="flex:1;font-
-
-size:12px;padding:8px 12px;min-height:38px;">
+                <button class="btn btn-success btn-sm" onclick="app && app.syncSessionToGoogleSheets()" style="flex:1;font-size:12px;padding:8px 12px;min-height:38px;">
                     <i class="fas fa-cloud-upload-alt"></i> ซิงค์ขึ้น
                 </button>
-                <button class="btn btn-outline btn-sm" onclick="app && app.loadFromGoogleSheets()" style="flex:1;font-size:12px;padding:8px 
-
-12px;min-height:38px;">
+                <button class="btn btn-outline btn-sm" onclick="app && app.loadFromGoogleSheets()" style="flex:1;font-size:12px;padding:8px 12px;min-height:38px;">
                     <i class="fas fa-cloud-download-alt"></i> โหลด
                 </button>
             </div>
-            <div id="googleSheetsStatus" style="font-size:11px;color:var(--text-muted);margin-top:8px;padding:6px 10px;background:var(--bg-
-
-body);border-radius:var(--radius-sm);">
+            <div id="googleSheetsStatus" style="font-size:11px;color:var(--text-muted);margin-top:8px;padding:6px 10px;background:var(--bg-body);border-radius:var(--radius-sm);">
                 ⚠️ ยังไม่ได้ตั้งค่า
             </div>
         </div>
@@ -2836,15 +2770,11 @@ body);border-radius:var(--radius-sm);">
     <div class="modal">
         <div class="modal-handle"></div>
         <div class="modal-title"><i class="fas fa-keyboard"></i> ใส่บาร์โค้ดด้วยตนเอง</div>
-        <input type="text" class="input" id="manualBarcodeInput" placeholder="ป้อนเลขบาร์โค้ด..." style="margin-bottom:8px;font-size:16px;padding:12px 
-
-16px;min-height:48px;" autofocus>
+        <input type="text" class="input" id="manualBarcodeInput" placeholder="ป้อนเลขบาร์โค้ด..." style="margin-bottom:8px;font-size:16px;padding:12px 16px;min-height:48px;" autofocus>
         <button class="btn btn-primary btn-block" onclick="submitManualBarcode()" style="font-size:15px;padding:12px;min-height:48px;">
             <i class="fas fa-search"></i> ค้นหา
         </button>
-        <button class="btn btn-outline btn-block" onclick="closeBarcodeModal()" style="margin-top:6px;font-size:15px;padding:12px;min-
-
-height:48px;">
+        <button class="btn btn-outline btn-block" onclick="closeBarcodeModal()" style="margin-top:6px;font-size:15px;padding:12px;min-height:48px;">
             <i class="fas fa-times"></i> ปิด
         </button>
     </div>
@@ -2855,39 +2785,19 @@ height:48px;">
     <div class="modal">
         <div class="modal-handle"></div>
         <div class="modal-title"><i class="fas fa-plus-circle"></i> เพิ่มสินค้าใหม่</div>
-        <div style="margin-bottom:6px;padding:6px 12px;background:var(--warning-light);border-radius:var(--radius-sm);font-
-
-size:12px;color:#92400e;">
+        <div style="margin-bottom:6px;padding:6px 12px;background:var(--warning-light);border-radius:var(--radius-sm);font-size:12px;color:#92400e;">
             <i class="fas fa-info-circle"></i> ราคาทุนจะตั้งเป็น 0 โดยอัตโนมัติ
         </div>
-        <input type="text" class="input" id="newProductBarcode" placeholder="📱 บาร์โค้ด (ถ้ามี)" style="margin-bottom:6px;font-size:14px;padding:10px 
-
-14px;min-height:44px;">
-        <input type="text" class="input" id="newProductName" placeholder="📦 ชื่อสินค้า *" style="margin-bottom:6px;font-size:14px;padding:10px 
-
-14px;min-height:44px;">
-        <input type="text" class="input" id="newProductLot" placeholder="🔖 เลขที่ผลิต (Lot)" style="margin-bottom:6px;font-size:14px;padding:10px 
-
-14px;min-height:44px;">
-        <input type="text" class="input" id="newProductMfg" placeholder="📅 วันที่ผลิต (YYYY-MM-DD)" style="margin-bottom:6px;font-
-
-size:14px;padding:10px 14px;min-height:44px;">
-        <input type="number" class="input" id="newProductSellPrice" placeholder="💰 ราคาขาย" style="margin-bottom:6px;font-size:14px;padding:10px 
-
-14px;min-height:44px;" step="0.01">
-        <input type="text" class="input" id="newProductUnit" placeholder="📦 หน่วยนับ" style="margin-bottom:6px;font-size:14px;padding:10px 
-
-14px;min-height:44px;">
-        <input type="date" class="input" id="newProductExpiry" placeholder="⏳ วันหมดอายุ" style="margin-bottom:6px;font-size:14px;padding:10px 
-
-14px;min-height:44px;">
+        <input type="text" class="input" id="newProductBarcode" placeholder="📱 บาร์โค้ด (ถ้ามี)" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;">
+        <input type="text" class="input" id="newProductName" placeholder="📦 ชื่อสินค้า *" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;">
+        <input type="text" class="input" id="newProductLot" placeholder="🔖 เลขที่ผลิต (Lot)" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;">
+        <input type="text" class="input" id="newProductMfg" placeholder="📅 วันที่ผลิต (YYYY-MM-DD)" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;">
+        <input type="number" class="input" id="newProductSellPrice" placeholder="💰 ราคาขาย" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;" step="0.01">
+        <input type="text" class="input" id="newProductUnit" placeholder="📦 หน่วยนับ" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;">
+        <input type="date" class="input" id="newProductExpiry" placeholder="⏳ วันหมดอายุ" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;">
         <div style="display:flex;gap:6px;margin-top:4px;">
-            <input type="number" class="input" id="newProductMinStock" placeholder="Min" style="flex:1;font-size:14px;padding:10px 14px;min-
-
-height:44px;" value="5">
-            <input type="number" class="input" id="newProductMaxStock" placeholder="Max" style="flex:1;font-size:14px;padding:10px 14px;min-
-
-height:44px;" value="100">
+            <input type="number" class="input" id="newProductMinStock" placeholder="Min" style="flex:1;font-size:14px;padding:10px 14px;min-height:44px;" value="5">
+            <input type="number" class="input" id="newProductMaxStock" placeholder="Max" style="flex:1;font-size:14px;padding:10px 14px;min-height:44px;" value="100">
         </div>
         <div style="display:flex;gap:6px;margin-top:4px;">
             <button class="btn btn-success btn-block" onclick="confirmAddProduct()" style="font-size:15px;padding:12px;min-height:48px;">
@@ -2910,16 +2820,12 @@ height:44px;" value="100">
             <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px;" id="editItemDetail">-</div>
             <div class="qty-control" style="margin:8px 0;">
                 <button class="qty-btn" onclick="editChangeQty(-1)"><i class="fas fa-minus"></i></button>
-                <input type="number" class="qty-input" id="editQtyInput" value="1" min="0" inputmode="numeric" style="height:40px;font-
-
-size:20px;">
+                <input type="number" class="qty-input" id="editQtyInput" value="1" min="0" inputmode="numeric" style="height:40px;font-size:20px;">
                 <button class="qty-btn" onclick="editChangeQty(1)"><i class="fas fa-plus"></i></button>
             </div>
             <div style="margin:6px 0;">
                 <label style="font-weight:600;font-size:13px;">📝 หมายเหตุ</label>
-                <input type="text" class="input" id="editNoteInput" placeholder="หมายเหตุ" style="font-size:13px;padding:8px 12px;min-
-
-height:38px;margin-top:4px;">
+                <input type="text" class="input" id="editNoteInput" placeholder="หมายเหตุ" style="font-size:13px;padding:8px 12px;min-height:38px;margin-top:4px;">
             </div>
             <div style="display:flex;gap:6px;margin-top:8px;">
                 <button class="btn btn-success btn-block" onclick="saveEditItem()" style="font-size:14px;padding:10px;min-height:44px;">
@@ -2963,16 +2869,12 @@ height:48px;">
     <div class="modal">
         <div class="modal-handle"></div>
         <div class="modal-title"><i class="fas fa-plus-circle"></i> เพิ่มตู้ใหม่</div>
-        <input type="text" class="input" id="scanNewCabinetName" placeholder="ชื่อตู้" style="margin-bottom:6px;font-size:14px;padding:10px 
-
-14px;min-height:44px;">
+        <input type="text" class="input" id="scanNewCabinetName" placeholder="ชื่อตู้" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;">
         <div style="display:flex;gap:6px;margin-top:4px;">
             <button class="btn btn-success btn-block" onclick="confirmScanAddCabinet()" style="font-size:15px;padding:12px;min-height:48px;">
                 <i class="fas fa-save"></i> บันทึก
             </button>
-            <button class="btn btn-outline btn-block" onclick="closeAddCabinetScanModal()" style="font-size:15px;padding:12px;min-
-
-height:48px;">
+            <button class="btn btn-outline btn-block" onclick="closeAddCabinetScanModal()" style="font-size:15px;padding:12px;min-height:48px;">
                 <i class="fas fa-times"></i> ยกเลิก
             </button>
         </div>
@@ -2984,9 +2886,7 @@ height:48px;">
     <div class="modal">
         <div class="modal-handle"></div>
         <div class="modal-title"><i class="fas fa-plus-circle"></i> เพิ่มชั้นใหม่</div>
-        <input type="text" class="input" id="scanNewShelfName" placeholder="ชื่อชั้น" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-
-
-height:44px;">
+        <input type="text" class="input" id="scanNewShelfName" placeholder="ชื่อชั้น" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;">
         <div style="display:flex;gap:6px;margin-top:4px;">
             <button class="btn btn-success btn-block" onclick="confirmScanAddShelf()" style="font-size:15px;padding:12px;min-height:48px;">
                 <i class="fas fa-save"></i> บันทึก
@@ -3006,16 +2906,12 @@ height:44px;">
         <div class="modal-handle"></div>
         <div class="modal-title"><i class="fas fa-edit"></i> แก้ไขชื่อตู้</div>
         <input type="hidden" id="editCabinetId">
-        <input type="text" class="input" id="editCabinetName" placeholder="ชื่อตู้ใหม่" style="margin-bottom:8px;font-size:15px;padding:12px;min-
-
-height:48px;">
+        <input type="text" class="input" id="editCabinetName" placeholder="ชื่อตู้ใหม่" style="margin-bottom:8px;font-size:15px;padding:12px;min-height:48px;">
         <div style="display:flex;gap:6px;">
             <button class="btn btn-success btn-block" onclick="app.saveEditCabinet()" style="font-size:15px;padding:12px;min-height:48px;">
                 <i class="fas fa-save"></i> บันทึก
             </button>
-            <button class="btn btn-outline btn-block" onclick="app.closeEditCabinetModal()" style="font-size:15px;padding:12px;min-
-
-height:48px;">
+            <button class="btn btn-outline btn-block" onclick="app.closeEditCabinetModal()" style="font-size:15px;padding:12px;min-height:48px;">
                 <i class="fas fa-times"></i> ยกเลิก
             </button>
         </div>
@@ -3031,16 +2927,12 @@ height:48px;">
         <div class="modal-title"><i class="fas fa-edit"></i> แก้ไขชื่อชั้น</div>
         <input type="hidden" id="editShelfCabinetId">
         <input type="hidden" id="editShelfId">
-        <input type="text" class="input" id="editShelfName" placeholder="ชื่อชั้นใหม่" style="margin-bottom:8px;font-size:15px;padding:12px;min-
-
-height:48px;">
+        <input type="text" class="input" id="editShelfName" placeholder="ชื่อชั้นใหม่" style="margin-bottom:8px;font-size:15px;padding:12px;min-height:48px;">
         <div style="display:flex;gap:6px;">
             <button class="btn btn-success btn-block" onclick="app.saveEditShelf()" style="font-size:15px;padding:12px;min-height:48px;">
                 <i class="fas fa-save"></i> บันทึก
             </button>
-            <button class="btn btn-outline btn-block" onclick="app.closeEditShelfModal()" style="font-size:15px;padding:12px;min-
-
-height:48px;">
+            <button class="btn btn-outline btn-block" onclick="app.closeEditShelfModal()" style="font-size:15px;padding:12px;min-height:48px;">
                 <i class="fas fa-times"></i> ยกเลิก
             </button>
         </div>
@@ -3061,22 +2953,16 @@ height:48px;">
         <input type="hidden" id="expiryProductId">
         <div style="margin-bottom:6px;">
             <label style="font-weight:600;font-size:12px;">📦 สินค้า</label>
-            <div id="expiryProductName" style="font-size:13px;padding:8px 12px;background:var(--bg-body);border-radius:var(--radius-sm);font-
-
-weight:600;">-</div>
+            <div id="expiryProductName" style="font-size:13px;padding:8px 12px;background:var(--bg-body);border-radius:var(--radius-sm);font-weight:600;">-</div>
         </div>
         <div style="margin-bottom:6px;">
             <label style="font-weight:600;font-size:12px;">🔖 LOT</label>
-            <div id="expiryLotName" style="font-size:13px;padding:8px 12px;background:var(--bg-body);border-radius:var(--radius-sm);font-
-
-family:monospace;">-</div>
+            <div id="expiryLotName" style="font-size:13px;padding:8px 12px;background:var(--bg-body);border-radius:var(--radius-sm);font-family:monospace;">-</div>
         </div>
         <div style="display:flex;gap:6px;margin-bottom:6px;">
             <div style="flex:1;">
                 <label style="font-weight:600;font-size:12px;">📅 วันเดิม</label>
-                <div id="expiryOldDate" style="font-size:13px;padding:8px 12px;background:var(--danger-light);border-radius:var(--radius-
-
-sm);color:#991b1b;font-weight:600;">-</div>
+                <div id="expiryOldDate" style="font-size:13px;padding:8px 12px;background:var(--danger-light);border-radius:var(--radius-sm);color:#991b1b;font-weight:600;">-</div>
             </div>
             <div style="flex:1;">
                 <label style="font-weight:600;font-size:12px;">📅 วันใหม่</label>
@@ -3087,9 +2973,7 @@ sm);color:#991b1b;font-weight:600;">-</div>
             <label style="font-weight:600;font-size:12px;">
                 📝 เหตุผล <span style="color:var(--danger);">*</span>
             </label>
-            <select class="input" id="expiryReasonSelect" onchange="app && app.onExpiryReasonChange()" style="font-size:13px;padding:8px 
-
-12px;min-height:38px;margin-top:4px;">
+            <select class="input" id="expiryReasonSelect" onchange="app && app.onExpiryReasonChange()" style="font-size:13px;padding:8px 12px;min-height:38px;margin-top:4px;">
                 <option value="">-- เลือกเหตุผล --</option>
                 <option value="ข้อมูลในระบบผิด">ข้อมูลในระบบผิด (คีย์ผิดตั้งแต่แรก)</option>
                 <option value="วันหมดอายุจริงเปลี่ยน">วันหมดอายุจริงเปลี่ยน</option>
@@ -3099,17 +2983,13 @@ sm);color:#991b1b;font-weight:600;">-</div>
             </select>
         </div>
         <div style="margin-bottom:8px;display:none;" id="expiryReasonOtherBox">
-            <input type="text" class="input" id="expiryReasonOther" placeholder="ระบุเหตุผล..." style="font-size:13px;padding:8px 12px;min-
-
-height:38px;">
+            <input type="text" class="input" id="expiryReasonOther" placeholder="ระบุเหตุผล..." style="font-size:13px;padding:8px 12px;min-height:38px;">
         </div>
         <div style="display:flex;gap:6px;">
             <button class="btn btn-success btn-block" onclick="app.saveExpiryChange()" style="font-size:15px;padding:12px;min-height:48px;">
                 <i class="fas fa-save"></i> บันทึก
             </button>
-            <button class="btn btn-outline btn-block" onclick="app.closeExpiryReasonModal()" style="font-size:15px;padding:12px;min-
-
-height:48px;">
+            <button class="btn btn-outline btn-block" onclick="app.closeExpiryReasonModal()" style="font-size:15px;padding:12px;min-height:48px;">
                 <i class="fas fa-times"></i> ยกเลิก
             </button>
         </div>
@@ -3157,9 +3037,7 @@ height:48px;">
                     <i class="fas fa-lock" style="color:var(--warning);" title="แก้ไขผ่านปุ่มแยก"></i>
                 </label>
                 <input type="date" class="input" id="editProductExpiry" readonly style="font-size:14px;padding:8px 12px;min-height:38px;">
-                <button class="btn btn-warning btn-sm" onclick="app.openExpiryReasonModal()" style="margin-top:4px;width:100%;font-
-
-size:11px;padding:6px 8px;min-height:32px;">
+                <button class="btn btn-warning btn-sm" onclick="app.openExpiryReasonModal()" style="margin-top:4px;width:100%;font-size:11px;padding:6px 8px;min-height:32px;">
                     <i class="fas fa-edit"></i> แก้ไขวันหมดอายุ (ต้องระบุเหตุผล)
                 </button>
             </div>
@@ -3182,9 +3060,7 @@ size:11px;padding:6px 8px;min-height:32px;">
             </div>
         </div>
         <div style="display:flex;gap:6px;margin-top:8px;">
-            <button class="btn btn-success btn-block" onclick="app && app.saveEditProductInfo()" style="font-size:14px;padding:10px;min-
-
-height:44px;">
+            <button class="btn btn-success btn-block" onclick="app && app.saveEditProductInfo()" style="font-size:14px;padding:10px;min-height:44px;">
                 <i class="fas fa-save"></i> บันทึก
             </button>
             <button class="btn btn-outline btn-block" onclick="closeEditProductModal()" style="font-size:14px;padding:10px;min-height:44px;">
@@ -3204,9 +3080,7 @@ height:44px;">
         <div id="conflictContent" style="max-height:50vh;overflow-y:auto;">
             <p style="color:var(--text-muted);text-align:center;padding:20px;">กำลังโหลด...</p>
         </div>
-        <button class="btn btn-outline btn-block" onclick="app.closeConflictModal()" style="margin-top:8px;font-size:14px;padding:10px;min-
-
-height:44px;">
+        <button class="btn btn-outline btn-block" onclick="app.closeConflictModal()" style="margin-top:8px;font-size:14px;padding:10px;min-height:44px;">
             <i class="fas fa-times"></i> ปิด
         </button>
     </div>
@@ -4628,17 +4502,11 @@ class StockApp {
             container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:12px;">ยังไม่มีสาขา</p>';
             return;
         }
-        container.innerHTML = this.branches.map(b => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 
-
-12px;border-bottom:1px solid var(--border-color);">
+        container.innerHTML = this.branches.map(b => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--border-color);">
             <span>🏪 ${escapeHtml(b.name)}</span>
             <div style="display:flex;gap:4px;">
-                <button class="btn btn-outline btn-sm" onclick="app.renameBranch('${escapeHtml(b.id)}')" style="min-height:30px;padding:4px 
-
-10px;font-size:11px;"><i class="fas fa-pen"></i></button>
-                <button class="btn btn-danger btn-sm" onclick="app.deleteBranch('${escapeHtml(b.id)}')" style="min-height:30px;padding:4px 
-
-10px;font-size:11px;"><i class="fas fa-trash"></i></button>
+                <button class="btn btn-outline btn-sm" onclick="app.renameBranch('${escapeHtml(b.id)}')" style="min-height:30px;padding:4px 10px;font-size:11px;"><i class="fas fa-pen"></i></button>
+                <button class="btn btn-danger btn-sm" onclick="app.deleteBranch('${escapeHtml(b.id)}')" style="min-height:30px;padding:4px 10px;font-size:11px;"><i class="fas fa-trash"></i></button>
             </div>
         </div>`).join('');
     }
@@ -4922,13 +4790,9 @@ class StockApp {
             container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:8px;font-size:13px;">ยังไม่มีหน่วย</p>';
             return;
         }
-        container.innerHTML = units.map(name => `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 
-
-10px;border-bottom:1px solid var(--border-color);">
+        container.innerHTML = units.map(name => `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid var(--border-color);">
             <span><strong>${escapeHtml(name)}</strong> = ${this.unitMap[name]} ชิ้น</span>
-            <button class="btn btn-danger btn-sm" onclick="app && app.deleteUnit('${escapeHtml(name)}')" style="font-size:10px;padding:2px 
-
-8px;min-height:28px;"><i class="fas fa-trash"></i></button>
+            <button class="btn btn-danger btn-sm" onclick="app && app.deleteUnit('${escapeHtml(name)}')" style="font-size:10px;padding:2px 8px;min-height:28px;"><i class="fas fa-trash"></i></button>
         </div>`).join('');
     }
 
@@ -5523,13 +5387,9 @@ async closeFullscreenScanner() {
 
         const overlay = document.createElement('div');
         overlay.id = 'scannerHelpOverlay';
-        overlay.style.cssText = `position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10001; display: flex; align-items: center; 
-
-justify-content: center; padding: 20px;`;
+        overlay.style.cssText = `position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10001; display: flex; align-items: center; justify-content: center; padding: 20px;`;
         overlay.innerHTML = `
-            <div style="background: #fff; color: #0f172a; border-radius: 20px; max-width: 380px; width: 100%; padding: 24px; box-shadow: 0 
-
-20px 60px rgba(0,0,0,0.5); text-align: left;">
+            <div style="background: #fff; color: #0f172a; border-radius: 20px; max-width: 380px; width: 100%; padding: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align: left;">
                 <div style="text-align:center; margin-bottom:16px;">
                     <div style="font-size:42px;">💡</div>
                     <h3 style="font-family:'Outfit',sans-serif; font-size:18px; margin:8px 0 0;">วิธีใช้กล้องสแกน</h3>
@@ -5542,9 +5402,7 @@ justify-content: center; padding: 20px;`;
                     <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">📱 รองรับ <strong>EAN-8, EAN-13, UPC-A, Code-128</strong></div>
                     <div style="padding:8px 0;">🔢 <strong>ถ้าอ่านไม่ได้</strong> ใช้ปุ่ม "ใส่รหัส" แทน</div>
                 </div>
-                <button id="scannerHelpClose" style="margin-top:20px; width:100%; padding:14px; background: linear-gradient
-
-(135deg,#0ea5e9,#6366f1); color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer;">✅ เข้าใจแล้ว</button>
+                <button id="scannerHelpClose" style="margin-top:20px; width:100%; padding:14px; background: linear-gradient(135deg,#0ea5e9,#6366f1); color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer;">✅ เข้าใจแล้ว</button>
             </div>
         `;
         document.body.appendChild(overlay);
@@ -5715,16 +5573,10 @@ LOT...</div>';
         document.getElementById('searchResults').style.display = 'block';
         document.getElementById('searchResults').innerHTML = `<div style="padding:14px;text-align:center;">
             <div style="font-size:14px;color:var(--text-muted);margin-bottom:8px;">⌨️ พิมพ์ชื่อสินค้าในช่องค้นหา</div>
-            <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">📎 บาร์โค้ด: <strong style="color:var(--primary);font-
-
-family:monospace;">${escapeHtml(barcode)}</strong></div>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">📎 บาร์โค้ด: <strong style="color:var(--primary);font-family:monospace;">${escapeHtml(barcode)}</strong></div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
-                <button class="btn btn-primary btn-sm" onclick="app.showAddProductModal()" style="font-size:13px;padding:6px 14px;min-
-
-height:36px;"><i class="fas fa-plus"></i> เพิ่มสินค้าใหม่</button>
-                <button class="btn btn-outline btn-sm" onclick="app.clearPendingBarcode()" style="font-size:13px;padding:6px 14px;min-
-
-height:36px;"><i class="fas fa-times"></i> ยกเลิก</button>
+                <button class="btn btn-primary btn-sm" onclick="app.showAddProductModal()" style="font-size:13px;padding:6px 14px;min-height:36px;"><i class="fas fa-plus"></i> เพิ่มสินค้าใหม่</button>
+                <button class="btn btn-outline btn-sm" onclick="app.clearPendingBarcode()" style="font-size:13px;padding:6px 14px;min-height:36px;"><i class="fas fa-times"></i> ยกเลิก</button>
             </div>
         </div>`;
         this.pendingBarcode = barcode;
@@ -5767,11 +5619,7 @@ height:36px;"><i class="fas fa-times"></i> ยกเลิก</button>
         const batch = this.filteredProducts.slice(start, end);
         if (this.filteredProducts.length === 0) {
             container.style.display = 'block';
-            container.innerHTML = `<div style="padding:14px;text-align:center;"><p style="color:var(--text-muted);">❌ ไม่พบสินค้า</p><button 
-
-class="btn btn-primary btn-sm" onclick="app.showAddProductModal()" style="font-size:13px;padding:6px 14px;min-height:36px;margin-top:6px;"><i 
-
-class="fas fa-plus"></i> เพิ่มสินค้าใหม่</button></div>`;
+            container.innerHTML = `<div style="padding:14px;text-align:center;"><p style="color:var(--text-muted);">❌ ไม่พบสินค้า</p><button class="btn btn-primary btn-sm" onclick="app.showAddProductModal()" style="font-size:13px;padding:6px 14px;min-height:36px;margin-top:6px;"><i class="fas fa-plus"></i> เพิ่มสินค้าใหม่</button></div>`;
             return;
         }
         const hasPending = !!this.pendingBarcode;
@@ -6994,9 +6842,7 @@ class="fas fa-plus"></i> เพิ่มสินค้าใหม่</button><
         if (countEl) countEl.textContent = this.sessionItems.length;
         if (!container) return;
         if (this.sessionItems.length === 0) {
-            container.innerHTML = `<p style="text-align:center;color:var(--text-muted);padding:16px;font-size:13px;"><i class="fas fa-inbox" 
-
-style="font-size:20px;display:block;margin-bottom:6px;opacity:0.5;"></i>ยังไม่มีประวัติการสแกน</p>`;
+            container.innerHTML = `<p style="text-align:center;color:var(--text-muted);padding:16px;font-size:13px;"><i class="fas fa-inbox" style="font-size:20px;display:block;margin-bottom:6px;opacity:0.5;"></i>ยังไม่มีประวัติการสแกน</p>`;
             if (moreEl) moreEl.innerHTML = '';
             return;
         }
@@ -7019,17 +6865,13 @@ style="font-size:20px;display:block;margin-bottom:6px;opacity:0.5;"></i>ยั�
                 <div style="display:flex;gap:4px;align-items:center;">
                     <span class="qty-diff ${diffClass}">${diffText}</span>
                     <button class="btn-icon" onclick="app.editItem(${realIdx})" title="แก้ไข"><i class="fas fa-pen"></i></button>
-                    <button class="btn-icon" onclick="app.deleteEditItemDirect(${realIdx})" title="ลบ" style="color:var(--danger);"><i class="fas 
-
-fa-trash"></i></button>
+                    <button class="btn-icon" onclick="app.deleteEditItemDirect(${realIdx})" title="ลบ" style="color:var(--danger);"><i class="fas fa-trash"></i></button>
                 </div>
             </div>`;
         }).join('');
         if (moreEl) {
             if (showCount < this.sessionItems.length) {
-                moreEl.innerHTML = `<button class="btn btn-outline btn-sm" onclick="app.loadMoreRecentScans()" style="font-
-
-size:12px;padding:6px 14px;min-height:34px;"><i class="fas fa-chevron-down"></i> ดูเพิ่มเติม (${showCount}/${this.sessionItems.length})</button>`;
+                moreEl.innerHTML = `<button class="btn btn-outline btn-sm" onclick="app.loadMoreRecentScans()" style="font-size:12px;padding:6px 14px;min-height:34px;"><i class="fas fa-chevron-down"></i> ดูเพิ่มเติม (${showCount}/${this.sessionItems.length})</button>`;
             } else {
                 moreEl.innerHTML = '';
             }
@@ -7206,19 +7048,17 @@ size:12px;padding:6px 14px;min-height:34px;"><i class="fas fa-chevron-down"></i>
             list.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:12px;font-size:13px;">ยังไม่มีชั้น</p>';
             return;
         }
-        list.innerHTML = cabinet.shelves.map((s, i) => `<div style="display:flex;justify-content:space-between;align-
-
-items:center;gap:5px;padding:6px 10px;background:var(--bg-body);border-radius:6px;margin-bottom:4px;border:1px solid var(--border-color);">
-            <span style="font-weight:600;font-size:13px;flex:1;">📚 ${escapeHtml(s.name)}${this.isNumericShelfName(s.name) ? ` <small 
-
-style="color:var(--text-muted);">#${i+1}</small>` : ''}</span>
+        list.innerHTML = cabinet.shelves.map((s, i) => `<div style="display:flex;justify-content:space-between;align-items:center;gap:5px;padding:6px 10px;background:var(--bg-body);border-radius:6px;margin-bottom:4px;border:1px solid var(--border-color);">
+            <span style="font-weight:600;font-size:13px;flex:1;">📚 ${escapeHtml(s.name)}${this.isNumericShelfName(s.name) ? ` <small style="color:var(--text-muted);">#${i+1}</small>` : ''}</span>
             <div class="shelf-actions">
                 <button class="btn btn-outline btn-sm" onclick="app.showEditShelfModal('${escapeHtml(cabinet.id)}','${escapeHtml(s.id)}')" 
-
-title="แก้ชื่อ" style="border-color:var(--info);color:var(--info);">
+                
+        title="แก้ชื่อ" style="border-color:var(--info);color:var(--info);">
                     <i class="fas fa-pen"></i>
                 </button>
-                <button class="btn btn-danger btn-sm" onclick="app.deleteShelf('${escapeHtml(cabinet.id)}', '${escapeHtml(s.id)}')" title="ลบ">
+                <button class="btn btn-danger btn-sm" onclick="app.deleteShelf('${escapeHtml(cabinet.id)}', '${escapeHtml(s.id)}')" 
+                
+        title="ลบ">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -7240,9 +7080,7 @@ app.switchTab('scan')">
             <div class="cabinet-name">${escapeHtml(cabinet.name)}</div>
             <div><span class="cabinet-type ${typeClass}">${typeLabel}</span></div>
             <div style="font-size:10px;color:var(--text-muted);">${cabinet.shelves.length} ชั้นวาง</div>
-            ${counted > 0 ? `<div style="font-size:9px;color:var(--success);margin-top:2px;font-weight:600;"><i class="fas fa-check-
-
-circle"></i> นับแล้ว ${counted}</div>` : ''}
+            ${counted > 0 ? `<div style="font-size:9px;color:var(--success);margin-top:2px;font-weight:600;"><i class="fas fa-check-circle"></i> นับแล้ว ${counted}</div>` : ''}
             <div class="cabinet-actions">
                 <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); app.showEditCabinetModal('${escapeHtml(cabIdStr)}')" 
 
@@ -7254,14 +7092,12 @@ title="แก้ชื่อ" style="border-color:var(--info);color:var(--info);
 title="เลื่อนขึ้น">
                     <i class="fas fa-arrow-up"></i>
                 </button>
-                <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); app.moveCabinet('${escapeHtml(cabIdStr)}',1)" title="
-
-เลื่อนลง">
+                <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); app.moveCabinet('${escapeHtml(cabIdStr)}',1)" 
+title="เลื่อนลง">
                     <i class="fas fa-arrow-down"></i>
                 </button>
-                <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); app.deleteCabinet('${escapeHtml(cabIdStr)}')" title="
-
-ลบ">
+                <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); app.deleteCabinet('${escapeHtml(cabIdStr)}')"
+title="ลบ">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -7274,21 +7110,17 @@ title="เลื่อนขึ้น">
         if (this.locations.length === 0) {
             grid.innerHTML = `<div style="text-align:center;color:var(--text-muted);padding:28px;grid-column:1/-1;font-size:14px;"><i 
 
-class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opacity:0.5;"></i>ยังไม่มีตู้สินค้า<br><small>เพิ่มตู้ด้านบนเพื่อเริ่มจัดผังร้าน</small></div>`;
+    class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opacity:0.5;"></i>ยังไม่มีตู้สินค้า<br><small>เพิ่มตู้ด้านบนเพื่อเริ่มจัดผังร้าน</small></div>`;
             return;
         }
         const front = this.locations.filter(l => l.type === 'front');
         const back = this.locations.filter(l => l.type === 'back');
         let html = '';
-        html += `<div style="grid-column:1/-1;margin:4px 0;padding:6px 10px;background:var(--success-light);border-radius:var(--radius-
-
-sm);font-size:12px;font-weight:700;color:#065f46;"><i class="fas fa-store"></i> หน้าร้าน (${front.length} ตู้)</div>`;
+        html += `<div style="grid-column:1/-1;margin:4px 0;padding:6px 10px;background:var(--success-light);border-radius:var(--radius-sm);font-size:12px;font-weight:700;color:#065f46;"><i class="fas fa-store"></i> หน้าร้าน (${front.length} ตู้)</div>`;
         front.forEach(c => {
             html += this.renderCabinetBlock(c);
         });
-        html += `<div style="grid-column:1/-1;margin:4px 0;padding:6px 10px;background:var(--warning-light);border-radius:var(--radius-
-
-sm);font-size:12px;font-weight:700;color:#92400e;"><i class="fas fa-warehouse"></i> หลังร้าน (${back.length} ตู้)</div>`;
+        html += `<div style="grid-column:1/-1;margin:4px 0;padding:6px 10px;background:var(--warning-light);border-radius:var(--radius-sm);font-size:12px;font-weight:700;color:#92400e;"><i class="fas fa-warehouse"></i> หลังร้าน (${back.length} ตู้)</div>`;
         back.forEach(c => {
             html += this.renderCabinetBlock(c);
         });
@@ -7334,9 +7166,7 @@ sm);font-size:12px;font-weight:700;color:#92400e;"><i class="fas fa-warehouse"><
         const html = this.locations.map((c, idx) => {
             const x = Number.isFinite(c.x) ? c.x : (idx % 4) * 24 + 2;
             const y = Number.isFinite(c.y) ? c.y : Math.floor(idx / 4) * 24 + 2;
-            return `<div class="blueprint-cab" draggable="true" data-id="${escapeHtml(String(c.id))}" style="left:${Math.max(0, Math.min(92, 
-
-x))}%;top:${Math.max(0, Math.min(92, y))}%;" title="ลากเพื่อย้ายตู้">
+            return `<div class="blueprint-cab" draggable="true" data-id="${escapeHtml(String(c.id))}" style="left:${Math.max(0, Math.min(92, x))}%;top:${Math.max(0, Math.min(92, y))}%;" title="ลากเพื่อย้ายตู้">
                 <div style="font-size:11px;font-weight:800;">${escapeHtml(c.name)}</div>
                 <div style="font-size:9px;">${c.type === 'front' ? 'หน้าร้าน' : 'หลังร้าน'}</div>
             </div>`;
@@ -7436,9 +7266,7 @@ x))}%;top:${Math.max(0, Math.min(92, y))}%;" title="ลากเพื่อย�
         const conflicts = Object.values(groups).filter(g => new Set(g.map(r => String(r[8] ?? ''))).size > 1);
 
         if (!conflicts.length) {
-            box.innerHTML = '<p style="text-align:center;padding:20px;color:var(--success);"><i class="fas fa-check-circle" style="font-
-
-size:24px;display:block;margin-bottom:8px;"></i>ไม่พบ Conflict</p>';
+            box.innerHTML = '<p style="text-align:center;padding:20px;color:var(--success);"><i class="fas fa-check-circle" style="font-size:24px;display:block;margin-bottom:8px;"></i>ไม่พบ Conflict</p>';
         } else {
             box.innerHTML = conflicts.map(g => {
                 const first = g[0];
@@ -7936,30 +7764,22 @@ size:24px;display:block;margin-bottom:8px;"></i>ไม่พบ Conflict</p>';
         const counts = this.getCountSummaryRows();
         add('การนับทั้งหมด',
             ['รหัสสินค้า', 'บาร์โค้ด', 'ชื่อสินค้า', 'LOT', 'ระบบ', 'นับรวม', 'ผลต่าง', 'ทุน', 'ขาย', 'ผลต่างทุน', 'ผลต่างขาย', 'ตู้/ชั้น', 'ผู้ตรวจนับ', 'หมดอายุ', 'หมายเหตุ'],
-            counts.map(r => [r.productId, r.barcode, r.name, r.lot, r.system, r.counted, r.difference, r.cost, r.sell, r.costDiff, r.sellDiff, 
-
-r.locations, r.users, r.expiry ? this.formatDate(r.expiry) : '', r.note]));
+            counts.map(r => [r.productId, r.barcode, r.name, r.lot, r.system, r.counted, r.difference, r.cost, r.sell, r.costDiff, r.sellDiff, r.locations, r.users, r.expiry ? this.formatDate(r.expiry) : '', r.note]));
 
         // ===== 3: ขาด-เกิน =====
         add('ขาด-เกิน',
             ['รหัสสินค้า', 'บาร์โค้ด', 'ชื่อสินค้า', 'LOT', 'ระบบ', 'นับ', 'ผลต่าง', 'สถานะ', 'มูลค่าทุนต่าง', 'มูลค่าขายต่าง', 'ตู้/ชั้น', 'ผู้ตรวจนับ'],
-            this.getDifferenceReportRows().map(r => [r.productId, r.barcode, r.name, r.lot, r.system, r.counted, r.difference, r.difference > 
-
-0 ? 'เกิน' : 'ขาด', r.costDiff, r.sellDiff, r.locations, r.users]));
+            this.getDifferenceReportRows().map(r => [r.productId, r.barcode, r.name, r.lot, r.system, r.counted, r.difference, r.difference > 0 ? 'เกิน' : 'ขาด', r.costDiff, r.sellDiff, r.locations, r.users]));
 
         // ===== 4: ยังไม่ได้นับ =====
         add('ยังไม่ได้นับ',
             ['รหัส', 'บาร์โค้ด', 'ชื่อสินค้า', 'LOT', 'จำนวน', 'ทุน/หน่วย', 'ขาย/หน่วย', 'มูลค่าทุน', 'มูลค่าขาย', 'หมดอายุ', 'หน่วย', 'ผู้จัดจำหน่าย'],
-            this.getUncountedReportRows().map(r => [r.id, r.primaryBarcode, r.name, r.lot, r.stock, r.cost, r.sell, r.stock * r.cost, r.stock 
-
-* r.sell, r.expiry ? this.formatDate(r.expiry) : '', r.unit, r.supplier]));
+            this.getUncountedReportRows().map(r => [r.id, r.primaryBarcode, r.name, r.lot, r.stock, r.cost, r.sell, r.stock * r.cost, r.stock * r.sell, r.expiry ? this.formatDate(r.expiry) : '', r.unit, r.supplier]));
 
         // ===== 5: สินค้าเพิ่มใหม่ =====
         add('สินค้าเพิ่มใหม่',
             ['รหัส', 'บาร์โค้ด', 'ชื่อสินค้า', 'LOT', 'จำนวนระบบ', 'จำนวนนับ', 'ผลต่าง', 'ทุน', 'ขาย', 'หมดอายุ', 'ผู้ตรวจนับ'],
-            this.getNewProductReportRows().map(r => [r.productId, r.barcode, r.name, r.lot, r.system_qty || 0, r.counted_qty || 0, 
-
-r.difference || 0, r.cost || 0, r.sellPrice || 0, r.expiry ? this.formatDate(r.expiry) : '', r.userName || '']));
+            this.getNewProductReportRows().map(r => [r.productId, r.barcode, r.name, r.lot, r.system_qty || 0, r.counted_qty || 0, r.difference || 0, r.cost || 0, r.sellPrice || 0, r.expiry ? this.formatDate(r.expiry) : '', r.userName || '']));
 
         // ===== 6: Barcode Master =====
         const bm = [];
@@ -7973,9 +7793,7 @@ r.difference || 0, r.cost || 0, r.sellPrice || 0, r.expiry ? this.formatDate(r.e
         // ===== 7-11: หมดอายุ =====
         const expirySheet = (name, rows) => add(name,
             ['รหัส', 'บาร์โค้ด', 'ชื่อสินค้า', 'LOT', 'หมดอายุ', 'คงเหลือวัน', 'จำนวน', 'ทุน', 'ขาย', 'มูลค่าทุน', 'มูลค่าขาย', 'หน่วย'],
-            rows.map(r => [r.id, r.primaryBarcode, r.name, r.lot, this.formatDate(r.expiry), r.diffDays, r.stock, r.cost, r.sell, r.stock * 
-
-r.cost, r.stock * r.sell, r.unit]));
+            rows.map(r => [r.id, r.primaryBarcode, r.name, r.lot, this.formatDate(r.expiry), r.diffDays, r.stock, r.cost, r.sell, r.stock * r.cost, r.stock * r.sell, r.unit]));
         expirySheet('หมดอายุแล้ว', this.getExpiryRows(-1, null));
         expirySheet('ใกล้หมด 3 เดือน', this.getExpiryRows(90, 0));
         expirySheet('ใกล้หมด 6 เดือน', this.getExpiryRows(180, 0));
@@ -7997,9 +7815,7 @@ r.cost, r.stock * r.sell, r.unit]));
 
         // ===== 15: Dead Stock =====
         add('Dead Stock', ['รหัส', 'ชื่อสินค้า', 'LOT', 'จำนวน', 'ทุน', 'ขาย', 'หมดอายุ', 'คงเหลือวัน', 'มูลค่าทุน'],
-            this.getDeadStockRows().map(r => [r.id, r.name, r.lot, r.stock, r.cost, r.sell, this.formatDate(r.expiry), r.diffDays, r.stock * 
-
-r.cost]));
+            this.getDeadStockRows().map(r => [r.id, r.name, r.lot, r.stock, r.cost, r.sell, this.formatDate(r.expiry), r.diffDays, r.stock * r.cost]));
 
         // ===== 16: สินค้าใกล้หมด =====
         add('สินค้าใกล้หมด', ['รหัส', 'ชื่อสินค้า', 'LOT', 'จำนวน', 'Min', 'ทุน', 'ขาย', 'มูลค่าทุน'],
@@ -8030,9 +7846,7 @@ r.cost]));
         const rows = [];
         this.products.forEach(p => {
             const bars = [...new Set([p.primaryBarcode, ...(p.barcodes || [])].filter(Boolean))];
-            bars.forEach(b => rows.push([p.id, p.code || '', p.name, b, p.primaryBarcode || '', p.lot || '', p.unit || '', p.supplier || 
-
-'']));
+            bars.forEach(b => rows.push([p.id, p.code || '', p.name, b, p.primaryBarcode || '', p.lot || '', p.unit || '', p.supplier || '']));
         });
         const ws = XLSX.utils.aoa_to_sheet([
             ['รหัส', 'Code', 'ชื่อสินค้า', 'Barcode', 'Barcode หลัก', 'LOT', 'หน่วย', 'ผู้จัดจำหน่าย'],
@@ -8087,9 +7901,7 @@ r.cost]));
             .pagebreak{page-break-before:always}
             @media print {button{display:none}}
         </style></head><body>
-        <button onclick="window.print()" style="padding:10px 20px;background:#0ea5e9;color:#fff;border:none;border-radius:6px;font-
-
-weight:700;cursor:pointer;margin-bottom:10px;">🖨️ พิมพ์ / Save as PDF</button>
+        <button onclick="window.print()" style="padding:10px 20px;background:#0ea5e9;color:#fff;border:none;border-radius:6px;font-weight:700;cursor:pointer;margin-bottom:10px;">🖨️ พิมพ์ / Save as PDF</button>
         <h1>📊 MediStock v5.3.1 Complete Edition — Full Report</h1>
         <div class="meta">
             <strong>วันที่:</strong> ${esc(new Date().toLocaleString('th-TH'))} |
@@ -8103,31 +7915,19 @@ weight:700;cursor:pointer;margin-bottom:10px;">🖨️ พิมพ์ / Save as
             <div class="summary-grid">
                 <div class="summary-item"><div class="label">สินค้า/LOT</div><div class="value">${this.products.length} / ${inv.length}</div></div>
                 <div class="summary-item"><div class="label">รายการนับ</div><div class="value">${counts.length}</div></div>
-                <div class="summary-item"><div class="label">ผลต่าง</div><div class="value ${diffs.length > 0 ? 'negative' : 'zero'}">
-
-${diffs.length}</div></div>
-                <div class="summary-item"><div class="label">ยังไม่นับ</div><div class="value ${uncounted.length > 0 ? 'negative' : 'positive'}">
-
-${uncounted.length}</div></div>
+                <div class="summary-item"><div class="label">ผลต่าง</div><div class="value ${diffs.length > 0 ? 'negative' : 'zero'}">${diffs.length}</div></div>
+                <div class="summary-item"><div class="label">ยังไม่นับ</div><div class="value ${uncounted.length > 0 ? 'negative' : 'positive'}">${uncounted.length}</div></div>
             </div>
             <div class="summary-grid" style="margin-top:10px;">
                 <div class="summary-item" style="grid-column:span 2;">
                     <div class="label">💰 ผลต่างทุน</div>
-                    <div class="value ${totalCostDiff >= 0 ? 'positive' : 'negative'}">${totalCostDiff >= 0 ? '+' : ''}${formatNumber
-
-(totalCostDiff, 2)} บาท</div>
-                    <div class="pct ${totalCostDiff >= 0 ? 'positive' : 'negative'}">${formatPercent(totalCostValue > 0 ? (totalCostDiff / 
-
-totalCostValue) * 100 : 0, 2)} (จาก ${formatNumber(totalCostValue, 2)})</div>
+                    <div class="value ${totalCostDiff >= 0 ? 'positive' : 'negative'}">${totalCostDiff >= 0 ? '+' : ''}${formatNumber(totalCostDiff, 2)} บาท</div>
+                    <div class="pct ${totalCostDiff >= 0 ? 'positive' : 'negative'}">${formatPercent(totalCostValue > 0 ? (totalCostDiff / totalCostValue) * 100 : 0, 2)} (จาก ${formatNumber(totalCostValue, 2)})</div>
                 </div>
                 <div class="summary-item" style="grid-column:span 2;">
                     <div class="label">💵 ผลต่างขาย</div>
-                    <div class="value ${totalSellDiff >= 0 ? 'positive' : 'negative'}">${totalSellDiff >= 0 ? '+' : ''}${formatNumber
-
-(totalSellDiff, 2)} บาท</div>
-                    <div class="pct ${totalSellDiff >= 0 ? 'positive' : 'negative'}">${formatPercent(totalSellValue > 0 ? (totalSellDiff / 
-
-totalSellValue) * 100 : 0, 2)} (จาก ${formatNumber(totalSellValue, 2)})</div>
+                    <div class="value ${totalSellDiff >= 0 ? 'positive' : 'negative'}">${totalSellDiff >= 0 ? '+' : ''}${formatNumber(totalSellDiff, 2)} บาท</div>
+                    <div class="pct ${totalSellDiff >= 0 ? 'positive' : 'negative'}">${formatPercent(totalSellValue > 0 ? (totalSellDiff / totalSellValue) * 100 : 0, 2)} (จาก ${formatNumber(totalSellValue, 2)})</div>
                 </div>
             </div>
         </div>
@@ -8378,16 +8178,12 @@ totalSellValue) * 100 : 0, 2)} (จาก ${formatNumber(totalSellValue, 2)})</d
                         <td>${escapeHtml(i.lot || '-')}</td>
                         <td>${i.system_qty}</td>
                         <td>${i.totalCounted} <small style="color:var(--text-muted);font-size:10px;">(${locs})</small></td>
-                        <td style="color:${i.difference < 0 ? 'var(--danger)' : 'var(--success)'};font-weight:600;">${i.difference > 0 ? '+' : 
-
-''}${i.difference}</td>
+                        <td style="color:${i.difference < 0 ? 'var(--danger)' : 'var(--success)'};font-weight:600;">${i.difference > 0 ? '+' : ''}${i.difference}</td>
                         <td style="color:${i.cost_diff < 0 ? 'var(--danger)' : 'var(--success)'};">${i.cost_diff.toFixed(2)}</td>
                     </tr>`;
                 }).join('');
             } else {
-                diffBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:12px;color:var(--success);font-weight:600;">✓ นับครบ ไม่
-
-มีผลต่าง</td></tr>';
+                diffBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:12px;color:var(--success);font-weight:600;">✓ นับครบ ไม่มีผลต่าง</td></tr>';
             }
         }
 
@@ -8399,14 +8195,10 @@ totalSellValue) * 100 : 0, 2)} (จาก ${formatNumber(totalSellValue, 2)})</d
             if (overItems.length > 0 || shortItems.length > 0) {
                 diffCard.style.display = 'block';
                 document.getElementById('overItems').innerHTML = overItems.length > 0 ?
-                    overItems.map(i => `<div style="padding:3px 0;border-bottom:1px dashed rgba(0,0,0,0.1);font-size:12px;"><strong>
-
-${escapeHtml(i.name)}</strong> (${escapeHtml(i.lot||'-')}) +${i.difference} ชิ้น</div>`).join('') :
+                    overItems.map(i => `<div style="padding:3px 0;border-bottom:1px dashed rgba(0,0,0,0.1);font-size:12px;"><strong>${escapeHtml(i.name)}</strong> (${escapeHtml(i.lot||'-')}) +${i.difference} ชิ้น</div>`).join('') :
                     'ไม่มี';
                 document.getElementById('shortItems').innerHTML = shortItems.length > 0 ?
-                    shortItems.map(i => `<div style="padding:3px 0;border-bottom:1px dashed rgba(0,0,0,0.1);font-size:12px;"><strong>
-
-${escapeHtml(i.name)}</strong> (${escapeHtml(i.lot||'-')}) ${i.difference} ชิ้น</div>`).join('') :
+                    shortItems.map(i => `<div style="padding:3px 0;border-bottom:1px dashed rgba(0,0,0,0.1);font-size:12px;"><strong>${escapeHtml(i.name)}</strong> (${escapeHtml(i.lot||'-')}) ${i.difference} ชิ้น</div>`).join('') :
                     'ไม่มี';
             } else {
                 diffCard.style.display = 'none';
@@ -8426,9 +8218,7 @@ ${escapeHtml(i.name)}</strong> (${escapeHtml(i.lot||'-')}) ${i.difference} ช�
         const tbody = document.getElementById('reportBody');
         if (!tbody) return;
         if (items.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="14" style="text-align:center;padding:16px;color:var(--text-muted);font-size:13px;"><i 
-
-class="fas fa-inbox" style="font-size:20px;display:block;margin-bottom:6px;opacity:0.5;"></i>ยังไม่มีข้อมูลสรุปผล</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="14" style="text-align:center;padding:16px;color:var(--text-muted);font-size:13px;"><i class="fas fa-inbox" style="font-size:20px;display:block;margin-bottom:6px;opacity:0.5;"></i>ยังไม่มีข้อมูลสรุปผล</td></tr>`;
             return;
         }
         tbody.innerHTML = items.map(item => {
@@ -8448,15 +8238,10 @@ class="fas fa-inbox" style="font-size:20px;display:block;margin-bottom:6px;opaci
                 <td><span class="badge ${diffClass}">${diffText}</span></td>
                 <td>${item.cost.toFixed(2)}</td>
                 <td>${item.sellPrice.toFixed(2)}</td>
-                <td style="color:${item.cost_diff < 0 ? 'var(--danger)' : 'var(--success)'};font-weight:600;">${item.cost_diff.toFixed(2)}
-
-</td>
-                <td style="color:${item.sell_diff < 0 ? 'var(--danger)' : 'var(--success)'};font-weight:600;">${item.sell_diff.toFixed(2)}
-
-</td>
+                <td style="color:${item.cost_diff < 0 ? 'var(--danger)' : 'var(--success)'};font-weight:600;">${item.cost_diff.toFixed(2)}</td>
+                <td style="color:${item.sell_diff < 0 ? 'var(--danger)' : 'var(--success)'};font-weight:600;">${item.sell_diff.toFixed(2)}</td>
                 <td>${item.age !== undefined && item.age !== null && item.age > 0 ? item.age.toFixed(1) : '-'}</td>
-                <td style="font-size:11px;">${item.locations.map(l => l.note).filter(Boolean).join(', ')}</td>
-            </tr>`;
+                <td style="font-size:11px;">${item.locations.map(l => l.note).filter(Boolean).join(', ')}</td> </tr>`;
         }).join('');
     }
 
@@ -8480,13 +8265,9 @@ class="fas fa-check-circle" style="color:var(--success);font-size:18px;display:b
         }, 0);
         const totalValue = uncountedItems.reduce((s, p) => {
             if (p._lotData) return s + (p._lotData.stock || 0) * (p._lotData.cost || p.costPerUnit || 0);
-            return (p.lots && p.lots.length ? s + p.lots.reduce((a, l) => a + (l.stock || 0) * (l.cost || p.costPerUnit || 0), 0) : s + 
-
-(p.stock || 0) * (p.costPerUnit || 0));
+            return (p.lots && p.lots.length ? s + p.lots.reduce((a, l) => a + (l.stock || 0) * (l.cost || p.costPerUnit || 0), 0) : s + (p.stock || 0) * (p.costPerUnit || 0));
         }, 0);
-        const summaryHtml = `<div style="background:var(--danger-light);border-left:4px solid var(--danger);padding:8px 12px;margin-
-
-bottom:8px;border-radius:8px;font-size:12px;"><strong>⚠️ ${uncountedItems.length} รายการที่ยังไม่ได้นับ</strong> | รวม ${totalQty.toLocaleString()} ชิ้น | มูลค่า 
+        const summaryHtml = `<div style="background:var(--danger-light);border-left:4px solid var(--danger);padding:8px 12px;margin-bottom:8px;border-radius:8px;font-size:12px;"><strong>⚠️ ${uncountedItems.length} รายการที่ยังไม่ได้นับ</strong> | รวม ${totalQty.toLocaleString()} ชิ้น | มูลค่า 
 
 ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท</div>`;
         const rowsHtml = uncountedItems.map(p => {
@@ -8508,9 +8289,7 @@ ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFracti
             } else {
                 stock = p.stock || 0;
             }
-            return `<tr><td><strong>${escapeHtml(p.name)}</strong></td><td>${escapeHtml(lotDisplay)}</td><td style="color:var(--danger);font-
-
-weight:600;">${stock}</td><td>${cost.toFixed(2)}</td><td>-</td><td style="font-weight:600;">${(stock*cost).toFixed(2)}</td><td>
+            return `<tr><td><strong>${escapeHtml(p.name)}</strong></td><td>${escapeHtml(lotDisplay)}</td><td style="color:var(--danger);font-weight:600;">${stock}</td><td>${cost.toFixed(2)}</td><td>-</td><td style="font-weight:600;">${(stock*cost).toFixed(2)}</td><td>
 
 ${expiryDisplay}</td></tr>`;
         }).join('');
@@ -8679,18 +8458,12 @@ ${expiryDisplay}</td></tr>`;
             return totalStock > 20;
         });
         if (items.length === 0) {
-            container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:16px;font-size:13px;"><i class="fas fa-check-
-
-circle" style="color:var(--success);font-size:20px;display:block;margin-bottom:6px;"></i>ไม่มีสินค้าที่มีความเสี่ยง</p>';
+            container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:16px;font-size:13px;"><i class="fas fa-check-circle" style="color:var(--success);font-size:20px;display:block;margin-bottom:6px;"></i>ไม่มีสินค้าที่มีความเสี่ยง</p>';
             return;
         }
         container.innerHTML = items.map(p => {
             const diff = this.diffDaysFromToday(p.expiryDate);
-            return `<div class="dead-stock-item"><div><div style="font-weight:600;">${escapeHtml(p.name)}</div><div style="font-
-
-size:12px;color:var(--text-muted);">หมดอายุใน ${diff} วัน (${this.formatDate(p.expiryDate)})</div></div><span class="badge badge-red">⚠️ 
-
-เสี่ยง</span></div>`;
+            return `<div class="dead-stock-item"><div><div style="font-weight:600;">${escapeHtml(p.name)}</div><div style="font-size:12px;color:var(--text-muted);">หมดอายุใน ${diff} วัน (${this.formatDate(p.expiryDate)})</div></div><span class="badge badge-red">⚠️ เสี่ยง</span></div>`;
         }).join('');
     }
 
@@ -8706,9 +8479,7 @@ size:12px;color:var(--text-muted);">หมดอายุใน ${diff} วั�
             return totalStock > 0 && totalStock <= (p.minStock || 5);
         });
         if (items.length === 0) {
-            container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:16px;font-size:13px;"><i class="fas fa-check-
-
-circle" style="color:var(--success);font-size:20px;display:block;margin-bottom:6px;"></i>ไม่มีสินค้าใกล้หมด</p>';
+            container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:16px;font-size:13px;"><i class="fas fa-check-circle" style="color:var(--success);font-size:20px;display:block;margin-bottom:6px;"></i>ไม่มีสินค้าใกล้หมด</p>';
             return;
         }
         container.innerHTML = items.map(p => {
@@ -8717,9 +8488,7 @@ circle" style="color:var(--success);font-size:20px;display:block;margin-bottom:6
                 totalStock += l.stock || 0;
             });
             else totalStock = p.stock || 0;
-            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid var(--
-
-border-color);"><span>${escapeHtml(p.name)}</span><span class="badge badge-warning">${totalStock} ชิ้น</span></div>`;
+            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid var(--border-color);"><span>${escapeHtml(p.name)}</span><span class="badge badge-warning">${totalStock} ชิ้น</span></div>`;
         }).join('');
     }
 
@@ -8735,9 +8504,7 @@ border-color);"><span>${escapeHtml(p.name)}</span><span class="badge badge-warni
             return totalStock > (p.maxStock || 100);
         });
         if (items.length === 0) {
-            container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:16px;font-size:13px;"><i class="fas fa-check-
-
-circle" style="color:var(--success);font-size:20px;display:block;margin-bottom:6px;"></i>ไม่มีสินค้าเกินสต็อก</p>';
+            container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:16px;font-size:13px;"><i class="fas fa-check-circle" style="color:var(--success);font-size:20px;display:block;margin-bottom:6px;"></i>ไม่มีสินค้าเกินสต็อก</p>';
             return;
         }
         container.innerHTML = items.map(p => {
@@ -8746,9 +8513,7 @@ circle" style="color:var(--success);font-size:20px;display:block;margin-bottom:6
                 totalStock += l.stock || 0;
             });
             else totalStock = p.stock || 0;
-            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid var(--
-
-border-color);"><span>${escapeHtml(p.name)}</span><span class="badge badge-warning">${totalStock} ชิ้น ⚠️</span></div>`;
+            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid var(--border-color);"><span>${escapeHtml(p.name)}</span><span class="badge badge-warning">${totalStock} ชิ้น ⚠️</span></div>`;
         }).join('');
     }
 
@@ -8870,9 +8635,7 @@ border-color);"><span>${escapeHtml(p.name)}</span><span class="badge badge-warni
                 item.locationName || '',
                 item.note || ''
             ]);
-            const clearUrl = `https://sheets.googleapis.com/v4/spreadsheets/${config.spreadsheetId}/values/Sheet1!A:Z:clear?key=
-
-${config.apiKey}`;
+            const clearUrl = `https://sheets.googleapis.com/v4/spreadsheets/${config.spreadsheetId}/values/Sheet1!A:Z:clear?key=${config.apiKey}`;
             await fetch(clearUrl, { method: 'POST' });
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${config.spreadsheetId}/values/Sheet1!A1:append?
 
@@ -9081,9 +8844,7 @@ valueInputOption=USER_ENTERED&key=${config.apiKey}`;
         if (!box) {
             box = document.createElement('div');
             box.id = 'v51TeamDataBox';
-            box.style.cssText = 'margin-top:10px;max-height:300px;overflow-y:auto;border:1px solid var(--border-color);border-radius:var(--
-
-radius-sm);';
+            box.style.cssText = 'margin-top:10px;max-height:300px;overflow-y:auto;border:1px solid var(--border-color);border-radius:var(--radius-sm);';
             const card = document.getElementById('v51UserCard');
             if (card) card.appendChild(box);
         }
@@ -9098,9 +8859,7 @@ radius-sm);';
             byUser[user]++;
         });
         const summaryHtml = Object.entries(byUser).map(([u, n]) =>
-            `<span style="display:inline-block;background:var(--primary);color:#fff;border-radius:10px;padding:2px 8px;font-
-
-size:11px;margin:2px;">👤 ${escapeHtml(u)}: ${n} รายการ</span>`
+            `<span style="display:inline-block;background:var(--primary);color:#fff;border-radius:10px;padding:2px 8px;font-size:11px;margin:2px;">👤 ${escapeHtml(u)}: ${n} รายการ</span>`
         ).join('');
         const recentRows = rows.slice(-20).reverse();
         const tableHtml = recentRows.map(r => {
@@ -9168,9 +8927,7 @@ size:11px;margin:2px;">👤 ${escapeHtml(u)}: ${n} รายการ</span>`
         box.innerHTML = conflicts.slice(0, 10).map(g => {
             const first = g[0];
             const vals = g.map(r => `${escapeHtml(r[2] || 'ไม่ระบุ')}: ${escapeHtml(String(r[8] ?? ''))}`).join(' · ');
-            return `<div style="font-size:11px;padding:5px;margin:3px 0;border-radius:6px;background:var(--danger-light);color:var(--
-
-danger);">⚠️ ${escapeHtml(first[5] || first[4] || '')} ${first[6] ? '(LOT ' + escapeHtml(first[6]) + ')' : ''}<br>${vals}</div>`;
+            return `<div style="font-size:11px;padding:5px;margin:3px 0;border-radius:6px;background:var(--danger-light);color:var(--danger);">⚠️ ${escapeHtml(first[5] || first[4] || '')} ${first[6] ? '(LOT ' + escapeHtml(first[6]) + ')' : ''}<br>${vals}</div>`;
         }).join('');
     }
 
@@ -9183,9 +8940,7 @@ danger);">⚠️ ${escapeHtml(first[5] || first[4] || '')} ${first[6] ? '(LOT ' 
         card.className = 'card';
         card.style.cssText = 'border:2px solid var(--primary);';
         card.innerHTML = `
-            <div class="card-title"><i class="fas fa-user"></i> ผู้ใช้งาน / Multi-user <span style="font-size:10px;font-
-
-weight:600;opacity:.7;">v5.3.1</span></div>
+            <div class="card-title"><i class="fas fa-user"></i> ผู้ใช้งาน / Multi-user <span style="font-size:10px;font-weight:600;opacity:.7;">v5.3.1</span></div>
             <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">ตั้งชื่อผู้ใช้งานเพื่อให้ระบบบันทึกว่าใครเป็นคนนับ</p>
             <div style="display:flex;gap:6px;">
                 <input id="v51UserName" class="input" placeholder="เช่น บอล / พนักงาน A" style="flex:1;min-height:40px;">
@@ -9195,22 +8950,16 @@ weight:600;opacity:.7;">v5.3.1</span></div>
             <hr style="border:0;border-top:1px solid var(--border-color);margin:10px 0;">
             <div class="card-title" style="font-size:13px;"><i class="fas fa-cloud"></i> Shared Sync</div>
             <p style="font-size:11px;color:var(--text-muted);">อ่านข้อมูลทีม: API Key + Spreadsheet ID; ส่งข้อมูลเขียนจริง: Apps Script Endpoint + Shared Token</p>
-            <input id="v51SyncEndpoint" class="input" placeholder="https://script.google.com/macros/s/.../exec" style="margin-bottom:6px;min-
-
-height:38px;">
+            <input id="v51SyncEndpoint" class="input" placeholder="https://script.google.com/macros/s/.../exec" style="margin-bottom:6px;min-height:38px;">
             <input id="v51SyncToken" class="input" type="password" placeholder="Shared token" style="margin-bottom:6px;min-height:38px;">
             <div style="display:flex;gap:6px;">
                 <button class="btn btn-primary btn-sm" id="v51SaveSync" style="flex:1;">บันทึก Sync</button>
                 <button class="btn btn-outline btn-sm" id="v51LoadTeam" style="flex:1;">โหลดข้อมูลทีม</button>
             </div>
-            <div id="v51SyncStatus" style="font-size:11px;margin-top:7px;padding:7px;border-radius:8px;background:var(--bg-body);">⚪ Shared 
-
-Sync ปิด</div>
+            <div id="v51SyncStatus" style="font-size:11px;margin-top:7px;padding:7px;border-radius:8px;background:var(--bg-body);">⚪ Shared Sync ปิด</div>
             <div style="margin-top:8px;font-size:11px;font-weight:700;display:flex;justify-content:space-between;align-items:center;">
                 <span>⚠️ Conflict</span>
-                <button class="btn btn-outline btn-sm" onclick="app.showConflictModal()" style="font-size:10px;padding:3px 8px;min-
-
-height:26px;">
+                <button class="btn btn-outline btn-sm" onclick="app.showConflictModal()" style="font-size:10px;padding:3px 8px;min-height:26px;">
                     <i class="fas fa-search"></i> ดูทั้งหมด
                 </button>
             </div>
@@ -9271,9 +9020,7 @@ height:26px;">
         const banner = document.createElement('div');
         banner.id = 'v5CycleBanner';
         banner.className = 'card';
-        banner.style.cssText = 'border:2px solid var(--primary);background:linear-gradient(135deg,rgba(14,165,233,.10),rgba
-
-(99,102,241,.08));padding:10px;';
+        banner.style.cssText = 'border:2px solid var(--primary);background:linear-gradient(135deg,rgba(14,165,233,.10),rgba(99,102,241,.08));padding:10px;';
         banner.innerHTML = `<div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;">
             <div>
                 <div style="font-weight:800;color:var(--primary-dark);font-size:13px;">🧾 MediStock v5.3.1 Complete Edition</div>
@@ -9532,9 +9279,7 @@ height:26px;">
         });
         html += '</tbody></table>';
         if (this.pendingRows.length > 5) {
-            html += '<p style="text-align:center;font-size:12px;color:var(--text-muted);padding:6px;">... และอีก ' + (this.pendingRows.length - 5) + 
-
-' รายการ</p>';
+            html += '<p style="text-align:center;font-size:12px;color:var(--text-muted);padding:6px;">... และอีก ' + (this.pendingRows.length - 5) + ' รายการ</p>';
         }
         table.innerHTML = html;
     }
@@ -9572,9 +9317,7 @@ height:26px;">
             return;
         }
         const mapping = {};
-        ['code', 'name', 'lot', 'mfgDate', 'expiryDate', 'sellPrice', 'costPerUnit', 'stock', 'unit', 'supplier', 'barcode', 'minStock', 
-
-'maxStock'].forEach(f => {
+        ['code', 'name', 'lot', 'mfgDate', 'expiryDate', 'sellPrice', 'costPerUnit', 'stock', 'unit', 'supplier', 'barcode', 'minStock', 'maxStock'].forEach(f => {
             mapping[f] = document.getElementById('map_' + f).value;
         });
         if (!mapping.name) {
@@ -9717,9 +9460,7 @@ height:26px;">
                 const meta = await metaRes.json();
                 sheetName = meta.sheets?.[0]?.properties?.title || 'Sheet1';
             }
-            const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}?key=
-
-${apiKey}`;
+            const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}?key=${apiKey}`;
             const response = await fetch(apiUrl);
             if (!response.ok) throw new Error('API error: ' + response.status);
             const data = await response.json();
