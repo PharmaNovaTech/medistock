@@ -1802,9 +1802,7 @@ infinite;"></div>
                     <span class="main">MediStock</span>
                     <span class="version">v5.3.1</span>
                 </span>
-                <span class="tagline"><i class="fas fa-circle" style="font-size:4px;color:#34d399;margin-right:3px;"></i>Complete Edition • 
-
-Dedup + Session</span>
+<span class="tagline"><i class="fas fa-circle" style="font-size:4px;color:#34d399;margin-right:3px;"></i>ระบบนับสต็อกครบวงจร • ฟรี 100%</span>
             </div>
         </a>
         <div class="header-actions">
@@ -3285,7 +3283,7 @@ class StockApp {
         // ========== Onboarding ==========
         this.onboardingStep = 0;
         this.onboardingSteps = [
-            { icon: '🏪', title: 'ยินดีต้อนรับสู่ MediStock v5.3.1!', desc: 'Complete Edition • Dedup + Session + Multi-device' },
+            { icon: '🏪', title: 'ยินดีต้อนรับสู่ MediStock v5.3.1!', desc: 'ระบบนับสต็อกครบวงจร • ฟรี 100%' },
             { icon: '📥', title: 'ขั้นตอนที่ 1: นำเข้าสินค้า', desc: 'ไปที่แท็บ "นำเข้า" → อัปโหลดไฟล์ Excel หรือ CSV' },
             { icon: '📸', title: 'ขั้นตอนที่ 2: สแกนบาร์โค้ด', desc: 'กด "เปิดสแกน" เพื่ออ่านบาร์โค้ด' },
             { icon: '📍', title: 'ขั้นตอนที่ 3: เลือกตำแหน่ง', desc: 'เลือกหน้าร้าน/หลังร้าน → ตู้ → ชั้นวาง (ไม่บังคับ)' },
@@ -3653,26 +3651,27 @@ class StockApp {
     normalizeDateValue(value) {
         if (value === null || value === undefined || value === '') return '';
 
-        // 1) Date object → ใช้ local getters
+        // 1) Date object (จาก SheetJS cellDates:true) → ใช้ UTC getters
         if (value instanceof Date && !isNaN(value.getTime())) {
-            const y = value.getFullYear();
+            const y = value.getUTCFullYear();
+            const mo = value.getUTCMonth() + 1;
+            const d = value.getUTCDate();
             if (y >= 1900 && y <= 2200) {
-                return `${y}-${String(value.getMonth()+1).padStart(2,'0')}-${String(value.getDate()).padStart(2,'0')}`;
+                return `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
             }
             return '';
         }
 
         // 2) Excel serial number → FIX TIMEZONE v5.3.1
-        // ⭐ เปลี่ยนจาก UTC เป็น LOCAL เพื่อไม่ให้คลาด 1 วัน
         if (typeof value === 'number' && Number.isFinite(value)) {
             if (value >= 1 && value <= 2958465) {
-                const epochLocal = new Date(1899, 11, 30); // ← local, ไม่ใช่ UTC
                 const msPerDay = 86400000;
                 const serialDays = Math.round(value);
-                const targetDate = new Date(epochLocal.getTime() + serialDays * msPerDay);
-                const y = targetDate.getFullYear();
-                const mo = targetDate.getMonth() + 1;
-                const d = targetDate.getDate();
+                const baseUtc = Date.UTC(1899, 11, 30);
+                const targetDate = new Date(baseUtc + serialDays * msPerDay);
+                const y = targetDate.getUTCFullYear();
+                const mo = targetDate.getUTCMonth() + 1;
+                const d = targetDate.getUTCDate();
                 if (y >= 1900 && y <= 2200) {
                     return `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
                 }
@@ -3688,8 +3687,8 @@ class StockApp {
         if (m) {
             let y = Number(m[1]);
             if (y > 2400) y -= 543;
-            const mo = Number(m[2]),
-                day = Number(m[3]);
+            const mo = Number(m[2]);
+            const day = Number(m[3]);
             const d = new Date(y, mo - 1, day);
             if (!isNaN(d.getTime()) && d.getFullYear() === y && d.getMonth() === mo - 1 && d.getDate() === day) {
                 return `${y}-${String(mo).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
@@ -3703,8 +3702,8 @@ class StockApp {
             let y = Number(m[3]);
             if (y < 100) y += (y > 50 ? 2500 : 2000);
             if (y > 2400) y -= 543;
-            const day = Number(m[1]),
-                mo = Number(m[2]);
+            const day = Number(m[1]);
+            const mo = Number(m[2]);
             const d = new Date(y, mo - 1, day);
             if (!isNaN(d.getTime()) && d.getFullYear() === y && d.getMonth() === mo - 1 && d.getDate() === day) {
                 return `${y}-${String(mo).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
@@ -3716,11 +3715,11 @@ class StockApp {
         if (/^\d+(\.\d+)?$/.test(raw)) {
             const n = Number(raw);
             if (n >= 1 && n <= 2958465) {
-                const epochLocal = new Date(1899, 11, 30);
-                const targetDate = new Date(epochLocal.getTime() + Math.round(n) * 86400000);
-                const y = targetDate.getFullYear();
-                const mo = targetDate.getMonth() + 1;
-                const d = targetDate.getDate();
+                const baseUtc = Date.UTC(1899, 11, 30);
+                const targetDate = new Date(baseUtc + Math.round(n) * 86400000);
+                const y = targetDate.getUTCFullYear();
+                const mo = targetDate.getUTCMonth() + 1;
+                const d = targetDate.getUTCDate();
                 if (y >= 1900 && y <= 2200) {
                     return `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
                 }
@@ -3730,14 +3729,15 @@ class StockApp {
         // 6) Last resort
         const parsed = new Date(raw);
         if (!isNaN(parsed.getTime())) {
-            const y = parsed.getFullYear();
+            const y = parsed.getUTCFullYear();
+            const mo = parsed.getUTCMonth() + 1;
+            const d = parsed.getUTCDate();
             if (y >= 1900 && y <= 2200) {
-                return `${y}-${String(parsed.getMonth()+1).padStart(2,'0')}-${String(parsed.getDate()).padStart(2,'0')}`;
+                return `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
             }
         }
         return '';
     }
-
     parseLocalDate(dateStr) {
         if (!dateStr) return null;
         const m = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})/);
