@@ -5309,13 +5309,25 @@ async openFullscreenScanner() {
 
     let lastDecoded = '';
     let lastDecodedTime = 0;
-    const DECODE_COOLDOWN = 1200;  // ⭐ ลดจาก 1500 → 1200
+    const DECODE_COOLDOWN = 800;    // ⭐ v5.3.1 Patch 5A-4: 1200 → 800
+    const BARCODE_HISTORY = [];     // ⭐ กันอ่านผิดซ้ำ
 
     const onDecodeSuccess = (decodedText) => {
         const now = Date.now();
+        
+        // Cooldown check
         if (decodedText === lastDecoded && (now - lastDecodedTime) < DECODE_COOLDOWN) return;
+        
+        // ⭐ v5.3.1 Patch 5A-4: กันอ่านผิดซ้ำ (2 ครั้งใน 3 วิ)
+        const recentSame = BARCODE_HISTORY.filter(x => 
+            x.text === decodedText && (now - x.time) < 3000
+        );
+        if (recentSame.length >= 2) return;
+        
         lastDecoded = decodedText;
         lastDecodedTime = now;
+        BARCODE_HISTORY.push({ text: decodedText, time: now });
+        if (BARCODE_HISTORY.length > 5) BARCODE_HISTORY.shift();
 
         const clean = String(decodedText).trim();
         const numericOnly = clean.replace(/[^0-9]/g, '');
@@ -5334,8 +5346,14 @@ async openFullscreenScanner() {
                 barcodeToUse = clean;
                 v = { valid: true, barcode: clean };
             } else if (!v.valid) {
-                statusFull.textContent = '⚠️ ' + (v.message || 'รูปแบบไม่ถูกต้อง');
+                statusFull.textContent = '⚠️ ' + (v.message || 'รูปแบบไม่ถูกต้อง') + ' — ลองอีกครั้ง';
                 statusFull.className = 'scanner-status-full error';
+                setTimeout(() => {
+                    if (statusFull.className.includes('error')) {
+                        statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ';
+                        statusFull.className = 'scanner-status-full';
+                    }
+                }, 2000);
                 return;
             }
         }
@@ -5347,9 +5365,12 @@ async openFullscreenScanner() {
             flash.classList.add('active');
             setTimeout(() => flash.classList.remove('active'), 200);
         }
+        
+        BARCODE_HISTORY.length = 0;
+        
         this.processScannedBarcode(barcodeToUse, 'Camera');
     };
-
+	
     const startScanner = async (constraintLevel) => {
         const constraintSets = [
             { 
@@ -5373,11 +5394,13 @@ async openFullscreenScanner() {
         const videoConstraints = constraintSets[constraintLevel] || { facingMode: "environment" };
 
         // ⭐ v5.3.1: Dynamic qrbox + เพิ่ม format
+        // ⭐ v5.3.1 Patch 5A-1: ปรับ scanConfig สำหรับยา (1D barcode)
         const scanConfig = {
-            fps: 20,                                    // ⭐ 20 fps
+            fps: 10,                                    // ⭐ ลดจาก 20 → 10 (decode ชัวร์ขึ้น)
             qrbox: function(viewfinderWidth, viewfinderHeight) {
                 const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
-                const qrboxWidth = Math.floor(minEdge * 0.85);
+                // ⭐ ลดขนาดกรอบ → บังคับผู้ใช้วางบาร์โค้ดในกรอบ
+                const qrboxWidth = Math.floor(minEdge * 0.65);   // ⭐ 0.85 → 0.65
                 return {
                     width: qrboxWidth,
                     height: Math.floor(qrboxWidth * 0.55)
@@ -5385,11 +5408,11 @@ async openFullscreenScanner() {
             },
             aspectRatio: 1.0,
             disableFlip: false,
-            experimentalFeatures: { 
-                useBarCodeDetectorIfSupported: true 
+            experimentalFeatures: {
+                useBarCodeDetectorIfSupported: false    // ⭐ บังคับใช้ ZXing (แม่นกว่า native)
             }
         };
-
+		
         // ⭐ v5.3.1: เพิ่ม formats
         if (typeof Html5QrcodeSupportedFormats !== 'undefined') {
             scanConfig.formatsToSupport = [
@@ -5438,7 +5461,7 @@ async openFullscreenScanner() {
 
         if (!started) throw new Error('ไม่สามารถเปิดกล้องได้ในทุก mode');
 
-        // ⭐ v5.3.1: Auto Focus + Zoom + Tap to Focus
+        // ⭐ v5.3.1 Patch 5A-3: Auto Focus + Zoom (ปรับปรุง)
         const readerEl = document.getElementById('reader-fullscreen');
         if (readerEl) {
             const videoEl = readerEl.querySelector('video');
@@ -5446,65 +5469,82 @@ async openFullscreenScanner() {
                 const track = videoEl.srcObject.getVideoTracks()[0];
                 if (track) {
                     const caps = track.getCapabilities ? track.getCapabilities() : {};
-                    
-                    // ⭐ Auto Focus ทันที
+                    console.log('[V5A] Camera caps:', caps);
+
                     setTimeout(async () => {
                         try {
                             if (caps.focusMode && caps.focusMode.includes('single-shot')) {
-                                await track.applyConstraints({ 
-                                    advanced: [{ focusMode: 'single-shot' }] 
+                                await track.applyConstraints({
+                                    advanced: [{ focusMode: 'single-shot' }]
                                 });
+                                console.log('[V5A] Single-shot focus applied');
                                 setTimeout(async () => {
                                     try {
-                                        await track.applyConstraints({ 
-                                            advanced: [{ focusMode: 'continuous' }] 
+                                        await track.applyConstraints({
+                                            advanced: [{ focusMode: 'continuous' }]
                                         });
+                                        console.log('[V5A] Continuous focus restored');
                                     } catch(_) {}
-                                }, 1000);
+                                }, 1500);
+                            } else if (caps.focusMode && caps.focusMode.includes('continuous')) {
+                                await track.applyConstraints({
+                                    advanced: [{ focusMode: 'continuous' }]
+                                });
+                                console.log('[V5A] Continuous focus set');
                             }
-                            
-                            // ⭐ Zoom 1.5x ถ้ารองรับ (ช่วยบาร์โค้ดเล็ก)
-                            if (caps.zoom) {
+
+                            if (caps.zoom && !this.v4ZoomSupported) {
                                 const minZ = caps.zoom.min || 1;
                                 const maxZ = caps.zoom.max || 1;
                                 if (maxZ > 1) {
                                     const targetZ = Math.min(maxZ, Math.max(minZ, 1.5));
-                                    await track.applyConstraints({ 
-                                        advanced: [{ zoom: targetZ }] 
+                                    await track.applyConstraints({
+                                        advanced: [{ zoom: targetZ }]
                                     });
+                                    console.log('[V5A] Initial zoom set to', targetZ);
                                 }
                             }
-                            
-                            // ⭐ ลด Exposure ถ้ารองรับ (ช่วยแสงสะท้อน)
+
                             if (caps.exposureCompensation) {
                                 const expMin = caps.exposureCompensation.min || -2;
                                 const expMax = caps.exposureCompensation.max || 2;
-                                const expValue = Math.max(expMin, Math.min(expMax, -0.3));
-                                await track.applyConstraints({ 
-                                    advanced: [{ exposureCompensation: expValue }] 
+                                const expValue = Math.max(expMin, Math.min(expMax, -0.5));
+                                await track.applyConstraints({
+                                    advanced: [{ exposureCompensation: expValue }]
+                                });
+                                console.log('[V5A] Exposure set to', expValue);
+                            }
+
+                            if (caps.whiteBalanceMode && caps.whiteBalanceMode.includes('continuous')) {
+                                await track.applyConstraints({
+                                    advanced: [{ whiteBalanceMode: 'continuous' }]
                                 });
                             }
-                        } catch(e) { 
-                            console.warn('Camera tuning failed:', e); 
+
+                        } catch(e) {
+                            console.warn('[V5A] Camera tuning failed:', e);
                         }
-                    }, 800);
-                    
-                    // ⭐ Tap to Focus
-                    readerEl.addEventListener('click', async () => {
+                    }, 1000);
+
+                    readerEl.addEventListener('click', async (e) => {
+                        if (e.target.closest('.zoom-controls')) return;
+                        if (e.target.closest('.scanner-close-btn')) return;
+                        if (e.target.closest('.scanner-help-btn')) return;
+
                         statusFull.textContent = '🎯 กำลัง Focus...';
                         statusFull.className = 'scanner-status-full focusing';
                         try {
                             if (caps.focusMode && caps.focusMode.includes('single-shot')) {
-                                await track.applyConstraints({ 
-                                    advanced: [{ focusMode: 'single-shot' }] 
+                                await track.applyConstraints({
+                                    advanced: [{ focusMode: 'single-shot' }]
                                 });
                                 setTimeout(async () => {
                                     try {
-                                        await track.applyConstraints({ 
-                                            advanced: [{ focusMode: 'continuous' }] 
+                                        await track.applyConstraints({
+                                            advanced: [{ focusMode: 'continuous' }]
                                         });
                                     } catch(_) {}
-                                }, 1000);
+                                }, 1200);
                             }
                         } catch(e) {}
                         setTimeout(() => {
@@ -5512,10 +5552,9 @@ async openFullscreenScanner() {
                                 statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ | 👆 แตะเพื่อโฟกัส';
                                 statusFull.className = 'scanner-status-full';
                             }
-                        }, 1200);
+                        }, 1500);
                     });
-                    
-                    // ⭐ ตรวจแสงทุก 2 วิ
+
                     this._brightnessTimer = setInterval(() => {
                         const b = this.checkFrameBrightness(videoEl);
                         if (b === null) return;
@@ -5533,7 +5572,7 @@ async openFullscreenScanner() {
                 }
             }
         }
-
+		
         // v5.3.1 Patch 4: Init zoom หลังกล้องเปิด
         setTimeout(() => this.v4InitZoom(), 600);
         statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ | 👆 แตะเพื่อโฟกัส';
