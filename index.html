@@ -3763,7 +3763,12 @@ class StockApp {
     }
 
     diffDaysFromToday(dateStr) {
-        return this.v52DateDiffDays(dateStr);
+        // ⭐ v5.3.1 FIX (ข้อ 15B): return ค่าที่ปลอดภัย ไม่ทำให้ Excel ว่าง
+        const result = this.v52DateDiffDays(dateStr);
+        if (result === null || result === undefined || !Number.isFinite(result)) {
+            return '';
+        }
+        return result;
     }
 
     formatDate(dateStr) {
@@ -7666,12 +7671,16 @@ title="ลบ">
     }
 
     getDeadStockRows() {
-        return this.getInventoryRows().filter(r => {
-            if (r.stock <= 20) return false;
-            if (!r.expiry) return false;
-            const d = this.diffDaysFromToday(r.expiry);
-            return d !== null && d >= 0 && d <= CONFIG.DEAD_STOCK_DAYS;
-        });
+        // ⭐ v5.3.1 FIX: เพิ่ม .map() ให้มี diffDays ใน object
+        // เพื่อให้ findDeadStock() และ Excel sheet "Dead Stock" ใช้ได้
+        return this.getInventoryRows()
+            .filter(r => {
+                if (r.stock <= 20) return false;
+                if (!r.expiry) return false;
+                return true;
+            })
+            .map(r => ({ ...r, diffDays: this.diffDaysFromToday(r.expiry) }))
+            .filter(r => r.diffDays !== null && r.diffDays >= 0 && r.diffDays <= CONFIG.DEAD_STOCK_DAYS);
     }
 
     getLowStockRows() {
@@ -7857,7 +7866,64 @@ title="ลบ">
     // ================================================================
     // EXPORT: Print-friendly Full Report
     // ================================================================
-    printFullReport() {
+    /**
+     * ⭐ v5.3.1: พิมพ์ผ่าน iframe — ทำงานบนมือถือได้ ไม่โดน popup blocker
+     */
+    printViaIframe(htmlContent) {
+        // ลบ iframe เก่าถ้ามี
+        const oldFrame = document.getElementById('medistock-print-iframe');
+        if (oldFrame) oldFrame.remove();
+
+        const iframe = document.createElement('iframe');
+        iframe.id = 'medistock-print-iframe';
+        iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden;';
+        document.body.appendChild(iframe);
+
+        const cleanup = () => {
+            setTimeout(() => {
+                try { iframe.remove(); } catch (_) {}
+            }, 1000);
+        };
+
+        try {
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(htmlContent);
+            doc.close();
+
+            const triggerPrint = () => {
+                try {
+                    iframe.contentWindow.focus();
+                    iframe.contentWindow.print();
+                } catch (err) {
+                    console.warn('iframe.print failed:', err);
+                    this.showToast('⚠️ เบราว์เซอร์ไม่รองรับการพิมพ์ — ลองบันทึกเป็น PDF แทน', 'warning');
+                }
+                cleanup();
+            };
+
+            if (doc.readyState === 'complete') {
+                setTimeout(triggerPrint, 300);
+            } else {
+
+                iframe.onload = () => setTimeout(triggerPrint, 300);
+            }
+
+            // Safety timeout — ถ้า onload ไม่ยิง
+            setTimeout(() => {
+                if (document.getElementById('medistock-print-iframe')) {
+                    triggerPrint();
+                }
+            }, 1500);
+
+        } catch (e) {
+            console.error('printViaIframe error:', e);
+            iframe.remove();
+            this.showToast('❌ พิมพ์ไม่สำเร็จ: ' + e.message, 'error');
+        }
+    }
+	
+	printFullReport() {
         const counts = this.getCountSummaryRows();
         const diffs = this.getDifferenceReportRows();
         const uncounted = this.getUncountedReportRows();
@@ -7871,12 +7937,7 @@ title="ลบ">
 
         const esc = escapeHtml;
         const rows = (arr, cols) => arr.map(r => '<tr>' + cols.map(c => `<td>${esc(String(c ?? ''))}</td>`).join('') + '</tr>').join('');
-        const w = window.open('', '_blank', 'width=1100,height=800');
-        if (!w) {
-            this.showToast('⚠️ เบราว์เซอร์บล็อกหน้าต่างพิมพ์', 'warning');
-            return;
-        }
-        w.document.write(`<!doctype html><html lang="th"><head><meta charset="utf-8"><title>MediStock v5.3.1 Full Report</title><style>
+        const htmlContent = `<!doctype html>
             body{font-family:Arial,'Tahoma',sans-serif;margin:18px;color:#111}
             h1,h2{margin:0 0 8px}
             h1{color:#0ea5e9}
@@ -7942,9 +8003,8 @@ title="ลบ">
         <table><tr><th>สินค้า</th><th>LOT</th><th>จำนวน</th><th>ทุน</th><th>ขาย</th><th>หมดอายุ</th></tr>
         ${rows(uncounted, r => [r.name, r.lot, r.stock, r.cost, r.sell, r.expiry ? this.formatDate(r.expiry) : ''])}</table>
 
-        </body></html>`);
-        w.document.close();
-        setTimeout(() => w.print(), 300);
+        </body></html>`;
+        this.printViaIframe(htmlContent);
     }
 
     // ================================================================
@@ -7999,27 +8059,42 @@ title="ลบ">
     }
 
     exportGenericPDF(headers, rows, type) {
-        try {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('landscape');
-            doc.setFontSize(14);
-            doc.setTextColor(14, 165, 233);
-            doc.text('MediStock v5.3.1', 14, 20);
-            doc.setFontSize(9);
-            doc.setTextColor(100, 116, 139);
-            doc.text('สร้างเมื่อ: ' + new Date().toLocaleString('th-TH'), 14, 26);
-            doc.autoTable({
-                head: [headers],
-                body: rows.map(r => r.map(v => String(v ?? ''))),
-                startY: 30,
-                styles: { fontSize: 7 },
-                headStyles: { fillColor: [14, 165, 233] }
-            });
-            doc.save(`${type}_${Date.now()}.pdf`);
-            this.showToast('✅ ดาวน์โหลด PDF สำเร็จ', 'success');
-        } catch (e) {
-            this.showToast('❌ PDF ไม่สำเร็จ: ' + e.message, 'error');
-        }
+        // ⭐ v5.3.1 FIX (ข้อ 5 + 7): ใช้ HTML Print + iframe แทน jsPDF
+        // - ฟอนต์ไทยแสดงถูกต้อง 100%
+        // - ทำงานบนมือถือได้ (ไม่ใช้ window.open)
+        const esc = escapeHtml;
+        const safeType = String(type || 'report').replace(/[^a-zA-Z0-9_-]/g, '_');
+        const title = `MediStock v5.3.1 — ${safeType}`;
+
+        const tableRows = rows.map(r =>
+            '<tr>' + r.map(c => `<td>${esc(String(c ?? ''))}</td>`).join('') + '</tr>'
+        ).join('');
+
+        const html = `<!doctype html><html lang="th"><head><meta charset="utf-8">
+            <title>${esc(title)}</title>
+            <style>
+                body{font-family:'Sarabun','Tahoma',Arial,sans-serif;margin:14px;color:#111}
+                h1{color:#0ea5e9;font-size:16px;margin:0 0 6px}
+                .meta{font-size:11px;color:#64748b;margin-bottom:10px}
+                table{border-collapse:collapse;width:100%;font-size:9px}
+                th,td{border:1px solid #bbb;padding:4px;vertical-align:top;word-break:break-word}
+                th{background:#e0f2fe;color:#0369a1;font-weight:700}
+                tr:nth-child(even) td{background:#f8fafc}
+                @media print {
+                    .no-print { display: none !important }
+                    body{margin:6mm}
+                }
+            </style></head><body>
+            <button class="no-print" onclick="window.print()" style="padding:10px 20px;background:#0ea5e9;color:#fff;border:none;border-radius:6px;font-weight:700;cursor:pointer;font-size:14px;margin-bottom:10px;">🖨️ พิมพ์ / Save as PDF</button>
+            <h1>📊 ${esc(title)}</h1>
+            <div class="meta">สร้างเมื่อ: ${esc(new Date().toLocaleString('th-TH'))} • สาขา: ${esc(this.branchId || '-')} • ผู้ใช้: ${esc(this.v5UserName || '-')}</div>
+            <table>
+                <thead><tr>${headers.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead>
+                <tbody>${tableRows}</tbody>
+            </table>
+            </body></html>`;
+
+        this.printViaIframe(html);
     }
 
     exportBarcodeMaster() {
@@ -8442,24 +8517,23 @@ ${expiryDisplay}</td></tr>`;
     findDeadStock() {
         const container = document.getElementById('deadStockList');
         if (!container) return;
-        const items = this.products.filter(p => {
-            if (!p.expiryDate) return false;
-            const diff = this.diffDaysFromToday(p.expiryDate);
-            if (diff === null || diff < 0 || diff > 90) return false;
-            let totalStock = 0;
-            if (p.lots && p.lots.length > 0) p.lots.forEach(l => {
-                totalStock += l.stock || 0;
-            });
-            else totalStock = p.stock || 0;
-            return totalStock > 20;
-        });
-        if (items.length === 0) {
+        // ⭐ v5.3.1 FIX (ข้อ 15A): ใช้ getDeadStockRows() ตัวเดียวกับ Excel → ข้อมูลตรงกัน 100%
+        const rows = this.getDeadStockRows();
+        if (rows.length === 0) {
             container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:16px;font-size:13px;"><i class="fas fa-check-circle" style="color:var(--success);font-size:20px;display:block;margin-bottom:6px;"></i>ไม่มีสินค้าที่มีความเสี่ยง</p>';
             return;
         }
-        container.innerHTML = items.map(p => {
-            const diff = this.diffDaysFromToday(p.expiryDate);
-            return `<div class="dead-stock-item"><div><div style="font-weight:600;">${escapeHtml(p.name)}</div><div style="font-size:12px;color:var(--text-muted);">หมดอายุใน ${diff} วัน (${this.formatDate(p.expiryDate)})</div></div><span class="badge badge-red">⚠️ เสี่ยง</span></div>`;
+        container.innerHTML = rows.map(r => {
+            const lotDisplay = r.lot ? ` <small style="color:var(--text-muted);">LOT: ${escapeHtml(r.lot)}</small>` : '';
+            return `<div class="dead-stock-item">
+                <div>
+                    <div style="font-weight:600;">${escapeHtml(r.name)}${lotDisplay}</div>
+                    <div style="font-size:12px;color:var(--text-muted);">
+                        คงเหลือ ${r.stock} ชิ้น | หมดอายุใน ${r.diffDays} วัน (${this.formatDate(r.expiry)})
+                    </div>
+                </div>
+                <span class="badge badge-red">⚠️ เสี่ยง</span>
+            </div>`;
         }).join('');
     }
 
@@ -9294,9 +9368,9 @@ valueInputOption=USER_ENTERED&key=${config.apiKey}`;
             { key: 'stock', label: '🔢 จำนวน' },
             { key: 'unit', label: '📦 หน่วย' },
             { key: 'supplier', label: '🏢 ผู้จัดจำหน่าย' },
-            { key: 'barcode', label: '📱 บาร์โค้ด' },
             { key: 'minStock', label: '📉 Min' },
-            { key: 'maxStock', label: '📈 Max' }
+            { key: 'maxStock', label: '📈 Max' },
+            { key: 'barcode', label: '📱 บาร์โค้ด' }
         ];
         div.innerHTML = fields.map(f => `<div style="display:flex;flex-direction:column;gap:2px;">
             <label style="font-size:12px;font-weight:600;">${f.label}</label>
@@ -9501,15 +9575,9 @@ valueInputOption=USER_ENTERED&key=${config.apiKey}`;
             <div class="expiry">หมดอายุ: ${escapeHtml(p.expiryDate || '')}</div>
             <div class="price">ราคา: ${num(p.sellPrice1).toFixed(2)}</div>
         </div>
-        <script>window.onload=()=>{window.print();setTimeout(()=>window.close(),500)}<\/script>
         </body></html>`;
-        const w = window.open('', '_blank', 'width=420,height=300');
-        if (!w) {
-            this.showToast('⚠️ เบราว์เซอร์บล็อกหน้าต่างพิมพ์', 'warning');
-            return;
-        }
-        w.document.write(html);
-        w.document.close();
+        // ⭐ v5.3.1 FIX (ข้อ 7): ใช้ printViaIframe แทน window.open
+        this.printViaIframe(html);
     }
 
     closeQRCodeModal() {
