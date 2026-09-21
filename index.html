@@ -600,6 +600,74 @@
             border-radius: 12px;
             pointer-events: none;
         }
+    /* v5.3.1 Patch 4: Zoom Controls */
+.scanner-fullscreen .zoom-controls {
+    position: fixed;
+    bottom: 130px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 25;
+    pointer-events: auto;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.scanner-fullscreen.show .zoom-controls {
+    opacity: 1;
+    transform: translateX(0);
+}
+.scanner-fullscreen .zoom-btn {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    font-size: 15px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.scanner-fullscreen .zoom-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+}
+.scanner-fullscreen .zoom-btn:active {
+    transform: scale(0.92);
+}
+.scanner-fullscreen .zoom-btn.active {
+    background: var(--primary, #0ea5e9);
+    border-color: #fff;
+    box-shadow: 0 0 16px rgba(14, 165, 233, 0.7);
+}
+.scanner-fullscreen .zoom-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.scanner-fullscreen .zoom-btn-auto {
+    font-size: 13px;
+    letter-spacing: -0.5px;
+}
+.scanner-fullscreen .zoom-btn-reset {
+    font-size: 20px;
+}
+/* ซ่อนชั่วคราวตอนยังไม่เปิดกล้อง */
+.scanner-fullscreen:not(.show) .zoom-controls {
+    display: none;
+}
 
         /* ========== Help Overlay ========== */
         .help-overlay {
@@ -1753,6 +1821,10 @@
             .scanner-overlay-full .scan-label { font-size: 10px; padding: 4px 12px; bottom: -32px; }
             .scanner-fullscreen .scanner-help-btn { padding: 10px 18px; font-size: 13px; }
             .scanner-fullscreen .focus-tip { bottom: 130px; font-size: 9px; }
+            /* v5.3.1 Patch 4: Zoom controls responsive */
+            .scanner-fullscreen .zoom-controls { bottom: 110px; right: 12px; gap: 8px; }
+            .scanner-fullscreen .zoom-btn { width: 46px; height: 46px; font-size: 13px; }
+            .scanner-fullscreen .zoom-btn-reset { font-size: 18px; }
             .scanner-controls { grid-template-columns: 1fr 1fr; }
             .scanner-controls .btn-full { grid-column: 1/-1; }
             .dashboard-grid { grid-template-columns: 1fr 1fr; }
@@ -2743,8 +2815,17 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
     <button class="scanner-help-btn" onclick="app && app.showScannerHelp()">
         <i class="fas fa-lightbulb"></i> วิธีใช้
     </button>
-    <div class="focus-tip">👆 แตะจอเพื่อโฟกัส</div>
-</div>
+        <div class="focus-tip">👆 วางบาร์โค้ดในกรอบ</div>
+        
+        <!-- v5.3.1 Patch 4: Zoom Controls -->
+        <div class="zoom-controls" id="zoomControls">
+            <button class="zoom-btn" data-zoom="1" onclick="app && app.v4SetZoom(1)" title="มุมมองปกติ">1x</button>
+            <button class="zoom-btn" data-zoom="2" onclick="app && app.v4SetZoom(2)" title="ขยาย 2 เท่า">2x</button>
+            <button class="zoom-btn" data-zoom="3" onclick="app && app.v4SetZoom(3)" title="ขยาย 3 เท่า">3x</button>
+            <button class="zoom-btn zoom-btn-auto" data-zoom="auto" onclick="app && app.v4SetZoom('auto')" title="ให้กล้องปรับอัตโนมัติ">A</button>
+            <button class="zoom-btn zoom-btn-reset" data-zoom="reset" onclick="app && app.v4SetZoom('reset')" title="รีเซ็ต">↺</button>
+        </div>
+    </div>
 
 <!-- Help Overlay -->
 <div class="help-overlay" id="helpOverlay">
@@ -3279,6 +3360,12 @@ class StockApp {
         // ========== v5.3.1: v5 Cycle ==========
         this.v5ActiveCycle = null;
         this.v5SnapshotItems = [];
+		
+		
+        // ════════ v5.3.1 Patch 4: Zoom Controls ════════
+        this.v4ZoomLevel = 1;
+        this.v4ZoomSupported = null;
+        this.v4ZoomTrack = null;
 
         // ========== Onboarding ==========
         this.onboardingStep = 0;
@@ -5081,9 +5168,119 @@ class StockApp {
         document.getElementById('productDetail')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    // ================================================================
-    // Fullscreen Camera Scanner
-    // ================================================================
+    // ══════════════════════════════════════════════
+    // v5.3.1 Patch 4: Zoom Controls (methods)
+    // ══════════════════════════════════════════════
+
+    async v4CheckZoomSupport() {
+        try {
+            const video = document.querySelector('#reader-fullscreen video');
+            const stream = video && video.srcObject;
+            const track = stream && stream.getVideoTracks && stream.getVideoTracks()[0];
+            if (!track) {
+                this.v4ZoomSupported = false;
+                return false;
+            }
+            this.v4ZoomTrack = track;
+            const caps = (track.getCapabilities && track.getCapabilities()) || {};
+            this.v4ZoomSupported = !!(caps.zoom);
+            console.log('[V4 Zoom] Supported:', this.v4ZoomSupported, 'Caps:', caps.zoom || 'none');
+            return this.v4ZoomSupported;
+        } catch (e) {
+            console.warn('[V4 Zoom] Check error:', e);
+            this.v4ZoomSupported = false;
+            return false;
+        }
+    }
+
+    async v4SetZoom(level) {
+        const video = document.querySelector('#reader-fullscreen video');
+        if (!video) {
+            console.warn('[V4 Zoom] No video element');
+            return;
+        }
+
+        await this.v4CheckZoomSupport();
+
+        let hwZoom = null;
+        let cssScale = 1;
+
+        if (level === 'reset') {
+            this.v4ZoomLevel = 1;
+            hwZoom = 1;
+            cssScale = 1;
+        } else if (level === 'auto') {
+            this.v4ZoomLevel = 'auto';
+            hwZoom = true;
+            cssScale = 1;
+        } else {
+            this.v4ZoomLevel = level;
+            hwZoom = level;
+            cssScale = level;
+        }
+
+        let hwSuccess = false;
+        if (this.v4ZoomSupported && this.v4ZoomTrack && hwZoom !== null) {
+            try {
+                await this.v4ZoomTrack.applyConstraints({
+                    advanced: [{ zoom: hwZoom }]
+                });
+                console.log('[V4 Zoom] HW applied:', hwZoom);
+                hwSuccess = true;
+            } catch (e) {
+                console.warn('[V4 Zoom] HW failed:', e.message);
+            }
+        }
+
+        if (!hwSuccess && cssScale !== 1) {
+            video.style.transform = 'scale(' + cssScale + ')';
+            video.style.transformOrigin = 'center center';
+            video.style.transition = 'transform 0.25s ease';
+        } else {
+            video.style.transform = '';
+            video.style.transition = 'transform 0.25s ease';
+        }
+
+        this.v4UpdateZoomButtons();
+    }
+
+    v4UpdateZoomButtons() {
+        const btns = document.querySelectorAll('.zoom-btn');
+        btns.forEach(btn => {
+            const z = btn.dataset.zoom;
+            let active = false;
+            if (z === 'auto') active = (this.v4ZoomLevel === 'auto');
+            else if (z === 'reset') active = false;
+            else active = (Number(this.v4ZoomLevel) === Number(z));
+            btn.classList.toggle('active', active);
+        });
+    }
+
+    v4InitZoom() {
+        let tries = 0;
+        const check = () => {
+            tries++;
+            const video = document.querySelector('#reader-fullscreen video');
+            const ready = video && video.srcObject && video.readyState >= 1;
+            if (ready) {
+                console.log('[V4 Zoom] Init — video ready');
+                this.v4ZoomSupported = null;
+                this.v4ZoomTrack = video.srcObject.getVideoTracks()[0] || null;
+                this.v4CheckZoomSupport().then(() => {
+                    this.v4SetZoom(1);
+                });
+            } else if (tries < 20) {
+                setTimeout(check, 250);
+            } else {
+                console.warn('[V4 Zoom] Init timeout — video not ready');
+            }
+        };
+        check();
+    }
+
+        // ────────────
+        // Fullscreen Camera Scanner
+        // ────────────
 async openFullscreenScanner() {
     console.log('📷 เปิด Scanner v5.3.1...');
     try {
@@ -5337,6 +5534,8 @@ async openFullscreenScanner() {
             }
         }
 
+        // v5.3.1 Patch 4: Init zoom หลังกล้องเปิด
+        setTimeout(() => this.v4InitZoom(), 600);
         statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ | 👆 แตะเพื่อโฟกัส';
         statusFull.className = 'scanner-status-full';
         statusFull.style.display = 'block';
