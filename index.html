@@ -2069,6 +2069,7 @@ size:12px;padding:8px 12px;min-height:38px;">
             </button>
         </div>
     </div>
+    <!-- end PAGE: IMPORT -->
 
     <!-- ================================================================
          PAGE: SCAN (นับสต็อก)
@@ -2168,11 +2169,12 @@ muted);color:#fff;">
 			</div>
 
 			<!-- ⭐ v5.3.1 [5B-tips] Scanner Tips -->
-			<div class="card" id="scannerTipsCard" style="padding:8px;background:var(--warning-light);border-left:4px solid var(--warning);margin-top:6px;">
-				<div style="font-size:11px;font-weight:700;color:#92400e;line-height:1.6;">
-					💡 <strong>Tips:</strong> บาร์โค้ดเล็ก/กระดาษมัน → วางบนพื้น + ใช้ 4x
+			<div class="card" id="scannerTipsCard" style="...">
+				<div style="font-size:11px;...">
+					💡 <strong>Tips:</strong> ...
 				</div>
-			</div>
+			</div>       <!-- ปิด Tips Card -->
+		</div>           <!-- ✅ เพิ่ม: ปิด Scanner Card -->
 
         <!-- Search -->
         <div class="card" style="padding:8px;background:var(--success-light);border:2px solid #6ee7b7;">
@@ -2314,9 +2316,12 @@ id="costDisplay">0.00</span>
             </div>
         </div>
     </div>
+    <!-- end PAGE: SCAN -->
+
     <!-- ================================================================
          PAGE: LAYOUT (ผังร้าน)
          ================================================================ -->
+
     <div class="page" id="page-layout">
         <div class="card">
             <div class="card-title"><i class="fas fa-sitemap"></i> ผังร้าน</div>
@@ -2630,6 +2635,7 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
 						</button>
 					</div>
 				</div>
+			</div>   <!-- ✅ เพิ่ม: ปิด .flex-between -->
             <div class="table-wrap" style="margin-top:8px;">
                 <table>
                     <thead>
@@ -2656,9 +2662,9 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
                         </td></tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
+            </div>       <!-- ปิด .table-wrap -->
+        </div>           <!-- ปิด .card (Report Table) -->
+    </div>               <!-- ✅ เพิ่ม: ปิด #page-report -->
 
     <!-- ================================================================
          PAGE: ANALYTICS (วิเคราะห์)
