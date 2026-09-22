@@ -3260,6 +3260,72 @@ height:48px;">
     </div>
 </div>
 
+<!-- ================================================================
+     🐛 TEMP DEBUG BUTTON — ลบออกหลังแก้ FIX-1 เสร็จ
+     ================================================================ -->
+<button id="tempDebugBtn" onclick="tempShowDebug()" style="
+    position: fixed; bottom: 80px; right: 12px; z-index: 999999;
+    background: linear-gradient(135deg,#ef4444,#dc2626); color: #fff; 
+    border: none; border-radius: 50%; width: 56px; height: 56px;
+    font-size: 26px; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(239,68,68,0.5);
+">🐛</button>
+
+<script>
+
+function tempShowDebug() {
+    // ========== เก็บข้อมูลพื้นฐาน ==========
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const offset = new Date().getTimezoneOffset();
+    const now = new Date();
+    
+    // ========== วันที่ปัจจุบัน 3 รูปแบบ ==========
+    const localDate = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    const utcDate = `${now.getUTCFullYear()}-${String(now.getUTCMonth()+1).padStart(2,'0')}-${String(now.getUTCDate()).padStart(2,'0')}`;
+    
+    // ========== ทดสอบ normalizeDateValue ==========
+    const testCases = [
+        { label: 'String ISO', value: '2026-02-23' },
+        { label: 'Excel Serial 46075', value: 46075 },
+        { label: 'String DD/MM/YYYY', value: '23/02/2026' },
+        { label: 'String DD.MM.YYYY', value: '23.02.2026' },
+        { label: 'Date object', value: new Date('2026-02-23') },
+    ];
+    
+    let testResults = '';
+    testCases.forEach(tc => {
+        const result = window.app?.normalizeDateValue ? window.app.normalizeDateValue(tc.value) : 'N/A';
+        testResults += `\n   ${tc.label}: ${result}`;
+    });
+    
+    // ========== ข้อมูลที่ควรรู้ ==========
+    const info = `=== MediStock v5.3.1 Debug ===
+
+📱 Timezone: ${tz}
+⏰ Offset: ${offset} นาที (ไทย = -420)
+
+🗓️ วันที่ปัจจุบัน:
+   • Local: ${localDate}
+   • UTC:   ${utcDate}
+
+🧪 ทดสอบ normalizeDateValue:${testResults}
+
+📋 User Agent:
+${navigator.userAgent}
+
+📱 Platform: ${navigator.platform}
+
+===== จบข้อความ — เลือก Copy ทั้งหมดส่งให้ผู้พัฒนา =====`;
+
+    // ========== แสดง popup ==========
+    // ใช้ prompt เพราะ copy ได้ง่ายกว่า alert
+    window.prompt('📋 Copy ข้อมูลนี้ส่งผู้พัฒนา (Ctrl+C / Long press → Copy):', info);
+    
+    // ========== Log ลง console ด้วย (เผื่อมี) ==========
+    console.log(info);
+}
+</script>
+
 <!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
 <script>
