@@ -10286,5 +10286,69 @@ document.addEventListener('DOMContentLoaded', function () {
 
 console.log('✅ MediStock v5.3.1 Complete Edition โหลดเสร็จ — พร้อม Bootstrap');
 </script>
+<!-- ================================================================
+     🐛 TEMP: Import Date Tracker — ลบออกหลัง FIX-1 เสร็จ
+     ================================================================ -->
+<script>
+(function() {
+    // รอให้ app พร้อมก่อน
+    const checkApp = setInterval(() => {
+        if (window.app && typeof window.app.normalizeDateValue === 'function') {
+            clearInterval(checkApp);
+            
+            // บันทึก function เดิม
+            const originalNormalize = window.app.normalizeDateValue;
+            
+            // เก็บ log ไว้ใน array
+            window.__dateDebugLog = [];
+            
+            // แทนที่ด้วยตัวดักจับ
+            window.app.normalizeDateValue = function(v) {
+                const result = originalNormalize.call(this, v);
+                
+                // Log เฉพาะค่าที่ดูเหมือนวันที่ (มี 4 หลัก ขึ้นไป หรือเป็น number)
+                if (v !== null && v !== undefined && v !== '' && 
+                    (String(v).match(/\d{4}/) || typeof v === 'number')) {
+                    window.__dateDebugLog.push({
+                        raw: v,
+                        type: typeof v,
+                        result: result
+                    });
+                }
+                return result;
+            };
+            
+            console.log('✅ Date Tracker เปิดใช้งาน — พร้อม Import');
+            
+            // เพิ่มปุ่มที่ 2 สำหรับดู log
+            const logBtn = document.createElement('button');
+            logBtn.id = 'tempDateLogBtn';
+            logBtn.innerHTML = '📅';
+            logBtn.style.cssText = `
+                position: fixed; bottom: 80px; left: 12px; z-index: 999999;
+                background: linear-gradient(135deg,#3b82f6,#1e40af); color: #fff;
+                border: none; border-radius: 50%; width: 56px; height: 56px;
+                font-size: 26px; cursor: pointer;
+                box-shadow: 0 6px 20px rgba(59,130,246,0.5);
+            `;
+            logBtn.onclick = () => {
+                if (window.__dateDebugLog.length === 0) {
+                    alert('ยังไม่มีข้อมูล — กรุณา Import ไฟล์ก่อน');
+                    return;
+                }
+                let output = `=== Date Import Log (${window.__dateDebugLog.length} รายการ) ===\n\n`;
+                window.__dateDebugLog.slice(0, 50).forEach((item, i) => {
+                    output += `${i+1}. [${item.type}] ${JSON.stringify(item.raw)} → ${item.result}\n`;
+                });
+                if (window.__dateDebugLog.length > 50) {
+                    output += `\n... และอีก ${window.__dateDebugLog.length - 50} รายการ`;
+                }
+                window.prompt('📋 Copy ข้อมูลนี้ส่งผู้พัฒนา:', output);
+            };
+            document.body.appendChild(logBtn);
+        }
+    }, 500);
+})();
+</script>
 </body>
 </html>
