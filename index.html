@@ -600,6 +600,21 @@
             border-radius: 12px;
             pointer-events: none;
         }
+/* [5B-2] Tap-to-Focus ring animation */
+@keyframes focusRingPulse {
+    0% {
+        opacity: 1;
+        transform: scale(1.4);
+    }
+    60% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+}		
     /* v5.3.1 Patch 4: Zoom Controls */
 .scanner-fullscreen .zoom-controls {
     position: fixed;
@@ -2822,6 +2837,7 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
             <button class="zoom-btn" data-zoom="1" onclick="app && app.v4SetZoom(1)" title="มุมมองปกติ">1x</button>
             <button class="zoom-btn" data-zoom="2" onclick="app && app.v4SetZoom(2)" title="ขยาย 2 เท่า">2x</button>
             <button class="zoom-btn" data-zoom="3" onclick="app && app.v4SetZoom(3)" title="ขยาย 3 เท่า">3x</button>
+            <button class="zoom-btn" data-zoom="4" onclick="app && app.v4SetZoom(4)" title="ขยาย 4 เท่า">4x</button>
             <button class="zoom-btn zoom-btn-auto" data-zoom="auto" onclick="app && app.v4SetZoom('auto')" title="ให้กล้องปรับอัตโนมัติ">A</button>
             <button class="zoom-btn zoom-btn-reset" data-zoom="reset" onclick="app && app.v4SetZoom('reset')" title="รีเซ็ต">↺</button>
         </div>
@@ -3735,96 +3751,72 @@ class StockApp {
      * Normalize date value - FIX TIMEZONE BUG
      * v5.3.1: ใช้ local timezone แทน UTC เพื่อไม่ให้คลาด 1 วัน
      */
-    normalizeDateValue(value) {
-        if (value === null || value === undefined || value === '') return '';
+// ===== [5B-1] normalizeDateValue — Fix off-by-one day =====
+normalizeDateValue(v) {
+  if (v === null || v === undefined || v === '') return '';
 
-        // 1) Date object (จาก SheetJS cellDates:true) → ใช้ UTC getters
-        if (value instanceof Date && !isNaN(value.getTime())) {
-            const y = value.getUTCFullYear();
-            const mo = value.getUTCMonth() + 1;
-            const d = value.getUTCDate();
-            if (y >= 1900 && y <= 2200) {
-                return `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-            }
-            return '';
-        }
+  // 1) Date object แล้ว → ใช้ local date โดยตรง
+  if (v instanceof Date && !isNaN(v.getTime())) {
+    const y = v.getFullYear();
+    const m = String(v.getMonth() + 1).padStart(2, '0');
+    const d = String(v.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
 
-        // 2) Excel serial number → FIX TIMEZONE v5.3.1
-        if (typeof value === 'number' && Number.isFinite(value)) {
-            if (value >= 1 && value <= 2958465) {
-                const msPerDay = 86400000;
-                const serialDays = Math.round(value);
-                const baseUtc = Date.UTC(1899, 11, 30);
-                const targetDate = new Date(baseUtc + serialDays * msPerDay);
-                const y = targetDate.getUTCFullYear();
-                const mo = targetDate.getUTCMonth() + 1;
-                const d = targetDate.getUTCDate();
-                if (y >= 1900 && y <= 2200) {
-                    return `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-                }
-            }
-            return '';
-        }
+  // 2) Excel serial number (เช่น 45000)
+  if (typeof v === 'number' && v > 20000 && v < 90000) {
+    // Excel epoch = 1899-12-30 (เพื่อชดเชย leap year bug)
+    const ms = Math.round((v - 25569) * 86400 * 1000);
+    const dt = new Date(ms);
+    const y = dt.getUTCFullYear();
+    const m = String(dt.getUTCMonth() + 1).padStart(2, '0');
+    const d = String(dt.getUTCDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
 
-        const raw = String(value).trim().replace(/,/g, '');
-        if (!raw) return '';
+  const s = String(v).trim();
 
-        // 3) ISO-like (YYYY-MM-DD)
-        let m = raw.match(/^(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})(?:[T\s].*)?$/);
-        if (m) {
-            let y = Number(m[1]);
-            if (y > 2400) y -= 543;
-            const mo = Number(m[2]);
-            const day = Number(m[3]);
-            const d = new Date(y, mo - 1, day);
-            if (!isNaN(d.getTime()) && d.getFullYear() === y && d.getMonth() === mo - 1 && d.getDate() === day) {
-                return `${y}-${String(mo).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-            }
-            return '';
-        }
+  // 3) ISO yyyy-mm-dd (อาจมี T00:00:00Z) → ตัด part วันที่ตรงๆ
+  let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (m) {
+    const y = m[1];
+    const mo = String(m[2]).padStart(2, '0');
+    const d = String(m[3]).padStart(2, '0');
+    return `${y}-${mo}-${d}`;
+  }
 
-        // 4) dd/mm/yyyy (Buddhist year aware)
-        m = raw.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})(?:[T\s].*)?$/);
-        if (m) {
-            let y = Number(m[3]);
-            if (y < 100) y += (y > 50 ? 2500 : 2000);
-            if (y > 2400) y -= 543;
-            const day = Number(m[1]);
-            const mo = Number(m[2]);
-            const d = new Date(y, mo - 1, day);
-            if (!isNaN(d.getTime()) && d.getFullYear() === y && d.getMonth() === mo - 1 && d.getDate() === day) {
-                return `${y}-${String(mo).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-            }
-            return '';
-        }
-
-        // 5) Numeric-only string (อาจเป็น Excel serial)
-        if (/^\d+(\.\d+)?$/.test(raw)) {
-            const n = Number(raw);
-            if (n >= 1 && n <= 2958465) {
-                const baseUtc = Date.UTC(1899, 11, 30);
-                const targetDate = new Date(baseUtc + Math.round(n) * 86400000);
-                const y = targetDate.getUTCFullYear();
-                const mo = targetDate.getUTCMonth() + 1;
-                const d = targetDate.getUTCDate();
-                if (y >= 1900 && y <= 2200) {
-                    return `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-                }
-            }
-        }
-
-        // 6) Last resort
-        const parsed = new Date(raw);
-        if (!isNaN(parsed.getTime())) {
-            const y = parsed.getUTCFullYear();
-            const mo = parsed.getUTCMonth() + 1;
-            const d = parsed.getUTCDate();
-            if (y >= 1900 && y <= 2200) {
-                return `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-            }
-        }
-        return '';
+  // 4) dd/mm/yyyy หรือ d/m/yyyy (แบบไทย)
+  m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  if (m) {
+    let d = m[1], mo = m[2], y = m[3];
+    // ถ้า d > 12 แสดงว่าเป็น dd/mm
+    if (parseInt(d, 10) > 12) {
+      // dd/mm/yyyy
+    } else if (parseInt(mo, 10) > 12) {
+      // สลับ mm/dd → dd/mm
+      [d, mo] = [mo, d];
     }
+    return `${y}-${String(mo).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+  }
+
+  // 5) yyyy/mm/dd
+  m = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+  if (m) {
+    return `${m[1]}-${String(m[2]).padStart(2, '0')}-${String(m[3]).padStart(2, '0')}`;
+  }
+
+  // 6) Fallback: ลอง new Date() แต่ดึง local
+  const dt = new Date(s);
+  if (!isNaN(dt.getTime())) {
+    const y = dt.getFullYear();
+    const mo = String(dt.getMonth() + 1).padStart(2, '0');
+    const d = String(dt.getDate()).padStart(2, '0');
+    return `${y}-${mo}-${d}`;
+  }
+
+  return '';
+}
+
     parseLocalDate(dateStr) {
         if (!dateStr) return null;
         const m = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})/);
@@ -5172,6 +5164,10 @@ class StockApp {
     // v5.3.1 Patch 4: Zoom Controls (methods)
     // ══════════════════════════════════════════════
 
+    // ═══════════════════════════════════════════════
+    // 🔍 ZOOM GROUP (v4)
+    // ═══════════════════════════════════════════════
+
     async v4CheckZoomSupport() {
         try {
             const video = document.querySelector('#reader-fullscreen video');
@@ -5193,90 +5189,126 @@ class StockApp {
         }
     }
 
-    async v4SetZoom(level) {
-        const video = document.querySelector('#reader-fullscreen video');
-        if (!video) {
-            console.warn('[V4 Zoom] No video element');
-            return;
-        }
-
-        await this.v4CheckZoomSupport();
-
-        let hwZoom = null;
-        let cssScale = 1;
-
-        if (level === 'reset') {
-            this.v4ZoomLevel = 1;
-            hwZoom = 1;
-            cssScale = 1;
-        } else if (level === 'auto') {
-            this.v4ZoomLevel = 'auto';
-            hwZoom = true;
-            cssScale = 1;
-        } else {
-            this.v4ZoomLevel = level;
-            hwZoom = level;
-            cssScale = level;
-        }
-
-        let hwSuccess = false;
-        if (this.v4ZoomSupported && this.v4ZoomTrack && hwZoom !== null) {
-            try {
-                await this.v4ZoomTrack.applyConstraints({
-                    advanced: [{ zoom: hwZoom }]
-                });
-                console.log('[V4 Zoom] HW applied:', hwZoom);
-                hwSuccess = true;
-            } catch (e) {
-                console.warn('[V4 Zoom] HW failed:', e.message);
-            }
-        }
-
-        if (!hwSuccess && cssScale !== 1) {
-            video.style.transform = 'scale(' + cssScale + ')';
-            video.style.transformOrigin = 'center center';
-            video.style.transition = 'transform 0.25s ease';
-        } else {
-            video.style.transform = '';
-            video.style.transition = 'transform 0.25s ease';
-        }
-
-        this.v4UpdateZoomButtons();
+// ═══════════════════════════════════════════════════════════════
+// [5B-3] v4SetZoom — รองรับ 4x + HW/CSS fallback ที่แม่นยำ
+// ═══════════════════════════════════════════════════════════════
+async v4SetZoom(level) {
+    const video = document.querySelector('#reader-fullscreen video');
+    if (!video) {
+        console.warn('[5B-3 Zoom] No video element');
+        return;
     }
 
+    await this.v4CheckZoomSupport();
+
+    // ─── Map level → hardware zoom value ───
+    let hwZoom = null;
+    let cssScale = 1;
+
+    if (level === 'reset') {
+        this.v4ZoomLevel = 1;
+        hwZoom = 1;
+        cssScale = 1;
+    } else if (level === 'auto') {
+        this.v4ZoomLevel = 'auto';
+        hwZoom = true;   // true = ให้กล้องเลือกเอง
+        cssScale = 1;
+    } else {
+        const numericLevel = Number(level);
+        this.v4ZoomLevel = numericLevel;
+        hwZoom = numericLevel;
+        cssScale = numericLevel;
+    }
+
+    // ─── ลอง hardware zoom ก่อน ───
+    let hwSuccess = false;
+    if (this.v4ZoomSupported && this.v4ZoomTrack && hwZoom !== null) {
+        try {
+            // ถ้าเป็นตัวเลข: clamp ให้อยู่ใน range ของกล้อง
+            let target = hwZoom;
+            if (typeof hwZoom === 'number' && this.v4ZoomTrack.getCapabilities) {
+                const caps = this.v4ZoomTrack.getCapabilities();
+                if (caps.zoom) {
+                    const minZ = caps.zoom.min ?? 1;
+                    const maxZ = caps.zoom.max ?? 1;
+                    target = Math.max(minZ, Math.min(maxZ, hwZoom));
+                }
+            }
+            await this.v4ZoomTrack.applyConstraints({
+                advanced: [{ zoom: target }]
+            });
+            console.log('[5B-3 Zoom] HW applied:', target);
+            hwSuccess = true;
+        } catch (e) {
+            console.warn('[5B-3 Zoom] HW failed, fallback to CSS:', e.message);
+        }
+    }
+
+    // ─── Fallback: CSS transform ───
+    if (!hwSuccess && cssScale !== 1) {
+        video.style.transform = `scale(${cssScale})`;
+        video.style.transformOrigin = 'center center';
+        video.style.transition = 'transform 0.25s ease';
+    } else {
+        video.style.transform = '';
+        video.style.transition = 'transform 0.25s ease';
+    }
+
+    // ─── Toast feedback ───
+    const label = level === 'auto' ? 'อัตโนมัติ'
+                : level === 'reset' ? 'รีเซ็ต'
+                : `${level}x`;
+    if (level !== 'auto' && level !== 'reset') {
+        this.showToast(`🔍 ซูม ${label}${!hwSuccess ? ' (CSS)' : ''}`, 'info');
+    }
+
+    this.v4UpdateZoomButtons();
+}
+// [5B-3] Update active state ของปุ่ม zoom
     v4UpdateZoomButtons() {
         const btns = document.querySelectorAll('.zoom-btn');
         btns.forEach(btn => {
             const z = btn.dataset.zoom;
             let active = false;
-            if (z === 'auto') active = (this.v4ZoomLevel === 'auto');
-            else if (z === 'reset') active = false;
-            else active = (Number(this.v4ZoomLevel) === Number(z));
+            if (z === 'auto') {
+                active = (this.v4ZoomLevel === 'auto');
+            } else if (z === 'reset') {
+                active = false;   // reset ไม่มี active
+            } else {
+                active = (Number(this.v4ZoomLevel) === Number(z));
+            }
             btn.classList.toggle('active', active);
         });
     }
 
-    v4InitZoom() {
-        let tries = 0;
-        const check = () => {
-            tries++;
-            const video = document.querySelector('#reader-fullscreen video');
-            const ready = video && video.srcObject && video.readyState >= 1;
-            if (ready) {
-                console.log('[V4 Zoom] Init — video ready');
-                this.v4ZoomSupported = null;
-                this.v4ZoomTrack = video.srcObject.getVideoTracks()[0] || null;
-                this.v4CheckZoomSupport().then(() => {
-                    this.v4SetZoom(1);
-                });
-            } else if (tries < 20) {
-                setTimeout(check, 250);
-            } else {
-                console.warn('[V4 Zoom] Init timeout — video not ready');
-            }
-        };
-        check();
-    }
+    // ═══════════════════════════════════════════════
+    // [5B-3] Init zoom หลังกล้องเริ่มทำงาน
+    // ═══════════════════════════════════════════════
+v4InitZoom() { 
+    let tries = 0;
+    const check = () => {
+        tries++;
+        const video = document.querySelector('#reader-fullscreen video');
+        const ready = video && video.srcObject && video.readyState >= 1;
+        if (ready) {
+            console.log('[5B-3 Zoom] Init — video ready');
+            this.v4ZoomSupported = null;
+            this.v4ZoomTrack = video.srcObject.getVideoTracks()[0] || null;
+            this.v4CheckZoomSupport().then(() => {
+                this.v4SetZoom(1);
+            });
+        } else if (tries < 20) {
+            setTimeout(check, 250);
+        } else {
+            console.warn('[5B-3 Zoom] Init timeout');
+        }
+    };
+    check();
+}
+
+    // ═══════════════════════════════════════════════
+    // 📷 CAMERA GROUP
+    // ═══════════════════════════════════════════════
 
         // ────────────
         // Fullscreen Camera Scanner
@@ -5526,34 +5558,96 @@ async openFullscreenScanner() {
                         }
                     }, 1000);
 
-                    readerEl.addEventListener('click', async (e) => {
-                        if (e.target.closest('.zoom-controls')) return;
-                        if (e.target.closest('.scanner-close-btn')) return;
-                        if (e.target.closest('.scanner-help-btn')) return;
+// ═══════════════════════════════════════════════════════════════
+// [5B-2] Tap to Focus Point — แตะจอเพื่อ focus ที่จุดนั้น
+// ═══════════════════════════════════════════════════════════════
+readerEl.addEventListener('click', async (e) => {
+    // ไม่ทำงานถ้าแตะปุ่ม UI
+    if (e.target.closest('.zoom-controls')) return;
+    if (e.target.closest('.scanner-close-btn')) return;
+    if (e.target.closest('.scanner-help-btn')) return;
 
-                        statusFull.textContent = '🎯 กำลัง Focus...';
-                        statusFull.className = 'scanner-status-full focusing';
-                        try {
-                            if (caps.focusMode && caps.focusMode.includes('single-shot')) {
-                                await track.applyConstraints({
-                                    advanced: [{ focusMode: 'single-shot' }]
-                                });
-                                setTimeout(async () => {
-                                    try {
-                                        await track.applyConstraints({
-                                            advanced: [{ focusMode: 'continuous' }]
-                                        });
-                                    } catch(_) {}
-                                }, 1200);
-                            }
-                        } catch(e) {}
-                        setTimeout(() => {
-                            if (statusFull.className.includes('focusing')) {
-                                statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ | 👆 แตะเพื่อโฟกัส';
-                                statusFull.className = 'scanner-status-full';
-                            }
-                        }, 1500);
+    // ─── คำนวณพิกัดจุดที่แตะ (normalize 0..1) ───
+    const rect = videoEl.getBoundingClientRect();
+    const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+
+    console.log(`[5B-2 Focus] Tap at (${x.toFixed(2)}, ${y.toFixed(2)})`);
+
+    // ─── โชว์ focus ring ───
+    this.showFocusRing(e.clientX, e.clientY);   // ← เพิ่ม this. นำหน้า
+	
+    // ─── Update status ───
+    statusFull.textContent = '🎯 กำลัง Focus...';
+    statusFull.className = 'scanner-status-full focusing';
+
+    // ─── ตรวจว่า track รองรับ pointsOfInterest ไหม ───
+    const focusModes = caps.focusMode || [];
+    const supportsPOI = focusModes.includes('single-shot') || focusModes.includes('manual');
+    const capsAny = track.getCapabilities ? track.getCapabilities() : {};
+    const hasPOI = !!(capsAny.pointsOfInterest);
+
+    try {
+        if (focusModes.includes('single-shot')) {
+            // ลองใส่ pointsOfInterest ถ้ารองรับ
+            if (hasPOI) {
+                await track.applyConstraints({
+                    advanced: [{
+                        focusMode: 'single-shot',
+                        pointsOfInterest: [{ x, y }]
+                    }]
+                });
+                console.log('[5B-2 Focus] single-shot + POI ✓');
+            } else {
+                await track.applyConstraints({
+                    advanced: [{ focusMode: 'single-shot' }]
+                });
+                console.log('[5B-2 Focus] single-shot (no POI) ✓');
+            }
+
+            // กลับ continuous หลัง 1.5 วิ
+            setTimeout(async () => {
+                try {
+                    await track.applyConstraints({
+                        advanced: [{ focusMode: 'continuous' }]
                     });
+                } catch(_) {}
+            }, 1500);
+
+        } else if (focusModes.includes('manual') && hasPOI) {
+            // Manual + POI (Android บางรุ่น)
+            await track.applyConstraints({
+                advanced: [{
+                    focusMode: 'manual',
+                    pointsOfInterest: [{ x, y }]
+                }]
+            });
+            console.log('[5B-2 Focus] manual + POI ✓');
+
+            setTimeout(async () => {
+                try {
+                    await track.applyConstraints({
+                        advanced: [{ focusMode: 'continuous' }]
+                    });
+                } catch(_) {}
+            }, 1500);
+
+        } else {
+            // ไม่รองรับ → แค่ toast
+            console.log('[5B-2 Focus] ไม่รองรับ focus mode');
+        }
+    } catch(err) {
+        console.warn('[5B-2 Focus] applyConstraints failed:', err);
+    }
+
+    // ─── Reset status หลัง 1.5 วิ ───
+    setTimeout(() => {
+        if (statusFull.className.includes('focusing')) {
+            statusFull.textContent = '📷 วางบาร์โค้ดในกรอบ | 👆 แตะเพื่อโฟกัส';
+            statusFull.className = 'scanner-status-full';
+        }
+    }, 1500);
+});
 
                     this._brightnessTimer = setInterval(() => {
                         const b = this.checkFrameBrightness(videoEl);
@@ -5607,6 +5701,31 @@ checkFrameBrightness(videoEl) {
         return null;
     }
 }
+
+// [5B-2] โชว์ focus ring ตรงจุดที่แตะ (method ของ class)
+showFocusRing(clientX, clientY) {
+    // ลบ ring เก่า
+    document.querySelectorAll('.tap-focus-ring').forEach(el => el.remove());
+
+    const ring = document.createElement('div');
+    ring.className = 'tap-focus-ring';
+    ring.style.cssText = `
+        position: fixed;
+        left: ${clientX - 30}px;
+        top: ${clientY - 30}px;
+        width: 60px;
+        height: 60px;
+        border: 2.5px solid #34d399;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 10002;
+        animation: focusRingPulse 1.2s ease-out forwards;
+    `;
+    document.body.appendChild(ring);
+
+    setTimeout(() => ring.remove(), 1200);
+}
+
 async closeFullscreenScanner() {
     // ⭐ ล้าง brightness timer
     if (this._brightnessTimer) {
