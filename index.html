@@ -1336,7 +1336,48 @@
             border-color: var(--primary-light);
             color: var(--primary);
         }
+		
+		/* ⭐ v5.3.1 [5B-4] Report Dropdown */
+		.dropdown-item {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			width: 100%;
+			padding: 10px 14px;
+			border: none;
+			background: transparent;
+			color: var(--text-main);
+			font-size: 13px;
+			font-weight: 600;
+			text-align: left;
+			cursor: pointer;
+			transition: background 0.15s;
+			font-family: inherit;
+		}
+		.dropdown-item:hover {
+			background: var(--bg-body);
+		}
+		.dropdown-item i {
+			color: var(--primary);
+			width: 16px;
+			text-align: center;
+			font-size: 13px;
+		}
+		[data-theme="dark"] .dropdown-item:hover {
+			background: #334155;
+		}
 
+		/* Mobile responsive */
+		@media (max-width: 480px) {
+			#reportDropdownMenu {
+				min-width: 180px !important;
+			}
+			.dropdown-item {
+				padding: 9px 12px;
+				font-size: 12px;
+			}
+		}
+		
         /* ========== v5.3.1: Report Dashboard ========== */
         .report-dashboard {
             background: var(--bg-card);
@@ -2121,11 +2162,17 @@ muted);color:#fff;">
                     <i class="fas fa-bug"></i> ทดสอบ
                 </button>
             </div>
-            <div class="continuous-warning" id="continuousWarning">
-                <i class="fas fa-exclamation-triangle"></i>
-                <span>⚠️ โหมดต่อเนื่อง: ระบบจะนับ 1 ชิ้น ทันทีเมื่อสแกนบาร์โค้ด</span>
-            </div>
-        </div>
+			<div class="continuous-warning" id="continuousWarning">
+				<i class="fas fa-exclamation-triangle"></i>
+				<span>⚠️ โหมดต่อเนื่อง: ระบบจะนับ 1 ชิ้น ทันทีเมื่อสแกนบาร์โค้ด</span>
+			</div>
+
+			<!-- ⭐ v5.3.1 [5B-tips] Scanner Tips -->
+			<div class="card" id="scannerTipsCard" style="padding:8px;background:var(--warning-light);border-left:4px solid var(--warning);margin-top:6px;">
+				<div style="font-size:11px;font-weight:700;color:#92400e;line-height:1.6;">
+					💡 <strong>Tips:</strong> บาร์โค้ดเล็ก/กระดาษมัน → วางบนพื้น + ใช้ 4x
+				</div>
+			</div>
 
         <!-- Search -->
         <div class="card" style="padding:8px;background:var(--success-light);border:2px solid #6ee7b7;">
@@ -2548,36 +2595,41 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
                 <span class="card-title" style="margin:0;font-size:14px;">
                     <i class="fas fa-table"></i> รายละเอียดการนับ
                 </span>
-                <div style="display:flex;gap:4px;flex-wrap:wrap;">
-                    <button class="btn btn-primary btn-sm" onclick="app.exportFullReportXLSX()" style="font-size:11px;padding:4px 10px;min-height:30px;background:#10b981;color:#fff;">
-                        <i class="fas fa-file-excel"></i> Excel 18 Sheets
-                    </button>
-                    <button class="btn btn-danger btn-sm" onclick="app.printFullReport()" style="font-size:11px;padding:4px 10px;min-height:30px;">
-                        <i class="fas fa-print"></i> พิมพ์/PDF
-                    </button>
-                    <button class="btn btn-outline btn-sm" onclick="app.exportBarcodeMasterXLSX()" style="font-size:11px;padding:4px 10px;min-height:30px;">
-                        <i class="fas fa-barcode"></i> Barcode XLSX
-                    </button>
-                    <button class="btn btn-outline btn-sm" onclick="exportData('csv')" style="font-size:11px;padding:4px 10px;min-height:30px;">
-                        <i class="fas fa-file-csv"></i> CSV
-                    </button>
-                    <button class="btn btn-outline btn-sm" onclick="exportData('xlsx')" style="font-size:11px;padding:4px 10px;min-height:30px;">
-                        <i class="fas fa-file-excel"></i> Excel
-                    </button>
-                    <button class="btn btn-outline btn-sm" onclick="exportData('pdf')" style="font-size:11px;padding:4px 10px;min-height:30px;">
-                        <i class="fas fa-file-pdf"></i> PDF
-                    </button>
-                    <button class="btn btn-outline btn-sm" onclick="exportLocationReport()" style="font-size:11px;padding:4px 10px;min-height:30px;">
-                        <i class="fas fa-map-pin"></i> ตู้/ชั้น
-                    </button>
-                    <button class="btn btn-outline btn-sm" onclick="exportBarcodeMaster()" style="font-size:11px;padding:4px 10px;min-height:30px;">
-                        <i class="fas fa-barcode"></i> Master
-                    </button>
-                    <button class="btn btn-outline btn-sm" onclick="exportHistory()" style="font-size:11px;padding:4px 10px;min-height:30px;">
-                        <i class="fas fa-history"></i> History
-                    </button>
-                </div>
-            </div>
+				<!-- ⭐ v5.3.1 [5B-4] ปุ่มรายงาน + Dropdown -->
+				<div style="position:relative;display:flex;gap:4px;flex-wrap:wrap;">
+					<!-- ปุ่มหลัก -->
+					<button class="btn btn-primary btn-sm" onclick="app.exportFullReportXLSX()" style="font-size:11px;padding:4px 10px;min-height:30px;background:#10b981;color:#fff;">
+						<i class="fas fa-file-excel"></i> Excel 18 Sheets
+					</button>
+
+					<!-- ปุ่ม Dropdown -->
+					<button class="btn btn-outline btn-sm" id="reportDropdownBtn" onclick="app.toggleReportDropdown()" style="font-size:11px;padding:4px 10px;min-height:30px;display:flex;align-items:center;gap:4px;">
+						<i class="fas fa-file-export"></i> ส่งออกอื่นๆ <i class="fas fa-chevron-down" id="reportDropdownIcon" style="font-size:9px;transition:transform 0.2s;"></i>
+					</button>
+
+					<!-- Dropdown Menu -->
+					<div id="reportDropdownMenu" style="display:none;position:absolute;top:100%;right:0;margin-top:4px;background:var(--bg-card);border:2px solid var(--primary-light);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);z-index:100;min-width:200px;overflow:hidden;">
+						<button class="dropdown-item" onclick="app.reportDropdownAction('exportData','csv')">
+							<i class="fas fa-file-csv"></i> ส่ง CSV
+						</button>
+						<button class="dropdown-item" onclick="app.reportDropdownAction('exportData','xlsx')">
+							<i class="fas fa-file-excel"></i> ส่ง Excel
+						</button>
+						<button class="dropdown-item" onclick="app.reportDropdownAction('exportData','pdf')">
+							<i class="fas fa-file-pdf"></i> ส่ง PDF
+						</button>
+						<div style="border-top:1px solid var(--border-color);"></div>
+						<button class="dropdown-item" onclick="app.reportDropdownAction('exportLocationReport')">
+							<i class="fas fa-map-pin"></i> รายงานตู้/ชั้น
+						</button>
+						<button class="dropdown-item" onclick="app.reportDropdownAction('exportBarcodeMasterXLSX')">
+							<i class="fas fa-barcode"></i> Barcode Master XLSX
+						</button>
+						<button class="dropdown-item" onclick="app.reportDropdownAction('exportHistory')">
+							<i class="fas fa-history"></i> ประวัตินับ
+						</button>
+					</div>
+				</div>
             <div class="table-wrap" style="margin-top:8px;">
                 <table>
                     <thead>
@@ -5743,36 +5795,39 @@ async closeFullscreenScanner() {
     }
 }
 
-    showScannerHelp() {
-        const old = document.getElementById('scannerHelpOverlay');
-        if (old) old.remove();
+	showScannerHelp() {
+		const old = document.getElementById('scannerHelpOverlay');
+		if (old) old.remove();
 
-        const overlay = document.createElement('div');
-        overlay.id = 'scannerHelpOverlay';
-        overlay.style.cssText = `position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10001; display: flex; align-items: center; justify-content: center; padding: 20px;`;
-        overlay.innerHTML = `
-            <div style="background: #fff; color: #0f172a; border-radius: 20px; max-width: 380px; width: 100%; padding: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align: left;">
-                <div style="text-align:center; margin-bottom:16px;">
-                    <div style="font-size:42px;">💡</div>
-                    <h3 style="font-family:'Outfit',sans-serif; font-size:18px; margin:8px 0 0;">วิธีใช้กล้องสแกน</h3>
-                </div>
-                <div style="font-size:14px; line-height:1.8;">
-                    <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">📷 <strong>วางบาร์โค้ดในกรอบสีเขียว</strong></div>
-                    <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">📏 <strong>ระยะห่าง 10-20 ซม.</strong> อย่าใกล้หรือไกลเกิน</div>
-                    <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">💡 <strong>แสงสว่างเพียงพอ</strong> หลีกเลี่ยงเงาสะท้อน</div>
-                    <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">👆 <strong>แตะจอเพื่อโฟกัส</strong> ถ้าภาพเบลอ</div>
-                    <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">📱 รองรับ <strong>EAN-8, EAN-13, UPC-A, Code-128</strong></div>
-                    <div style="padding:8px 0;">🔢 <strong>ถ้าอ่านไม่ได้</strong> ใช้ปุ่ม "ใส่รหัส" แทน</div>
-                </div>
-                <button id="scannerHelpClose" style="margin-top:20px; width:100%; padding:14px; background: linear-gradient(135deg,#0ea5e9,#6366f1); color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer;">✅ เข้าใจแล้ว</button>
-            </div>
-        `;
-        document.body.appendChild(overlay);
-        overlay.querySelector('#scannerHelpClose').onclick = () => overlay.remove();
-        overlay.onclick = (e) => {
-            if (e.target === overlay) overlay.remove();
-        };
-    }
+		const overlay = document.createElement('div');
+		overlay.id = 'scannerHelpOverlay';
+		overlay.style.cssText = `position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10001; display: flex; align-items: center; justify-content: center; padding: 20px;`;
+		overlay.innerHTML = `
+			<div style="background: #fff; color: #0f172a; border-radius: 20px; max-width: 380px; width: 100%; padding: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align: left;">
+				<div style="text-align:center; margin-bottom:16px;">
+					<div style="font-size:42px;">💡</div>
+					<h3 style="font-family:'Outfit',sans-serif; font-size:18px; margin:8px 0 0;">วิธีใช้กล้องสแกน</h3>
+				</div>
+				<div style="font-size:14px; line-height:1.8;">
+					<div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">📷 <strong>วางบาร์โค้ดในกรอบสีเขียว</strong></div>
+					<div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">📏 <strong>ระยะห่าง 10-20 ซม.</strong> อย่าใกล้หรือไกลเกิน</div>
+					<div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">📏 <strong>วางบนพื้น/โต๊ะ</strong> — ห้ามถือกลางอากาศ</div>
+					<div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">💡 <strong>แสงสว่างเพียงพอ</strong> หลีกเลี่ยงเงาสะท้อน</div>
+					<div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">💡 <strong>45° กับกระดาษมัน</strong> — ลดแสงสะท้อน</div>
+					<div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">👆 <strong>แตะจอเพื่อโฟกัส</strong> ถ้าภาพเบลอ</div>
+					<div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">🎯 <strong>ใช้ 2x-4x กับบาร์โค้ดเล็ก</strong></div>
+					<div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">📱 รองรับ <strong>EAN-8, EAN-13, UPC-A, Code-128</strong></div>
+					<div style="padding:8px 0;">📸 <strong>ถ้าอ่านไม่ได้ → ถ่ายรูปบาร์โค้ด</strong> หรือใช้ปุ่ม "ใส่รหัส"</div>
+				</div>
+				<button id="scannerHelpClose" style="margin-top:20px; width:100%; padding:14px; background: linear-gradient(135deg,#0ea5e9,#6366f1); color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer;">✅ เข้าใจแล้ว</button>
+			</div>
+		`;
+		document.body.appendChild(overlay);
+		overlay.querySelector('#scannerHelpClose').onclick = () => overlay.remove();
+		overlay.onclick = (e) => {
+			if (e.target === overlay) overlay.remove();
+		};
+	}
 
     async testCamera() {
         try {
@@ -8363,6 +8418,73 @@ title="ลบ">
         </body></html>`;
         this.printViaIframe(htmlContent);
     }
+	
+	// ═══════════════════════════════════════════════
+	// [5B-4] Report Dropdown
+	// ═══════════════════════════════════════════════
+	toggleReportDropdown() {
+		const menu = document.getElementById('reportDropdownMenu');
+		const icon = document.getElementById('reportDropdownIcon');
+		if (!menu) return;
+
+		const isOpen = menu.style.display === 'block';
+		menu.style.display = isOpen ? 'none' : 'block';
+		if (icon) {
+			icon.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+		}
+
+		// ปิดเมื่อคลิกนอก
+		if (!isOpen) {
+			setTimeout(() => {
+				const closeHandler = (e) => {
+					const btn = document.getElementById('reportDropdownBtn');
+					if (!btn || !btn.contains(e.target)) {
+						const m = document.getElementById('reportDropdownMenu');
+						if (m) m.style.display = 'none';
+						const ic = document.getElementById('reportDropdownIcon');
+						if (ic) ic.style.transform = 'rotate(0deg)';
+					}
+					document.removeEventListener('click', closeHandler);
+				};
+				document.addEventListener('click', closeHandler);
+			}, 10);
+		}
+	}
+
+	reportDropdownAction(action, param) {
+		// ปิด dropdown ก่อน
+		const menu = document.getElementById('reportDropdownMenu');
+		if (menu) menu.style.display = 'none';
+		const icon = document.getElementById('reportDropdownIcon');
+		if (icon) icon.style.transform = 'rotate(0deg)';
+
+		// เรียก action
+		if (action === 'exportData' && param) {
+			if (typeof this.exportData === 'function') {
+				this.exportData(param);
+			} else if (typeof exportData === 'function') {
+				exportData(param);
+			}
+		} else if (action === 'exportLocationReport') {
+			if (typeof this.exportLocationReport === 'function') {
+				this.exportLocationReport();
+			} else if (typeof exportLocationReport === 'function') {
+				exportLocationReport();
+			}
+		} else if (action === 'exportBarcodeMasterXLSX') {
+			if (typeof this.exportBarcodeMasterXLSX === 'function') {
+				this.exportBarcodeMasterXLSX();
+			} else if (typeof exportBarcodeMasterXLSX === 'function') {
+				exportBarcodeMasterXLSX();
+			}
+		} else if (action === 'exportHistory') {
+			if (typeof this.exportHistory === 'function') {
+				this.exportHistory();
+			} else if (typeof exportHistory === 'function') {
+				exportHistory();
+			}
+		}
+	}
 
     // ================================================================
     // EXPORT: Generic (CSV/XLSX/PDF)
