@@ -771,18 +771,18 @@
         }
 
         /* ========== Product Detail ========== */
-        .product-detail {
-            background: linear-gradient(135deg, var(--success-light) 0%, #f0fdf4 100%);
-            border: 2px solid #6ee7b7;
-            border-radius: var(--radius-lg);
-            padding: 16px;
-            margin-bottom: 10px;
-            display: none;
-        }
-        [data-theme="dark"] .product-detail {
-            background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
-            border-color: #34d399;
-        }
+		.product-detail {
+			background: #ffffff;
+			border: 2px solid #bae6fd;
+			border-radius: var(--radius-lg);
+			padding: 16px;
+			margin-bottom: 10px;
+			display: none;
+		}
+		[data-theme="dark"] .product-detail {
+			background: #1e293b;
+			border: 2px solid #0ea5e9;
+		}
         .product-name {
             font-family: 'Outfit', sans-serif;
             font-size: var(--font-xl);
@@ -2011,11 +2011,7 @@ infinite;"></div>
 <div class="status-bar" id="statusBar">
     <span class="status-dot"></span>
     <span class="status-text" id="statusText">กำลังเริ่มต้นระบบ...</span>
-    <span class="auto-sync-badge" id="autoSyncBadge"><i class="fas fa-sync-alt fa-fw"></i> Auto-Sync</span>
-    <span class="dedup-status" id="dedupStatus" title="สถานะการป้องกันข้อมูลซ้ำ">
-        <span class="dedup-dot"></span>
-        <span id="dedupText">Dedup: พร้อม</span>
-    </span>
+    <!-- ⭐ v5.3.1 Patch 5B-5: ซ่อน Dedup + Auto-sync (แสดงเฉพาะ Settings) -->
 </div>
 
 <!-- ================================================================
@@ -2058,10 +2054,11 @@ infinite;"></div>
     <div class="page active" id="page-import">
         <div class="card">
             <div class="card-title"><i class="fas fa-file-import"></i> นำเข้าข้อมูลสินค้า</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;padding:4px 10px;background:var(--bg-body);border-radius:var
-
-(--radius-sm);">
-                <i class="fas fa-info-circle"></i> โหมด <strong>Append</strong> • รองรับ <strong>หลาย LOT</strong> • <strong>ไม่แปลงหน่วย</strong>
+            <!-- ⭐ v5.3.1 Patch 5B-6: Append info (คลิกดูรายละเอียด) -->
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;padding:4px 10px;background:var(--bg-body);border-radius:var(--radius-sm);cursor:pointer;" 
+                 onclick="alert('📥 โหมด Append (เพิ่มต่อ ไม่ทับ)\\n\\n✅ มีสินค้าอยู่แล้ว → เพิ่ม LOT ใหม่\\n✅ ไม่มีสินค้า → สร้างสินค้าใหม่\\n✅ ราคา/หน่วย → เก็บตามไฟล์ ไม่แปลง\\n\\n💡 อัปโหลดซ้ำได้ปลอดภัย ไม่ทับข้อมูลเดิม')">
+                <i class="fas fa-info-circle"></i> โหมดนำเข้า: <strong>Append</strong> (เพิ่มต่อ ไม่ทับ)
+                <i class="fas fa-question-circle" style="color:var(--info);"></i>
             </div>
             <div id="dropZone" onclick="document.getElementById('fileInput').click()" style="border:2px dashed var(--border-color);border-
 
@@ -2086,9 +2083,15 @@ width:100px;font-size:13px;padding:8px 12px;min-height:42px;">
             </div>
         </div>
 
-        <!-- Mapping Card -->
+        <!-- Mapping Card (⭐ 5B-17: + Reorder) -->
         <div class="card" id="mappingCard" style="display:none;">
             <div class="card-title"><i class="fas fa-cog"></i> กำหนดคอลัมน์</div>
+            <div style="font-size:11px;color:var(--text-muted);padding:6px 10px;background:var(--bg-body);border-radius:var(--radius-sm);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+                <span><i class="fas fa-info-circle"></i> ลากหรือกดปุ่ม ↑↓ เพื่อเรียงลำดับ</span>
+                <button class="btn btn-outline btn-sm" onclick="app.resetMappingOrder()" style="font-size:10px;padding:2px 8px;min-height:26px;">
+                    <i class="fas fa-redo"></i> รีเซ็ต
+                </button>
+            </div>
             <div class="mapping-grid" id="mappingFields"></div>
             <button class="btn btn-primary btn-block" id="confirmMappingBtn" onclick="confirmMapping()" style="margin-top:8px;font-size:14px;padding:12px;">
                 <i class="fas fa-check"></i> ยืนยันและนำเข้าข้อมูล
@@ -2256,7 +2259,7 @@ radius:var(--radius-md);border:1px solid var(--border-color);"></div>
         </div>
 
         <!-- Product Detail (แสดงเมื่อเลือกสินค้า) -->
-        <div class="product-detail" id="productDetail">
+        <div class="product-detail" id="productDetail" style="background:#ffffff;border:2px solid #bae6fd;">
             <div class="product-name" id="productName">-</div>
             <div class="product-info" id="productBarcode">-</div>
             <div class="product-info" id="productStock">
@@ -2658,40 +2661,40 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
                     <i class="fas fa-table"></i> รายละเอียดการนับ
                 </span>
 				<!-- ⭐ v5.3.1 [5B-4] ปุ่มรายงาน + Dropdown -->
-				<div style="position:relative;display:flex;gap:4px;flex-wrap:wrap;">
-					<!-- ปุ่มหลัก -->
-					<button class="btn btn-primary btn-sm" onclick="app.exportFullReportXLSX()" style="font-size:11px;padding:4px 10px;min-height:30px;background:#10b981;color:#fff;">
-						<i class="fas fa-file-excel"></i> Excel 18 Sheets
-					</button>
+			<div style="position:relative;display:flex;gap:4px;flex-wrap:wrap;">
+				<!-- ⭐ ปุ่มหลัก: Full Report Excel -->
+				<button class="btn btn-primary btn-sm" onclick="app.exportFullReportXLSX()" style="font-size:11px;padding:4px 10px;min-height:30px;background:#10b981;color:#fff;">
+					<i class="fas fa-file-excel"></i> 📊 Full Report (Excel)
+				</button>
 
-					<!-- ปุ่ม Dropdown -->
-					<button class="btn btn-outline btn-sm" id="reportDropdownBtn" onclick="app.toggleReportDropdown()" style="font-size:11px;padding:4px 10px;min-height:30px;display:flex;align-items:center;gap:4px;">
-						<i class="fas fa-file-export"></i> ส่งออกอื่นๆ <i class="fas fa-chevron-down" id="reportDropdownIcon" style="font-size:9px;transition:transform 0.2s;"></i>
-					</button>
+				<!-- ⭐ ปุ่ม Dropdown -->
+				<button class="btn btn-outline btn-sm" id="reportDropdownBtn" onclick="app.toggleReportDropdown()" style="font-size:11px;padding:4px 10px;min-height:30px;display:flex;align-items:center;gap:4px;">
+					<i class="fas fa-file-export"></i> 📤 ส่งออกอื่นๆ <i class="fas fa-chevron-down" id="reportDropdownIcon" style="font-size:9px;transition:transform 0.2s;"></i>
+				</button>
 
-					<!-- Dropdown Menu -->
-					<div id="reportDropdownMenu" style="display:none;position:absolute;top:100%;right:0;margin-top:4px;background:var(--bg-card);border:2px solid var(--primary-light);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);z-index:100;min-width:200px;overflow:hidden;">
-						<button class="dropdown-item" onclick="app.reportDropdownAction('exportData','csv')">
-							<i class="fas fa-file-csv"></i> ส่ง CSV
-						</button>
-						<button class="dropdown-item" onclick="app.reportDropdownAction('exportData','xlsx')">
-							<i class="fas fa-file-excel"></i> ส่ง Excel
-						</button>
-						<button class="dropdown-item" onclick="app.reportDropdownAction('exportData','pdf')">
-							<i class="fas fa-file-pdf"></i> ส่ง PDF
-						</button>
-						<div style="border-top:1px solid var(--border-color);"></div>
-						<button class="dropdown-item" onclick="app.reportDropdownAction('exportLocationReport')">
-							<i class="fas fa-map-pin"></i> รายงานตู้/ชั้น
-						</button>
-						<button class="dropdown-item" onclick="app.reportDropdownAction('exportBarcodeMasterXLSX')">
-							<i class="fas fa-barcode"></i> Barcode Master XLSX
-						</button>
-						<button class="dropdown-item" onclick="app.reportDropdownAction('exportHistory')">
-							<i class="fas fa-history"></i> ประวัตินับ
-						</button>
-					</div>
+				<!-- ⭐ Dropdown Menu — จัดเรียงใหม่ -->
+				<div id="reportDropdownMenu" style="display:none;position:absolute;top:100%;right:0;margin-top:4px;background:var(--bg-card);border:2px solid var(--primary-light);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);z-index:100;min-width:220px;overflow:hidden;">
+					<!-- ⭐ ย้าย PDF ขึ้นบนสุด -->
+					<button class="dropdown-item" onclick="app.reportDropdownAction('printFullReport')" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;font-weight:700;">
+						<i class="fas fa-file-pdf" style="color:#fff;"></i> 🖨️ Full Report (PDF 4 สี)
+					</button>
+					<div style="border-top:1px solid var(--border-color);"></div>
+
+					<!-- ⭐ ส่งออกเป็น Excel/CSV (มี Option C ใน action) -->
+					<button class="dropdown-item" onclick="app.reportDropdownAction('exportData','choose')">
+						<i class="fas fa-file-export"></i> 📄 ส่งออก (Excel / CSV)
+					</button>
+					<button class="dropdown-item" onclick="app.reportDropdownAction('exportLocationReport')">
+						<i class="fas fa-map-pin"></i> 📍 รายงานตู้/ชั้น
+					</button>
+					<button class="dropdown-item" onclick="app.reportDropdownAction('exportBarcodeMasterXLSX')">
+						<i class="fas fa-barcode"></i> 📱 ฐานข้อมูลบาร์โค้ด (Excel)
+					</button>
+					<button class="dropdown-item" onclick="app.reportDropdownAction('exportHistory')">
+						<i class="fas fa-history"></i> 🕐 ประวัตินับ
+					</button>
 				</div>
+			</div>>
 			</div>   <!-- ✅ เพิ่ม: ปิด .flex-between -->
             <div class="table-wrap" style="margin-top:8px;">
                 <table>
@@ -2791,9 +2794,36 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
     <!-- ================================================================
          PAGE: SETTINGS (ตั้งค่า)
          ================================================================ -->
-    <div class="page" id="page-settings">
+		<div class="page" id="page-settings">
 
-        <!-- PWA / Cache -->
+			<!-- PWA / Cache -->
+					<!-- ⭐ v5.3.1 Patch 5B-5: สถานะระบบ (ย้ายมาจาก status bar) -->
+			<div class="card" style="border:2px solid var(--success);">
+				<div class="card-title" style="color:var(--success);font-size:14px;">
+					<i class="fas fa-shield-alt"></i> สถานะระบบ
+				</div>
+				<div class="sync-status-card" style="margin-top:8px;">
+					<span class="sync-dot online"></span>
+					<div class="sync-info">
+						<div style="font-weight:700;">🛡️ Dedup Engine</div>
+						<div style="font-size:11px;color:var(--text-muted);" id="dedupText">Seen: 0 | Skipped: 0</div>
+					</div>
+				</div>
+				<div class="sync-status-card" style="margin-top:6px;">
+					<span class="sync-dot online"></span>
+					<div class="sync-info">
+						<div style="font-weight:700;">🔄 Auto-Sync</div>
+						<div style="font-size:11px;color:var(--text-muted);" id="autoSyncText">เปิดใช้งาน (ทุก 30 วิ)</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- PWA / Cache -->
+			<div class="card" style="border:2px solid var(--info);">
+				<div class="card-title" style="color:var(--info);font-size:14px;">
+					<i class="fas fa-sync-alt"></i> PWA / แคช
+				</div>
+				
         <div class="card" style="border:2px solid var(--info);">
             <div class="card-title" style="color:var(--info);font-size:14px;">
                 <i class="fas fa-sync-alt"></i> PWA / แคช
@@ -2817,7 +2847,7 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
                 <i class="fas fa-shield-alt"></i> ระบบป้องกันข้อมูลซ้ำ (Dedup)
             </div>
             <div class="sync-status-card">
-                <span class="sync-dot online" id="dedupDot"></span>
+                <span class="sync-dot online"></span>
                 <div class="sync-info">
                     <div style="font-weight:700;" id="dedupStatusText">ทำงานปกติ</div>
                     <div style="font-size:11px;color:var(--text-muted);" id="dedupDetailText">Event IDs: 0 / ล่าสุด: -</div>
@@ -3317,7 +3347,55 @@ height:48px;">
     </div>
 </div>
 
-:<!-- ================================================================
+<!-- ⭐⬇️⬇️⬇️ วางตรงนี้! ⬇️⬇️⬇️⭐ -->
+
+<!-- ⭐ [NEW] PDF Mode Selection Modal -->
+<div class="modal-overlay" id="pdfModeModal">
+    <div class="modal" style="max-width:420px;">
+        <div class="modal-handle"></div>
+        <div class="modal-title"><i class="fas fa-file-pdf"></i> เลือกรูปแบบรายงาน PDF</div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">เลือกรูปแบบที่ต้องการพิมพ์/บันทึกเป็น PDF</p>
+        <div style="display:grid;gap:8px;">
+            <button class="btn btn-block" onclick="app.printFullReportWithMode('color')" style="padding:14px;font-size:15px;min-height:56px;background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;text-align:left;">
+                🌈 <strong>ตารางสีสวย (แนะนำ)</strong>
+                <div style="font-size:11px;font-weight:400;opacity:0.9;margin-top:2px;">เหมาะกับดูบนจอ — มีสี 6 แบบ</div>
+            </button>
+            <button class="btn btn-block" onclick="app.printFullReportWithMode('plain')" style="padding:14px;font-size:15px;min-height:56px;background:#fff;color:#0f172a;border:2px solid #0f172a;text-align:left;">
+                ⚪ <strong>ตารางขาว-ดำ</strong>
+                <div style="font-size:11px;font-weight:400;opacity:0.75;margin-top:2px;">ประหยัดหมึก — เหมาะพิมพ์เยอะ</div>
+            </button>
+        </div>
+        <button class="btn btn-outline btn-block" onclick="app.closePdfModeModal()" style="margin-top:8px;font-size:14px;padding:10px;min-height:44px;">
+            <i class="fas fa-times"></i> ยกเลิก
+        </button>
+    </div>
+</div>
+
+<!-- ⭐ [NEW] Export Format Selection Modal -->
+<div class="modal-overlay" id="exportFormatModal">
+    <div class="modal" style="max-width:420px;">
+        <div class="modal-handle"></div>
+        <div class="modal-title"><i class="fas fa-file-export"></i> เลือกรูปแบบไฟล์ส่งออก</div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">เลือกรูปแบบไฟล์ที่ต้องการดาวน์โหลด</p>
+        <div style="display:grid;gap:8px;">
+            <button class="btn btn-block" onclick="app.exportDataWithFormat('xlsx')" style="padding:14px;font-size:15px;min-height:56px;background:#10b981;color:#fff;text-align:left;">
+                📊 <strong>Excel (.xlsx)</strong>
+                <div style="font-size:11px;font-weight:400;opacity:0.9;margin-top:2px;">มีสี format สวย — เปิดใน Excel/WPS</div>
+            </button>
+            <button class="btn btn-block" onclick="app.exportDataWithFormat('csv')" style="padding:14px;font-size:15px;min-height:56px;background:#6366f1;color:#fff;text-align:left;">
+                📄 <strong>CSV (.csv)</strong>
+                <div style="font-size:11px;font-weight:400;opacity:0.9;margin-top:2px;">เบา เปิดได้ทุกโปรแกรม</div>
+            </button>
+        </div>
+        <button class="btn btn-outline btn-block" onclick="app.closeExportFormatModal()" style="margin-top:8px;font-size:14px;padding:10px;min-height:44px;">
+            <i class="fas fa-times"></i> ยกเลิก
+        </button>
+    </div>
+</div>
+
+<!-- ⭐⬆️⬆️⬆️ สิ้นสุดการวาง ⬆️⬆️⬆️⭐ -->
+
+<!-- ================================================================
       Toast Container
       ================================================================ -->
 <div class="toast-container" id="toastContainer"></div>
@@ -3459,6 +3537,7 @@ class StockApp {
         this._pendingUpdateReg = null;
         this._syncInterval = null;
         this._v51LastTeamRows = [];
+		this._isImporting = false;
 
         // ========== v5.3.1: Report Mode ==========
         this.reportMode = localStorage.getItem('reportMode') || 'local';
@@ -3945,6 +4024,13 @@ normalizeDateValue(v) {
         if (/ตรวจสอบสต็อก|ไม่มีในระบบ/i.test(trimmed) || trimmed.length > 30) {
             return '';  // ← คืนเงียบๆ ไม่ warn
         }
+        // ⭐ Bug 2 FIX: กรอง invalid date patterns
+        //   - '0000-00-00', '0000/00/00', '0000.00.00'
+        //   - '00/00/0000', '00-00-0000'
+        //   - '0000-00-00T00:00:00' (ISO with invalid date)
+        if (/^0{4}[-./]0{2}[-./]0{2}/.test(trimmed) || /^0{2}[-./]0{2}[-./]0{4}/.test(trimmed)) {
+            return '';  // ← ไม่ใช่วันที่จริง
+        }
     }
 
     // ---------- กรณี 1: Date object (จาก XLSX cellDates:true) ----------
@@ -4275,10 +4361,28 @@ if (m) {
             }
             const tx = this.db.transaction('products', 'readonly');
             const req = tx.objectStore('products').getAll();
-            this.products = await new Promise(r => {
-                req.onsuccess = () => r(req.result || []);
-                req.onerror = () => r([]);
-            });
+			this.products = await new Promise(r => {
+				req.onsuccess = () => r(req.result || []);
+				req.onerror = () => r([]);
+			});
+
+			// ⭐ [FIX] Sync product.stock = sum(lots) + Normalize LOT
+			let syncedCount = 0;
+			this.products.forEach(p => {
+				const oldStock = p.stock;
+				this.syncProductStock(p);
+				if (oldStock !== p.stock) syncedCount++;
+				this.v5NormalizeProduct(p);
+			});
+			if (syncedCount > 0) {
+				console.log(`🔄 [FIX] Sync stock: ${syncedCount} products`);
+				// ⭐ บันทึกกลับ DB (ถ้าต้องการ)
+				for (const p of this.products) {
+					if (Array.isArray(p.lots) && p.lots.length > 0) {
+						try { await this.saveProduct(p); } catch (e) {}
+					}
+				}
+			}
 			
 			// [FIX-2] กรอง LOT แปลกในทุก product หลังโหลด
 			let cleaned = 0;
@@ -6220,24 +6324,50 @@ async closeFullscreenScanner() {
             container.innerHTML = `<div style="padding:14px;text-align:center;"><p style="color:var(--text-muted);">❌ ไม่พบสินค้า</p><button class="btn btn-primary btn-sm" onclick="app.showAddProductModal()" style="font-size:13px;padding:6px 14px;min-height:36px;margin-top:6px;"><i class="fas fa-plus"></i> เพิ่มสินค้าใหม่</button></div>`;
             return;
         }
+
+        // ⭐ ปัญหา B: ไฮไลท์คำค้นหา
+        const query = (document.getElementById('searchProduct')?.value || '').trim();
+
+        // Helper: ไฮไลท์ข้อความ (escape HTML ก่อน เพื่อความปลอดภัย)
+        const highlightText = (text, q) => {
+            if (!q || !text) return escapeHtml(text);
+            const safeText = String(text);
+            const safeQ = String(q);
+            // Escape special regex chars
+            const escapedQ = safeQ.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp(`(${escapedQ})`, 'gi');
+            // Escape HTML แล้วค่อย replace (เพื่อความปลอดภัย)
+            return escapeHtml(safeText).replace(regex, '<mark style="background:#fef08a;color:#0f172a;padding:0 3px;border-radius:3px;font-weight:600;">$1</mark>');
+        };
+
         const hasPending = !!this.pendingBarcode;
         let html = batch.map(p => {
             const lotCount = p.lots ? p.lots.length : (p.lot ? 1 : 0);
             const lotDisplay = lotCount > 0 ? ` (${lotCount} LOT)` : '';
             const selectLabel = hasPending ? '📎 จับคู่' : '✅ เลือก';
+
+            // ⭐ ไฮไลท์ชื่อ + รหัส + บาร์โค้ด
+            const nameHtml = highlightText(p.name, query);
+            const codeHtml = p.code ? highlightText(p.code, query) : '';
+            const barcodeHtml = p.primaryBarcode ? highlightText(p.primaryBarcode, query) : '';
+
+            const detailParts = [];
+            if (codeHtml) detailParts.push('รหัส: ' + codeHtml);
+            if (barcodeHtml) detailParts.push('🏷️ ' + barcodeHtml);
+            detailParts.push(`📦 ${p.stock || 0} ชิ้น${lotDisplay}`);
+
             return `<div class="search-result-item" onclick="app.selectProductFromSearch('${escapeHtml(p.id)}')">
                 <div class="info">
-                    <div class="name">${escapeHtml(p.name)}</div>
-                    <div class="detail">${p.code ? 'รหัส: '+escapeHtml(p.code) : ''} | 📦 ${p.stock || 0} ชิ้น${lotDisplay}</div>
+                    <div class="name">${nameHtml}</div>
+                    <div class="detail">${detailParts.join(' | ')}</div>
                 </div>
                 <span class="badge-select">${selectLabel}</span>
             </div>`;
         }).join('');
+
         const maxPage = Math.ceil(this.filteredProducts.length / CONFIG.BATCH_SIZE);
         if (end < this.filteredProducts.length) {
-            html += `<div style="padding:8px;text-align:center;"><button class="btn btn-outline btn-sm" onclick="app.loadMoreSearchResults
-
-()"><i class="fas fa-chevron-down"></i> โหลดเพิ่ม (${this.currentPage + 1}/${maxPage})</button></div>`;
+            html += `<div style="padding:8px;text-align:center;"><button class="btn btn-outline btn-sm" onclick="app.loadMoreSearchResults()"><i class="fas fa-chevron-down"></i> โหลดเพิ่ม (${this.currentPage + 1}/${maxPage})</button></div>`;
         }
         container.style.display = 'block';
         container.innerHTML = html;
@@ -6290,107 +6420,172 @@ async closeFullscreenScanner() {
     // ================================================================
     // Product Display
     // ================================================================
-    showProduct(product) {
-        const detail = document.getElementById('productDetail');
-        if (!detail) return;
+		// ═══════════════════════════════════════════════════════════════
+		// [v5.3.1 SCAN-UI] showProduct — 2 บรรทัด + ตัดพื้นเขียว
+		// ═══════════════════════════════════════════════════════════════
+		showProduct(product) {
+			const detail = document.getElementById('productDetail');
+			if (!detail) return;
 
-        const safeSet = (id, val) => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = val;
-        };
-        const safeSetHTML = (id, val) => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = val;
-        };
-        const safeShow = (id, show) => {
-            const el = document.getElementById(id);
-            if (el) el.style.display = show ? 'block' : 'none';
-        };
+			// ⭐ [SCAN-UI] ตัดพื้นเขียว — พื้นขาว ขอบฟ้า
+			detail.style.display = 'block';
+			detail.style.background = '#ffffff';
+			detail.style.border = '2px solid #bae6fd';
 
-        detail.style.display = 'block';
+			const safeSet = (id, val) => {
+				const el = document.getElementById(id);
+				if (el) el.textContent = val;
+			};
+			const safeSetHTML = (id, val) => {
+				const el = document.getElementById(id);
+				if (el) el.innerHTML = val;
+			};
+			const safeShow = (id, show) => {
+				const el = document.getElementById(id);
+				if (el) el.style.display = show ? 'block' : 'none';
+			};
 
-        safeSet('productName', '📦 ' + product.name);
-        const barcodeDisplay = Array.isArray(product.barcodes) && product.barcodes.length > 0 ?
-            product.barcodes.join(', ') :
-            (product.primaryBarcode || '-');
-        safeSet('productBarcode', '🏷️ บาร์โค้ด: ' + barcodeDisplay);
+			safeSet('productName', '📦 ' + product.name);
+			const barcodeDisplay = Array.isArray(product.barcodes) && product.barcodes.length > 0 ?
+				product.barcodes.join(', ') :
+				(product.primaryBarcode || '-');
+			safeSet('productBarcode', '🏷️ บาร์โค้ด: ' + barcodeDisplay);
 
-        let stock = product.stock || 0;
-        let cost = product.costPerUnit || 0;
-        let sellPrice = product.sellPrice1 || 0;
-        let expiry = product.expiryDate || '';
-        let mfg = product.mfgDate || '';
+			// ===== คำนวณค่าทั้งหมด =====
+			const productCost = product.costPerUnit || 0;
+			const lots = Array.isArray(product.lots) ? product.lots : [];
+			// ⭐ [FIX] คำนวณ "ในระบบรวม" จากผลรวม LOT (ถ้ามี)
+			const productTotalStock = lots.length > 0
+				? lots.reduce((s, l) => s + (Number(l.stock) || 0), 0)
+				: (product.stock || 0);
+			const totalLots = lots.length;
+			const lotIdx = (lots.length > 0 && this.selectedLotIndex < lots.length) ? this.selectedLotIndex : -1;
+			const selectedLot = lotIdx >= 0 ? lots[lotIdx] : null;
 
-        if (product.lots && product.lots.length > 0) {
-            const lotIdx = (this.selectedLotIndex < product.lots.length) ? this.selectedLotIndex : 0;
-            const lot = product.lots[lotIdx];
-            if (lot) {
-                stock = (lot.stock !== undefined && lot.stock !== null) ? lot.stock : (product.stock || 0);
-                cost = lot.cost || product.costPerUnit || 0;
-                sellPrice = lot.sellPrice || product.sellPrice1 || 0;
-                expiry = lot.expiry || product.expiryDate || '';
-                mfg = lot.mfg || product.mfgDate || '';
-            }
-        }
+			// ค่าที่จะแสดง (ใช้ LOT ที่เลือกก่อน ถ้าไม่มีใช้ Product)
+			const stock = selectedLot
+				? (selectedLot.stock !== undefined && selectedLot.stock !== null ? selectedLot.stock : 0)
+				: productTotalStock;
+			const cost = selectedLot ? (selectedLot.cost ?? productCost) : productCost;
+			const sellPrice = selectedLot ? (selectedLot.sellPrice ?? (product.sellPrice1 || 0)) : (product.sellPrice1 || 0);
+			const expiry = selectedLot ? (selectedLot.expiry || product.expiryDate || '') : (product.expiryDate || '');
+			const mfg = selectedLot ? (selectedLot.mfg || product.mfgDate || '') : (product.mfgDate || '');
 
-        safeSet('stockHighlight', stock);
-        safeSet('costDisplay', cost.toFixed(2));
-        safeSetHTML('productStock',
-            `📊 ในระบบ: <span class="highlight-stock">${stock}</span> ชิ้น | 💰 ทุน: <span class="highlight-cost">${cost.toFixed(2)}</span>`
-        );
+			// ⭐ [SCAN-UI] บรรทัด 1: "ในระบบรวม" (บน) — ยอดรวม Product
+			safeSet('stockHighlight', productTotalStock);
+			safeSet('costDisplay', productCost.toFixed(2));
+			safeSetHTML('productStock',
+				`📊 ในระบบรวม: <span class="highlight-stock">${productTotalStock}</span> ชิ้น`
+				+ (totalLots > 1 ? ` <small style="color:#64748b;font-weight:500;">(${totalLots} LOT)</small>` : '')
+				+ ` | 💰 ทุนเฉลี่ย: <span class="highlight-cost">${productCost.toFixed(2)}</span>`
+			);
 
-        const profit = sellPrice - cost;
-        safeSet('productSellPrice', '💰 ราคาขาย: ' + sellPrice.toFixed(2) + ' บาท');
-        safeShow('productSellPrice', sellPrice > 0);
-        safeSet('productProfit', '📈 กำไรต่อหน่วย: ' + profit.toFixed(2) + ' บาท');
-        safeShow('productProfit', sellPrice > 0);
+			// ⭐ [SCAN-UI] บรรทัด 2: "LOT ที่เลือก" (ล่าง) — สร้าง element ใหม่
+			let lotLineEl = document.getElementById('productLotLine');
+			if (!lotLineEl) {
+				lotLineEl = document.createElement('div');
+				lotLineEl.id = 'productLotLine';
+				lotLineEl.className = 'product-info';
+				lotLineEl.style.cssText = 'margin-top:6px;padding:8px 12px;background:#eff6ff;border-left:4px solid #0ea5e9;border-radius:6px;font-weight:600;';
+				const stockEl = document.getElementById('productStock');
+				if (stockEl) stockEl.insertAdjacentElement('afterend', lotLineEl);
+			}
+			if (selectedLot) {
+				const lotStock = selectedLot.stock || 0;
+				const lotCost = selectedLot.cost || productCost;
+				const lotExpiry = selectedLot.expiry ? ' | ⏳ ' + this.formatDate(selectedLot.expiry) : '';
+				lotLineEl.innerHTML = `🎯 LOT ที่เลือก: <strong style="color:#0369a1;">${escapeHtml(selectedLot.lot || '-')}</strong>`
+					+ ` | 📦 <span style="color:#0ea5e9;font-size:18px;font-weight:800;">${lotStock}</span> ชิ้น`
+					+ ` | 💰 ทุน <strong>${lotCost.toFixed(2)}</strong>`
+					+ lotExpiry;
+				lotLineEl.style.display = 'block';
+			} else {
+				lotLineEl.style.display = 'none';
+			}
 
-        const age = this.calculateProductAge(mfg, expiry);
-        if (age !== null && age > 0) {
-            safeSet('productAge', `📅 อายุสินค้า: ${age.toFixed(1)} ปี`);
-            safeShow('productAge', true);
-        } else {
-            safeShow('productAge', false);
-        }
+			// ===== ราคาขาย / กำไร / อายุ =====
+			const profit = sellPrice - cost;
+			safeSet('productSellPrice', '💰 ราคาขาย: ' + sellPrice.toFixed(2) + ' บาท');
+			safeShow('productSellPrice', sellPrice > 0);
+			safeSet('productProfit', '📈 กำไรต่อหน่วย: ' + profit.toFixed(2) + ' บาท');
+			safeShow('productProfit', sellPrice > 0);
 
-        const qtyInput = document.getElementById('qtyInput');
-        if (qtyInput) qtyInput.value = 1;
+			const age = this.calculateProductAge(mfg, expiry);
+			if (age !== null && age > 0) {
+				safeSet('productAge', `📅 อายุสินค้า: ${age.toFixed(1)} ปี`);
+				safeShow('productAge', true);
+			} else {
+				safeShow('productAge', false);
+			}
 
-        this.showExpiryWarning(product);
-        this.renderLotList(product);
+			const qtyInput = document.getElementById('qtyInput');
+			if (qtyInput) qtyInput.value = 1;
 
-        detail.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+			this.showExpiryWarning(product);
+			this.renderLotList(product);
 
-    renderLotList(product) {
-        const lotList = document.getElementById('lotList');
-        if (!lotList) return;
-        if (product.lots && product.lots.length > 0) {
-            lotList.innerHTML = product.lots.map((lot, index) => {
-                const isSelected = index === this.selectedLotIndex;
-                const expiryInfo = lot.expiry ? this.formatDate(lot.expiry) : 'ไม่ระบุ';
-                return `<div class="lot-item ${isSelected ? 'selected' : ''}" onclick="app.selectLot(${index})">
-                    <div class="lot-radio"></div>
-                    <div style="flex:1;pointer-events:none;">
-                        <strong style="font-size:14px;">🔖 LOT: ${escapeHtml(lot.lot || 'N/A')}</strong>
-                        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">
-                            📦 เหลือ: ${lot.stock || 0} ชิ้น | 💰 ทุน: ${(lot.cost || 0).toFixed(2)}${expiryInfo !== 'ไม่ระบุ' ? ' | ⏳ ' + expiryInfo : ''}
-                        </div>
-                    </div>
-                </div>`;
-            }).join('');
-        } else if (product.lot) {
-            lotList.innerHTML = `<div class="lot-item selected">
-                <div class="lot-radio"></div>
-                <div style="flex:1;">
-                    <strong style="font-size:14px;">🔖 LOT: ${escapeHtml(product.lot)}</strong>
-                    <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">📦 ${product.stock || 0} ชิ้น</div>
-                </div>
-            </div>`;
-        } else {
-            lotList.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:8px;font-size:13px;">ไม่มีข้อมูล LOT</div>';
-        }
-    }
+			detail.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}
+
+	// ═══════════════════════════════════════════════════════════════
+	// [v5.3.1 SCAN-UI] renderLotList — พื้นขาว ขอบฟ้า ตัวเลขเด่น
+	// ═══════════════════════════════════════════════════════════════
+	renderLotList(product) {
+		const lotList = document.getElementById('lotList');
+		if (!lotList) return;
+		const lots = Array.isArray(product.lots) ? product.lots : [];
+
+		if (lots.length > 0) {
+			lotList.innerHTML = lots.map((lot, index) => {
+				const isSelected = index === this.selectedLotIndex;
+				const stock = lot.stock || 0;
+				const expiry = lot.expiry ? this.formatDate(lot.expiry) : '';
+				const cost = lot.cost || 0;
+
+				// ⭐ สีตามสถานะ stock
+				let stockColor = '#64748b', stockBg = '#f1f5f9';
+				if (stock === 0) { stockColor = '#ef4444'; stockBg = '#fee2e2'; }
+				else if (stock <= 5) { stockColor = '#f59e0b'; stockBg = '#fef3c7'; }
+				else { stockColor = '#10b981'; stockBg = '#d1fae5'; }
+
+				// ⭐ พื้นขาว + ขอบฟ้า (เด่นขึ้นเมื่อเลือก)
+				const borderStyle = isSelected
+					? 'border:2px solid #0ea5e9;background:#ffffff;box-shadow:0 0 0 3px rgba(14,165,233,0.15);'
+					: 'border:2px solid #bae6fd;background:#ffffff;';
+
+				const radioStyle = isSelected
+					? 'width:18px;height:18px;border-radius:50%;border:3px solid #0ea5e9;background:#0ea5e9;box-shadow:inset 0 0 0 3px #fff;flex-shrink:0;'
+					: 'width:18px;height:18px;border-radius:50%;border:2px solid #bae6fd;background:#fff;flex-shrink:0;';
+
+				return `<div class="lot-item ${isSelected ? 'selected' : ''}"
+					onclick="app.selectLot(${index})"
+					style="${borderStyle}border-radius:10px;padding:10px 12px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all 0.2s;">
+					<div style="${radioStyle}"></div>
+					<div style="flex:1;pointer-events:none;">
+						<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+							<strong style="font-size:14px;color:#0f172a;">🔖 LOT: ${escapeHtml(lot.lot || 'N/A')}</strong>
+							<span style="font-size:16px;font-weight:800;color:${stockColor};background:${stockBg};padding:2px 10px;border-radius:6px;min-width:50px;text-align:center;">${stock}</span>
+						</div>
+						<div style="font-size:11px;color:#64748b;margin-top:4px;">
+							💰 ทุน ${cost.toFixed(2)}${expiry ? ' | ⏳ ' + expiry : ''}
+						</div>
+					</div>
+				</div>`;
+			}).join('');
+		} else if (product.lot) {
+			lotList.innerHTML = `<div class="lot-item selected" style="border:2px solid #0ea5e9;background:#fff;border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;">
+				<div style="width:18px;height:18px;border-radius:50%;border:3px solid #0ea5e9;background:#0ea5e9;box-shadow:inset 0 0 0 3px #fff;flex-shrink:0;"></div>
+				<div style="flex:1;">
+					<div style="display:flex;justify-content:space-between;align-items:center;">
+						<strong style="font-size:14px;">🔖 ${escapeHtml(product.lot)}</strong>
+						<span style="font-size:16px;font-weight:800;color:#10b981;background:#d1fae5;padding:2px 10px;border-radius:6px;">${product.stock || 0}</span>
+					</div>
+				</div>
+			</div>`;
+		} else {
+			lotList.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:10px;font-size:13px;">ไม่มีข้อมูล LOT</div>';
+		}
+	}
 
     selectLot(index) {
         this.selectedLotIndex = index;
@@ -8163,6 +8358,8 @@ title="ลบ">
             const i = items[0];
             const counted = items.reduce((s, x) => s + (Number(x.counted_qty) || 0), 0);
             const diff = counted - (Number(i.system_qty) || 0);
+            // ⭐ v5.3.1 Patch 5B-16: ดึงอายุสินค้าจาก mfg + expiry
+            const age = this.calculateProductAge(i.mfg || '', i.expiry || '');
             return {
                 productId: i.productId,
                 barcode: i.barcode || '',
@@ -8178,21 +8375,107 @@ title="ลบ">
                 locations: [...new Set(items.map(x => x.locationName || ''))].filter(Boolean).join(' | '),
                 users: [...new Set(items.map(x => x.userName || ''))].filter(Boolean).join(' | '),
                 expiry: i.expiry || '',
+                mfg: i.mfg || '',
+                age: age,   // ⭐ ใหม่
                 note: items.map(x => x.note || '').filter(Boolean).join(' | ')
             };
         });
     }
 
-    getUncountedReportRows() {
-        const countedKeys = new Set(this.sessionItems.map(i => `${i.productId}|${i.lotName || i.lot || ''}`));
-        return this.getInventoryRows().filter(r => !countedKeys.has(`${r.id}|${r.lot || ''}`));
-    }
+	getUncountedReportRows() {
+		const countedKeys = new Set(this.sessionItems.map(i => `${i.productId}|${i.lotName || i.lot || ''}`));
+		return this.getInventoryRows()
+			.filter(r => !countedKeys.has(`${r.id}|${r.lot || ''}`))
+			.map(r => ({
+				...r,
+				age: this.calculateProductAge(r.mfg, r.expiry)   // ⭐ [ข้อ 5] คำนวณอายุ
+			}));
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// [v5.3.1] getOverShortSummary — คำนวณผลต่างแยกกลุ่ม Over / Short
+	// ═══════════════════════════════════════════════════════════════
+	getOverShortSummary() {
+		const agg = this.getAggregatedByProductLot();
+		const overItems = agg.filter(r => r.difference > 0);
+		const shortItems = agg.filter(r => r.difference < 0);
+
+		const overCostDiff = overItems.reduce((s, r) => s + (r.cost_diff || 0), 0);
+		const overSellDiff = overItems.reduce((s, r) => s + (r.sell_diff || 0), 0);
+		const shortCostDiff = shortItems.reduce((s, r) => s + (r.cost_diff || 0), 0);
+		const shortSellDiff = shortItems.reduce((s, r) => s + (r.sell_diff || 0), 0);
+
+		return {
+			over: {
+				items: overItems,
+				count: overItems.length,
+				costDiff: overCostDiff,
+				sellDiff: overSellDiff
+			},
+			short: {
+				items: shortItems,
+				count: shortItems.length,
+				costDiff: shortCostDiff,
+				sellDiff: shortSellDiff
+			}
+		};
+	}
+	
+	// ═══════════════════════════════════════════════════════════════
+	// [v5.3.1] getReportSummaryForExport — สร้างบล็อกสรุปสำหรับ Excel/CSV
+	// ═══════════════════════════════════════════════════════════════
+	getReportSummaryForExport() {
+		const inv = this.getInventoryRows();
+		const counts = this.getCountSummaryRows();
+		const uncounted = this.getUncountedReportRows();
+		const summary = this.getOverShortSummary();
+
+		const totalCostValue = inv.reduce((s, r) => s + r.stock * r.cost, 0);
+		const totalSellValue = inv.reduce((s, r) => s + r.stock * r.sell, 0);
+		const agg = this.getAggregatedByProductLot();
+		const totalCostDiff = agg.reduce((s, r) => s + r.cost_diff, 0);
+		const totalSellDiff = agg.reduce((s, r) => s + r.sell_diff, 0);
+
+		const costDiffPct = totalCostValue > 0 ? (totalCostDiff / totalCostValue) * 100 : 0;
+		const sellDiffPct = totalSellValue > 0 ? (totalSellDiff / totalSellValue) * 100 : 0;
+
+		const totalQty = inv.reduce((s, r) => s + r.stock, 0);
+		const branchName = this.branches.find(b => b.id === this.branchId)?.name || this.branchId || '-';
+
+		return [
+			['📊 MediStock v5.3.1 — ' + (this.v5UserName || '-')],
+			['วันที่: ' + new Date().toLocaleString('th-TH') + ' | สาขา: ' + branchName + ' | Session: ' + (this.v53GetActiveSession()?.sessionId?.slice(-12) || '-')],
+			[],
+			['📋 สรุปรายงาน', ''],
+			['สินค้าทั้งหมด', this.products.length],
+			['LOT ทั้งหมด', inv.length],
+			['จำนวนคงเหลือ', totalQty],
+			['มูลค่าทุน', totalCostValue.toFixed(2)],
+			['มูลค่าขาย', totalSellValue.toFixed(2)],
+			['───', '───'],
+			['รายการนับ', counts.length],
+			['ผลต่างรายการ', agg.filter(r => r.difference !== 0).length],
+			['  ⬆️ เกิน (Over)', summary.over.count + ' รายการ'],
+			['  ⬇️ ขาด (Short)', summary.short.count + ' รายการ'],
+			['  💰 มูลค่าเกิน (ทุน)', '+' + summary.over.costDiff.toFixed(2) + ' บาท'],
+			['  💰 มูลค่าขาด (ทุน)', summary.short.costDiff.toFixed(2) + ' บาท'],
+			['───', '───'],
+			['ผลต่างทุน', (totalCostDiff >= 0 ? '+' : '') + totalCostDiff.toFixed(2) + ' บาท'],
+			['ผลต่างทุน %', costDiffPct.toFixed(2) + '%'],
+			['ผลต่างขาย', (totalSellDiff >= 0 ? '+' : '') + totalSellDiff.toFixed(2) + ' บาท'],
+			['ผลต่างขาย %', sellDiffPct.toFixed(2) + '%'],
+			['───', '───'],
+			['ยังไม่นับ', uncounted.length + ' รายการ'],
+			[]
+		];
+	}
 
     getDifferenceReportRows() {
         return this.getCountSummaryRows().filter(r => r.difference !== 0);
     }
 
     getLocationReportRows() {
+        // ⭐ 5B-9: เพิ่มยอดรวมแต่ละชั้น
         const map = new Map();
         this.sessionItems.forEach(i => {
             const key = i.location || 'all';
@@ -8203,15 +8486,65 @@ title="ลบ">
                 items: 0,
                 qty: 0,
                 valueCost: 0,
-                valueSell: 0
+                valueSell: 0,
+                shelves: new Map()   // ⭐ เก็บชั้น
             });
             const g = map.get(key);
             g.items++;
             g.qty += Number(i.counted_qty) || 0;
             g.valueCost += (Number(i.counted_qty) || 0) * (Number(i.cost) || 0);
             g.valueSell += (Number(i.counted_qty) || 0) * (Number(i.sellPrice) || 0);
+
+            // ⭐ แยกตามชั้น
+            const shelfMatch = (i.location || '').match(/_shelf_(.+)$/);
+            if (shelfMatch) {
+                const shelfKey = shelfMatch[1];
+                if (!g.shelves.has(shelfKey)) {
+                    g.shelves.set(shelfKey, { 
+                        qty: 0, 
+                        valueCost: 0, 
+                        valueSell: 0, 
+                        items: 0, 
+                        locationName: i.locationName || '' 
+                    });
+                }
+                const s = g.shelves.get(shelfKey);
+                s.qty += Number(i.counted_qty) || 0;
+                s.valueCost += (Number(i.counted_qty) || 0) * (Number(i.cost) || 0);
+                s.valueSell += (Number(i.counted_qty) || 0) * (Number(i.sellPrice) || 0);
+                s.items++;
+                s.locationName = i.locationName || s.locationName;
+            }
         });
-        return [...map.values()];
+
+        const result = [];
+        for (const g of map.values()) {
+            // ตู้หลัก
+            result.push({
+                location: g.location,
+                locationName: g.locationName,
+                type: g.type,
+                items: g.items,
+                qty: g.qty,
+                valueCost: g.valueCost,
+                valueSell: g.valueSell,
+                isShelf: false
+            });
+            // ชั้น
+            for (const [shelf, s] of g.shelves.entries()) {
+                result.push({
+                    location: g.location + '_shelf_' + shelf,
+                    locationName: '   └─ ' + (s.locationName || shelf),
+                    type: g.type,
+                    items: s.items,
+                    qty: s.qty,
+                    valueCost: s.valueCost,
+                    valueSell: s.valueSell,
+                    isShelf: true
+                });
+            }
+        }
+        return result;
     }
 
     getLocationDetailRows() {
@@ -8242,29 +8575,32 @@ title="ลบ">
                 out.push(i);
             }
         });
-        this.products.filter(p => p.isNew === true).forEach(p => out.push({
-            productId: p.id,
-            barcode: p.primaryBarcode || '',
-            name: p.name,
-            lot: p.lot || '',
-            system_qty: 0,
-            counted_qty: 0,
-            difference: 0,
-            cost: p.costPerUnit || 0,
-            sellPrice: p.sellPrice1 || 0,
-            expiry: p.expiryDate || '',
-            userName: ''
-        }));
+		this.products.filter(p => p.isNew === true).forEach(p => out.push({
+			productId: p.id,
+			barcode: p.primaryBarcode || '',
+			name: p.name,
+			lot: p.lot || '',
+			system_qty: 0,
+			counted_qty: 0,
+			difference: 0,
+			cost: p.costPerUnit || 0,
+			sellPrice: p.sellPrice1 || 0,
+			mfg: p.mfgDate || '',                 // ⭐ เพิ่ม
+			expiry: p.expiryDate || '',
+			userName: ''
+		}));
         return out;
     }
 
     getExpiryRows(maxDays = null, minDays = null) {
+        // ⭐ v5.3.1 Patch 5B-8: เรียงจากน้อยไปมาก (ใกล้วันหมดอายุก่อน)
         return this.getInventoryRows()
             .filter(r => r.expiry)
             .map(r => ({ ...r, diffDays: this.diffDaysFromToday(r.expiry) }))
             .filter(r => r.diffDays !== null &&
                 (minDays === null || r.diffDays >= minDays) &&
-                (maxDays === null || r.diffDays <= maxDays));
+                (maxDays === null || r.diffDays <= maxDays))
+            .sort((a, b) => a.diffDays - b.diffDays);
     }
 
     getDeadStockRows() {
@@ -8317,9 +8653,46 @@ title="ลบ">
         }
         this.recalculateGroupDifferences();
         const wb = XLSX.utils.book_new();
+        // ⭐ 5B-12 v2: Header ทุก Sheet + ชื่อรายงาน
+        const branchName = this.branches.find(b => b.id === this.branchId)?.name || this.branchId;
+        const reportDate = new Date().toLocaleString('th-TH');
+
+        // ชื่อรายงาน + Sheet name → Title
+        const reportTitleMap = {
+            'สรุปภาพรวม': 'รายงานสรุปภาพรวม',
+            'การนับทั้งหมด': 'รายงานการนับสินค้าทั้งหมด',
+            'ขาด-เกิน': 'รายงานสินค้าขาด-เกิน',
+            'ยังไม่ได้นับ': 'รายงานสินค้าที่ยังไม่ได้นับ',
+            'สินค้าเพิ่มใหม่': 'รายงานสินค้าเพิ่มใหม่',
+            'Barcode Master': 'รายงานฐานข้อมูลบาร์โค้ด',
+            'หมดอายุแล้ว': 'รายงานสินค้าหมดอายุแล้ว',
+            'ใกล้หมด 3 เดือน': 'รายงานสินค้าใกล้หมดอายุ (3 เดือน)',
+            'ใกล้หมด 6 เดือน': 'รายงานสินค้าใกล้หมดอายุ (6 เดือน)',
+            'ใกล้หมด 9 เดือน': 'รายงานสินค้าใกล้หมดอายุ (9 เดือน)',
+            'ใกล้หมด 12 เดือน': 'รายงานสินค้าใกล้หมดอายุ (12 เดือน)',
+            'สรุปตู้ชั้น': 'รายงานสรุปตู้-ชั้น',
+            'รายละเอียดตู้ชั้น': 'รายงานรายละเอียดตู้-ชั้น',
+            'ABC Analysis': 'รายงานวิเคราะห์ ABC',
+            'Dead Stock': 'รายงาน Dead Stock (สินค้าไม่เคลื่อนไหว)',
+            'สินค้าใกล้หมด': 'รายงานสินค้าใกล้หมดสต็อก',
+            'สต็อก 0': 'รายงานสินค้าสต็อก 0',
+            'ทีม Sync': 'รายงานข้อมูลทีม (Multi-user)'
+        };
+
         const add = (name, headers, rows) => {
             const safeName = name.slice(0, 31).replace(/[\\\/\?\*\[\]:]/g, '_');
-            const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+            const reportTitle = reportTitleMap[name] || ('รายงาน: ' + name);
+            
+            // ⭐ Header 4 บรรทัด: ชื่อบริษัท / ชื่อรายงาน / สาขา+วันที่ / ว่าง
+            const headerRows = [
+                ['📊 MediStock v5.3.1 — ' + (this.v5UserName || '-')],
+                [reportTitle],                                       // ← ใหม่!
+                ['สาขา: ' + branchName + ' | วันที่: ' + reportDate],
+                []  // บรรทัดว่าง
+            ];
+            
+            const allRows = [...headerRows, headers, ...rows];
+            const ws = XLSX.utils.aoa_to_sheet(allRows);
             ws['!cols'] = headers.map(h => ({ wch: Math.min(34, Math.max(10, String(h).length + 4)) }));
             XLSX.utils.book_append_sheet(wb, ws, safeName);
         };
@@ -8335,6 +8708,14 @@ title="ลบ">
         const costDiffPct = totalCostValue > 0 ? (totalCostDiff / totalCostValue) * 100 : 0;
         const sellDiffPct = totalSellValue > 0 ? (totalSellDiff / totalSellValue) * 100 : 0;
 
+        // ⭐ 5B-7: แยก ขาด/เกิน
+        const overItems = agg.filter(r => r.difference > 0);
+        const shortItems = agg.filter(r => r.difference < 0);
+        const overCount = overItems.length;
+        const shortCount = shortItems.length;
+        const overValue = overItems.reduce((s, r) => s + r.cost_diff, 0);
+        const shortValue = shortItems.reduce((s, r) => s + r.cost_diff, 0);
+
         add('สรุปภาพรวม', ['หัวข้อ', 'ค่า'], [
             ['เวอร์ชัน', CONFIG.VERSION],
             ['วันที่ออกรายงาน', new Date().toLocaleString('th-TH')],
@@ -8342,17 +8723,25 @@ title="ลบ">
             ['ผู้ใช้', this.v5UserName || '-'],
             ['Session', this.v53GetActiveSession()?.sessionId || '-'],
             ['Report Mode', this.reportMode === 'team' ? 'รวมทีม (Sheets)' : 'เครื่องนี้ (Local)'],
+            ['───', '───'],
             ['สินค้าทั้งหมด', this.products.length],
             ['LOT ทั้งหมด', inv.length],
             ['จำนวนคงเหลือ', inv.reduce((s, r) => s + r.stock, 0)],
             ['มูลค่าทุน', totalCostValue.toFixed(2)],
             ['มูลค่าขาย', totalSellValue.toFixed(2)],
+            ['───', '───'],
             ['รายการนับ', agg.length],
             ['ผลต่างรายการ', agg.filter(r => r.difference !== 0).length],
+            ['  ⬆️ เกิน (Over)', overCount + ' รายการ'],
+            ['  ⬇️ ขาด (Short)', shortCount + ' รายการ'],
+            ['  💰 มูลค่าเกิน (ทุน)', '+' + overValue.toFixed(2) + ' บาท'],
+            ['  💰 มูลค่าขาด (ทุน)', shortValue.toFixed(2) + ' บาท'],
+            ['───', '───'],
             ['ผลต่างทุน', totalCostDiff.toFixed(2)],
             ['ผลต่างทุน %', costDiffPct.toFixed(2) + '%'],
             ['ผลต่างขาย', totalSellDiff.toFixed(2)],
             ['ผลต่างขาย %', sellDiffPct.toFixed(2) + '%'],
+            ['───', '───'],
             ['ยังไม่นับ', this.getUncountedReportRows().length],
             ['สต็อก 0', this.getZeroStockRows().length],
             ['หมดอายุแล้ว', this.getExpiryRows(-1, null).length],
@@ -8364,24 +8753,50 @@ title="ลบ">
 
         // ===== 2: การนับทั้งหมด =====
         const counts = this.getCountSummaryRows();
+        // ⭐ v5.3.1 Patch 5B-16: เพิ่มคอลัมน์ "อายุ (ปี)"
         add('การนับทั้งหมด',
-            ['รหัสสินค้า', 'บาร์โค้ด', 'ชื่อสินค้า', 'LOT', 'ระบบ', 'นับรวม', 'ผลต่าง', 'ทุน', 'ขาย', 'ผลต่างทุน', 'ผลต่างขาย', 'ตู้/ชั้น', 'ผู้ตรวจนับ', 'หมดอายุ', 'หมายเหตุ'],
-            counts.map(r => [r.productId, r.barcode, r.name, r.lot, r.system, r.counted, r.difference, r.cost, r.sell, r.costDiff, r.sellDiff, r.locations, r.users, r.expiry ? this.formatDate(r.expiry) : '', r.note]));
+            ['รหัสสินค้า', 'บาร์โค้ด', 'ชื่อสินค้า', 'LOT', 'ระบบ', 'นับรวม', 'ผลต่าง', 'ทุน', 'ขาย', 'ผลต่างทุน', 'ผลต่างขาย', 'ตู้/ชั้น', 'ผู้ตรวจนับ', 'หมดอายุ', 'อายุ (ปี)', 'หมายเหตุ'],
+            counts.map(r => [
+                r.productId, r.barcode, r.name, r.lot,
+                r.system, r.counted, r.difference,
+                r.cost, r.sell, r.costDiff, r.sellDiff,
+                r.locations, r.users,
+                r.expiry ? this.formatDate(r.expiry) : '',
+                r.age !== null && r.age !== undefined && r.age > 0 ? r.age.toFixed(1) : '-',
+                r.note
+            ]));
 
         // ===== 3: ขาด-เกิน =====
         add('ขาด-เกิน',
             ['รหัสสินค้า', 'บาร์โค้ด', 'ชื่อสินค้า', 'LOT', 'ระบบ', 'นับ', 'ผลต่าง', 'สถานะ', 'มูลค่าทุนต่าง', 'มูลค่าขายต่าง', 'ตู้/ชั้น', 'ผู้ตรวจนับ'],
             this.getDifferenceReportRows().map(r => [r.productId, r.barcode, r.name, r.lot, r.system, r.counted, r.difference, r.difference > 0 ? 'เกิน' : 'ขาด', r.costDiff, r.sellDiff, r.locations, r.users]));
 
-        // ===== 4: ยังไม่ได้นับ =====
-        add('ยังไม่ได้นับ',
-            ['รหัส', 'บาร์โค้ด', 'ชื่อสินค้า', 'LOT', 'จำนวน', 'ทุน/หน่วย', 'ขาย/หน่วย', 'มูลค่าทุน', 'มูลค่าขาย', 'หมดอายุ', 'หน่วย', 'ผู้จัดจำหน่าย'],
-            this.getUncountedReportRows().map(r => [r.id, r.primaryBarcode, r.name, r.lot, r.stock, r.cost, r.sell, r.stock * r.cost, r.stock * r.sell, r.expiry ? this.formatDate(r.expiry) : '', r.unit, r.supplier]));
+	 // ===== 4: ยังไม่ได้นับ (⭐ [ข้อ 6] เพิ่มคอลัมน์ "อายุ") =====
+	add('ยังไม่ได้นับ',
+		['รหัส', 'บาร์โค้ด', 'ชื่อสินค้า', 'LOT', 'จำนวน', 'ทุน/หน่วย', 'ขาย/หน่วย', 'มูลค่าทุน', 'มูลค่าขาย', 'หมดอายุ', 'อายุ (ปี)', 'หน่วย', 'ผู้จัดจำหน่าย'],
+		this.getUncountedReportRows().map(r => [
+			r.id, r.primaryBarcode, r.name, r.lot, r.stock, r.cost, r.sell,
+			r.stock * r.cost, r.stock * r.sell,
+			r.expiry ? this.formatDate(r.expiry) : '',
+			(r.age !== null && r.age !== undefined && r.age > 0) ? r.age.toFixed(1) : '-',   // ⭐ Age
+			r.unit, r.supplier
+		]));
 
-        // ===== 5: สินค้าเพิ่มใหม่ =====
-        add('สินค้าเพิ่มใหม่',
-            ['รหัส', 'บาร์โค้ด', 'ชื่อสินค้า', 'LOT', 'จำนวนระบบ', 'จำนวนนับ', 'ผลต่าง', 'ทุน', 'ขาย', 'หมดอายุ', 'ผู้ตรวจนับ'],
-            this.getNewProductReportRows().map(r => [r.productId, r.barcode, r.name, r.lot, r.system_qty || 0, r.counted_qty || 0, r.difference || 0, r.cost || 0, r.sellPrice || 0, r.expiry ? this.formatDate(r.expiry) : '', r.userName || '']));
+	// ===== 5: สินค้าเพิ่มใหม่ (⭐ เพิ่มคอลัมน์ "อายุ (ปี)") =====
+	add('สินค้าเพิ่มใหม่',
+		['รหัส', 'บาร์โค้ด', 'ชื่อสินค้า', 'LOT', 'จำนวนระบบ', 'จำนวนนับ', 'ผลต่าง', 'ทุน', 'ขาย', 'หมดอายุ', 'อายุ (ปี)', 'ผู้ตรวจนับ'],
+		this.getNewProductReportRows().map(r => {
+			// ⭐ คำนวณ age จาก mfg + expiry
+			const age = this.calculateProductAge(r.mfg || '', r.expiry || '');
+			return [
+				r.productId, r.barcode, r.name, r.lot,
+				r.system_qty || 0, r.counted_qty || 0, r.difference || 0,
+				r.cost || 0, r.sellPrice || 0,
+				r.expiry ? this.formatDate(r.expiry) : '',
+				(age !== null && age > 0) ? age.toFixed(1) : '-',   // ⭐ Age
+				r.userName || ''
+			];
+		}));
 
         // ===== 6: Barcode Master =====
         const bm = [];
@@ -8404,7 +8819,13 @@ title="ลบ">
 
         // ===== 12: สรุปตู้ชั้น =====
         add('สรุปตู้ชั้น', ['ตำแหน่ง', 'ประเภท', 'รายการ', 'จำนวนชิ้น', 'มูลค่าทุน', 'มูลค่าขาย'],
-            this.getLocationReportRows().map(r => [r.locationName, r.type === 'front' ? 'หน้าร้าน' : 'หลังร้าน', r.items, r.qty, r.valueCost, r.valueSell]));
+            this.getLocationReportRows().map(r => [
+                r.isShelf ? r.locationName : '📦 ' + r.locationName,
+                r.type === 'front' ? 'หน้าร้าน' : 'หลังร้าน',
+                r.items, r.qty,
+                r.valueCost.toFixed(2),
+                r.valueSell.toFixed(2)
+            ]));
 
         // ===== 13: รายละเอียดตู้ชั้น =====
         add('รายละเอียดตู้ชั้น',
@@ -8419,13 +8840,18 @@ title="ลบ">
         add('Dead Stock', ['รหัส', 'ชื่อสินค้า', 'LOT', 'จำนวน', 'ทุน', 'ขาย', 'หมดอายุ', 'คงเหลือวัน', 'มูลค่าทุน'],
             this.getDeadStockRows().map(r => [r.id, r.name, r.lot, r.stock, r.cost, r.sell, this.formatDate(r.expiry), r.diffDays, r.stock * r.cost]));
 
-        // ===== 16: สินค้าใกล้หมด =====
-        add('สินค้าใกล้หมด', ['รหัส', 'ชื่อสินค้า', 'LOT', 'จำนวน', 'Min', 'ทุน', 'ขาย', 'มูลค่าทุน'],
-            this.getLowStockRows().map(r => [r.id, r.name, r.lot, r.stock, r.min, r.cost, r.sell, r.stock * r.cost]));
+        // ===== 16: สินค้าใกล้หมด (⭐ 5B-10: เพิ่มมูลค่าขาย) =====
+        add('สินค้าใกล้หมด', ['รหัส', 'ชื่อสินค้า', 'LOT', 'จำนวน', 'Min', 'ทุน', 'ขาย', 'มูลค่าทุน', 'มูลค่าขาย'],
+            this.getLowStockRows().map(r => [
+                r.id, r.name, r.lot, r.stock, r.min,
+                r.cost, r.sell,
+                (r.stock * r.cost).toFixed(2),
+                (r.stock * r.sell).toFixed(2)
+            ]));
 
-        // ===== 17: สต็อก 0 =====
-        add('สต็อก 0', ['รหัส', 'ชื่อสินค้า', 'LOT', 'ทุน', 'ขาย', 'หน่วย', 'ผู้จัดจำหน่าย'],
-            this.getZeroStockRows().map(r => [r.id, r.name, r.lot, r.cost, r.sell, r.unit, r.supplier]));
+        // ===== 17: สต็อก 0 (⭐ 5B-11: ลบ LOT + supplier) =====
+        add('สต็อก 0', ['รหัส', 'ชื่อสินค้า', 'ทุน', 'ขาย', 'หน่วย'],
+            this.getZeroStockRows().map(r => [r.id, r.name, r.cost, r.sell, r.unit]));
 
         // ===== 18: ทีม Sync =====
         add('ทีม Sync', ['เวลา', 'เวลาไทย', 'ผู้ตรวจนับ', 'สาขา', 'บาร์โค้ด', 'สินค้า', 'LOT', 'ระบบ', 'นับ', 'ผลต่าง', 'ตู้/ชั้น', 'หมายเหตุ'],
@@ -8444,19 +8870,38 @@ title="ลบ">
             this.showToast('❌ ไม่พบ Excel library', 'error');
             return;
         }
+        // ⭐ v5.3.1 Patch 5B-15: ลบ Code, Barcode หลัก, LOT (ซ้ำ/ไม่จำเป็น) + เพิ่ม ทุน/ขาย
         const wb = XLSX.utils.book_new();
         const rows = [];
         this.products.forEach(p => {
             const bars = [...new Set([p.primaryBarcode, ...(p.barcodes || [])].filter(Boolean))];
-            bars.forEach(b => rows.push([p.id, p.code || '', p.name, b, p.primaryBarcode || '', p.lot || '', p.unit || '', p.supplier || '']));
+            bars.forEach(b => rows.push([
+                p.id,
+                p.name,
+                b,
+                p.unit || '',
+                p.supplier || '',
+                Number(p.costPerUnit) || 0,
+                Number(p.sellPrice1) || 0
+            ]));
         });
+        // ⭐ Header: ฐานข้อมูลบาร์โค้ด
+        const branchNameB = this.branches.find(b => b.id === this.branchId)?.name || this.branchId;
+        const reportDateB = new Date().toLocaleString('th-TH');
+        const headerRowsB = [
+            ['📊 MediStock v5.3.1 — ' + (this.v5UserName || '-')],
+            ['รายงานฐานข้อมูลบาร์โค้ด'],
+            ['สาขา: ' + branchNameB + ' | วันที่: ' + reportDateB],
+            []
+        ];
         const ws = XLSX.utils.aoa_to_sheet([
-            ['รหัส', 'Code', 'ชื่อสินค้า', 'Barcode', 'Barcode หลัก', 'LOT', 'หน่วย', 'ผู้จัดจำหน่าย'],
+            ...headerRowsB,
+            ['รหัสสินค้า', 'ชื่อสินค้า', 'Barcode', 'หน่วย', 'ผู้จัดจำหน่าย', 'ทุน', 'ขาย'],
             ...rows
         ]);
-        XLSX.utils.book_append_sheet(wb, ws, 'Barcode Master');
+        XLSX.utils.book_append_sheet(wb, ws, 'Barcode');
         const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
-        XLSX.writeFile(wb, `MediStock_Barcode_Master_${timestamp}.xlsx`);
+        XLSX.writeFile(wb, `MediStock_ฐานข้อมูลบาร์โค้ด_${timestamp}.xlsx`);
         this.showToast('✅ ส่งออกฐานข้อมูลบาร์โค้ดแล้ว', 'success');
     }
 
@@ -8466,10 +8911,16 @@ title="ลบ">
     /**
      * ⭐ v5.3.1: พิมพ์ผ่าน iframe — ทำงานบนมือถือได้ ไม่โดน popup blocker
      */
-    printViaIframe(htmlContent) {
-        // ลบ iframe เก่าถ้ามี
+    printViaIframe(htmlContent, customTitle = null) {
         const oldFrame = document.getElementById('medistock-print-iframe');
         if (oldFrame) oldFrame.remove();
+
+        // ⭐ ตั้ง title ของ document ให้ browser ใช้เป็นชื่อไฟล์ตอน Save PDF
+        if (customTitle) {
+            const oldTitle = document.title;
+            document.title = customTitle;
+            setTimeout(() => { document.title = oldTitle; }, 8000);
+        }
 
         const iframe = document.createElement('iframe');
         iframe.id = 'medistock-print-iframe';
@@ -8488,6 +8939,10 @@ title="ลบ">
             doc.write(htmlContent);
             doc.close();
 
+            if (customTitle) {
+                try { doc.title = customTitle; } catch (_) {}
+            }
+
             const triggerPrint = () => {
                 try {
                     iframe.contentWindow.focus();
@@ -8502,11 +8957,9 @@ title="ลบ">
             if (doc.readyState === 'complete') {
                 setTimeout(triggerPrint, 300);
             } else {
-
                 iframe.onload = () => setTimeout(triggerPrint, 300);
             }
 
-            // Safety timeout — ถ้า onload ไม่ยิง
             setTimeout(() => {
                 if (document.getElementById('medistock-print-iframe')) {
                     triggerPrint();
@@ -8520,93 +8973,309 @@ title="ลบ">
         }
     }
 	
+	// ═══════════════════════════════════════════════════════════════
+	// [v5.3.1 FINAL-2] printFullReport — ปรับครบ 7 ข้อ
+	// ═══════════════════════════════════════════════════════════════
+	// ⭐ Wrapper: เปิด modal เลือกโหมด
 	printFullReport() {
-        const counts = this.getCountSummaryRows();
-        const diffs = this.getDifferenceReportRows();
-        const uncounted = this.getUncountedReportRows();
-        const inv = this.getInventoryRows();
-        const agg = this.getAggregatedByProductLot();
+		document.getElementById('pdfModeModal').classList.add('show');
+	}
 
-        const totalCostValue = inv.reduce((s, r) => s + r.stock * r.cost, 0);
-        const totalSellValue = inv.reduce((s, r) => s + r.stock * r.sell, 0);
-        const totalCostDiff = agg.reduce((s, r) => s + r.cost_diff, 0);
-        const totalSellDiff = agg.reduce((s, r) => s + r.sell_diff, 0);
+	// ⭐ ปิด modal
+	closePdfModeModal() {
+		document.getElementById('pdfModeModal').classList.remove('show');
+	}
 
-        const esc = escapeHtml;
-        const rows = (arr, cols) => arr.map(r => '<tr>' + cols.map(c => `<td>${esc(String(c ?? ''))}</td>`).join('') + '</tr>').join('');
-        const htmlContent = `<!doctype html>
-            body{font-family:Arial,'Tahoma',sans-serif;margin:18px;color:#111}
-            h1,h2{margin:0 0 8px}
-            h1{color:#0ea5e9}
-            h2{margin-top:20px;border-bottom:2px solid #0ea5e9;padding-bottom:4px}
-            table{border-collapse:collapse;width:100%;font-size:9px;margin-top:8px}
-            th,td{border:1px solid #bbb;padding:4px;vertical-align:top}
-            th{background:#e0f2fe;color:#0369a1}
-            .meta{font-size:11px;margin-bottom:12px;color:#475569}
-            .summary{background:#f0f9ff;border:2px solid #0ea5e9;border-radius:8px;padding:12px;margin:10px 0}
-            .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-            .summary-item{text-align:center}
-            .summary-item .label{font-size:10px;color:#64748b;font-weight:600}
-            .summary-item .value{font-size:16px;font-weight:800;color:#0ea5e9}
-            .summary-item .pct{font-size:10px;font-weight:700}
-            .positive{color:#10b981}
-            .negative{color:#ef4444}
-            .zero{color:#64748b}
-            .pagebreak{page-break-before:always}
-            @media print {button{display:none}}
-        </style></head><body>
-        <button onclick="window.print()" style="padding:10px 20px;background:#0ea5e9;color:#fff;border:none;border-radius:6px;font-weight:700;cursor:pointer;margin-bottom:10px;">🖨️ พิมพ์ / Save as PDF</button>
-        <h1>📊 MediStock v5.3.1 Complete Edition — Full Report</h1>
-        <div class="meta">
-            <strong>วันที่:</strong> ${esc(new Date().toLocaleString('th-TH'))} |
-            <strong>สาขา:</strong> ${esc(this.branchId || '')} |
-            <strong>ผู้ใช้:</strong> ${esc(this.v5UserName || '-')} |
-            <strong>Session:</strong> ${esc(this.v53GetActiveSession()?.sessionId?.slice(-12) || '-')} |
-            <strong>Mode:</strong> ${this.reportMode === 'team' ? '🌐 รวมทีม' : '📱 เครื่องนี้'}
-        </div>
+	// ⭐ Print ตามโหมดที่เลือก
+	printFullReportWithMode(mode) {
+		document.getElementById('pdfModeModal').classList.remove('show');
+		const usePlainMode = (mode === 'plain');	
+		const counts = this.getCountSummaryRows();
+		const diffs = this.getDifferenceReportRows();
+		const uncounted = this.getUncountedReportRows();
+		const inv = this.getInventoryRows();
+		const agg = this.getAggregatedByProductLot();
 
-        <div class="summary">
-            <div class="summary-grid">
-                <div class="summary-item"><div class="label">สินค้า/LOT</div><div class="value">${this.products.length} / ${inv.length}</div></div>
-                <div class="summary-item"><div class="label">รายการนับ</div><div class="value">${counts.length}</div></div>
-                <div class="summary-item"><div class="label">ผลต่าง</div><div class="value ${diffs.length > 0 ? 'negative' : 'zero'}">${diffs.length}</div></div>
-                <div class="summary-item"><div class="label">ยังไม่นับ</div><div class="value ${uncounted.length > 0 ? 'negative' : 'positive'}">${uncounted.length}</div></div>
-            </div>
-            <div class="summary-grid" style="margin-top:10px;">
-                <div class="summary-item" style="grid-column:span 2;">
-                    <div class="label">💰 ผลต่างทุน</div>
-                    <div class="value ${totalCostDiff >= 0 ? 'positive' : 'negative'}">${totalCostDiff >= 0 ? '+' : ''}${formatNumber(totalCostDiff, 2)} บาท</div>
-                    <div class="pct ${totalCostDiff >= 0 ? 'positive' : 'negative'}">${formatPercent(totalCostValue > 0 ? (totalCostDiff / totalCostValue) * 100 : 0, 2)} (จาก ${formatNumber(totalCostValue, 2)})</div>
-                </div>
-                <div class="summary-item" style="grid-column:span 2;">
-                    <div class="label">💵 ผลต่างขาย</div>
-                    <div class="value ${totalSellDiff >= 0 ? 'positive' : 'negative'}">${totalSellDiff >= 0 ? '+' : ''}${formatNumber(totalSellDiff, 2)} บาท</div>
-                    <div class="pct ${totalSellDiff >= 0 ? 'positive' : 'negative'}">${formatPercent(totalSellValue > 0 ? (totalSellDiff / totalSellValue) * 100 : 0, 2)} (จาก ${formatNumber(totalSellValue, 2)})</div>
-                </div>
-            </div>
-        </div>
+		// ⭐ [ข้อ 3] คำนวณผลต่างแยกกลุ่ม Over / Short
+		const summary = this.getOverShortSummary();
+		const overItems = summary.over.items;
+		const shortItems = summary.short.items;
+		const overCostDiff = summary.over.costDiff;
+		const overSellDiff = summary.over.sellDiff;
+		const shortCostDiff = summary.short.costDiff;
+		const shortSellDiff = summary.short.sellDiff;
 
-        <h2>📋 ผลต่าง (ขาด/เกิน)</h2>
-        <table><tr><th>สินค้า</th><th>LOT</th><th>ระบบ</th><th>นับ</th><th>ต่าง</th><th>ทุนต่าง</th><th>ขายต่าง</th><th>ตู้/ชั้น</th></tr>
-        ${rows(diffs, d => [d.name, d.lot, d.system, d.counted, d.difference, d.costDiff.toFixed(2), d.sellDiff.toFixed(2), d.locations])}
+		const totalCostValue = inv.reduce((s, r) => s + r.stock * r.cost, 0);
+		const totalSellValue = inv.reduce((s, r) => s + r.stock * r.sell, 0);
+		const totalCostDiff = agg.reduce((s, r) => s + r.cost_diff, 0);
+		const totalSellDiff = agg.reduce((s, r) => s + r.sell_diff, 0);
 
-</table>
+		const esc = escapeHtml;
+		const fmtN = (v) => formatNumber(v, 2);
+		const fmtP = (v) => formatPercent(v, 2);
 
-        <h2 class="pagebreak">📋 การนับทั้งหมด</h2>
-        <table><tr><th>สินค้า</th><th>LOT</th><th>ระบบ</th><th>นับ</th><th>ต่าง</th><th>ตู้/ชั้น</th><th>ผู้ตรวจนับ</th></tr>
-        ${rows(counts, d => [d.name, d.lot, d.system, d.counted, d.difference, d.locations, d.users])}</table>
+		const rowsHtml = (arr, colsFn) => arr.map(r => {
+			const cols = typeof colsFn === 'function' ? colsFn(r) : colsFn;
+			return '<tr>' + cols.map(c => '<td>' + esc(String(c ?? '')) + '</td>').join('') + '</tr>';
+		}).join('');
 
-        <h2 class="pagebreak">⚠️ ยังไม่ได้นับ</h2>
-        <table><tr><th>สินค้า</th><th>LOT</th><th>จำนวน</th><th>ทุน</th><th>ขาย</th><th>หมดอายุ</th></tr>
-        ${rows(uncounted, r => [r.name, r.lot, r.stock, r.cost, r.sell, r.expiry ? this.formatDate(r.expiry) : ''])}</table>
+		const costDiffPct = totalCostValue > 0 ? (totalCostDiff / totalCostValue) * 100 : 0;
+		const sellDiffPct = totalSellValue > 0 ? (totalSellDiff / totalSellValue) * 100 : 0;
 
-        </body></html>`;
-        this.printViaIframe(htmlContent);
-    }
+		// ⭐ [ข้อ 4] ปรับขนาดแถวให้แคบลง + [ข้อ 5] ขอบสวย
+		const cssBlock = [
+			'@page { size: A4 portrait; margin: 15mm 12mm 15mm 12mm; }',
+			'* { box-sizing: border-box; }',
+			"body { font-family: 'Sarabun','TH Sarabun New','Tahoma',Arial,sans-serif; margin: 0; padding: 0; color: #0f172a; font-size: 13px; line-height: 1.5; font-weight: 500; -webkit-print-color-adjust: exact; print-color-adjust: exact; }",
+			'h1 { color: #0369a1; font-size: 22px; margin: 0 0 10px; font-weight: 800; letter-spacing: -0.3px; border-bottom: 3px solid #0ea5e9; padding-bottom: 8px; }',
+			'h2 { color: #0369a1; font-size: 17px; margin: 18px 0 10px; padding: 8px 12px; background: linear-gradient(135deg,#e0f2fe 0%,#f0f9ff 100%); border-left: 5px solid #0ea5e9; border-radius: 4px; font-weight: 800; page-break-after: avoid; }',
+			'h3 { color: #0369a1; font-size: 15px; margin: 12px 0 8px; font-weight: 700; }',
+			'.meta { font-size: 12px; margin-bottom: 12px; padding: 8px 12px; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 8px; color: #475569; line-height: 1.6; font-weight: 500; }',
+			'.meta strong { color: #0369a1; font-weight: 700; }',
+			// ⭐ [ข้อ 4] แถวแคบลง
+			'table { border-collapse: collapse; width: 100%; font-size: 11.5px; margin: 8px 0 14px; border: 2px solid #94a3b8; border-radius: 4px; overflow: hidden; table-layout: auto; }',
+			'th, td { border: 1px solid #cbd5e1; padding: 4px 7px; vertical-align: middle; text-align: left; line-height: 1.4; }',
+			'th { font-weight: 800; white-space: nowrap; text-align: center; letter-spacing: 0.2px; font-size: 11.5px; }',
+			'tr:nth-child(even) td { background: #f8fafc; }',
+			'.pagebreak { page-break-before: always; }',
+			'.no-print { padding: 10px 20px; background: linear-gradient(135deg,#0ea5e9,#6366f1); color: #fff; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; margin-bottom: 12px; font-size: 14px; box-shadow: 0 4px 12px rgba(14,165,233,0.3); }',
+			'@media print { .no-print { display: none !important; } body { margin: 0; font-size: 11px; } h2 { page-break-after: avoid; } table { page-break-inside: auto; } tr { page-break-inside: avoid; } thead { display: table-header-group; } }'
+		].join('\n');
+
+		// ⭐ [ข้อ 1] โหมดขาวดำ ใช้ Layout 4 การ์ด แบบรูป 3
+		let themeCss;
+		if (usePlainMode) {
+			themeCss = [
+				// ตารางขาวดำ
+				'table { border: 1.5px solid #000; }',
+				'th, td { border: 1px solid #000; color: #000; }',
+				'th { background: #e5e5e5 !important; color: #000 !important; }',
+				'td { background: #fff !important; }',
+				'.tbl-overview th, .tbl-diff th, .tbl-count th, .tbl-detail th { background: #e5e5e5 !important; color: #000 !important; }',
+				'.row-over th { background: #d4d4d4 !important; color: #000 !important; font-weight: 800; }',
+				'.row-over td { background: #f5f5f5 !important; color: #000 !important; }',
+				'.row-short th { background: #d4d4d4 !important; color: #000 !important; font-weight: 800; }',
+				'.row-short td { background: #f5f5f5 !important; color: #000 !important; }',
+				// ⭐ [ข้อ 1] การ์ด 4 ช่อง ขาวดำ แบบรูป 3
+				'.summary { border: 2px solid #000; background: #fff; border-radius: 10px; padding: 14px; margin: 12px 0; }',
+				'.summary h3 { margin: 0 0 10px; color: #000; font-size: 15px; font-weight: 800; }',
+				'.summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }',
+				'.summary-item { text-align: center; padding: 10px 8px; background: #fff; border-radius: 8px; border: 2px solid #000; }',
+				'.summary-item .label { font-size: 11px; color: #000; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }',
+				'.summary-item .value { font-size: 18px; font-weight: 800; color: #000; line-height: 1.2; margin-top: 4px; }',
+				'.summary-item .pct { font-size: 11px; font-weight: 700; margin-top: 3px; color: #000; }',
+				'.positive { color: #000; font-weight: 800; }',
+				'.negative { color: #000; font-weight: 800; }',
+				'.zero { color: #666; }'
+			].join('\n');
+		} else {
+			themeCss = [
+				// สรุปภาพรวม — ฟ้า
+				'.tbl-overview th { background: #0ea5e9 !important; color: #fff !important; }',
+				'.tbl-overview td { background: #f0f9ff; }',
+				'.tbl-overview tr:nth-child(even) td { background: #e0f2fe; }',
+				// Diff — เขียวเข้ม + Over เขียว + Short แดง
+				'.tbl-diff { border: 2px solid #0d9488; }',
+				'.tbl-diff thead th { background: #0d9488 !important; color: #fff !important; }',
+				'.tbl-diff .row-over th { background: #059669 !important; color: #fff !important; font-size: 13px; letter-spacing: 0.3px; }',
+				'.tbl-diff .row-over td { background: #ecfdf5 !important; color: #065f46 !important; }',
+				'.tbl-diff .row-short th { background: #dc2626 !important; color: #fff !important; font-size: 13px; letter-spacing: 0.3px; }',
+				'.tbl-diff .row-short td { background: #fef2f2 !important; color: #991b1b !important; }',
+				// การนับทั้งหมด — ส้ม
+				'.tbl-count th { background: #f59e0b !important; color: #fff !important; }',
+				'.tbl-count td { background: #fffbeb; }',
+				'.tbl-count tr:nth-child(even) td { background: #fef3c7; }',
+				// ยังไม่นับ — ชมพู
+				'.tbl-detail th { background: #ec4899 !important; color: #fff !important; }',
+				'.tbl-detail td { background: #fdf2f8; }',
+				'.tbl-detail tr:nth-child(even) td { background: #fce7f3; }',
+				// Summary 4 การ์ด
+				'.summary { background: linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%); border: 3px solid #0ea5e9; border-radius: 10px; padding: 14px; margin: 12px 0; }',
+				'.summary h3 { margin: 0 0 10px; color: #0369a1; font-size: 15px; font-weight: 800; }',
+				'.summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }',
+				'.summary-item { text-align: center; padding: 10px 8px; background: #fff; border-radius: 8px; border: 2px solid #bae6fd; }',
+				'.summary-item .label { font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }',
+				'.summary-item .value { font-size: 18px; font-weight: 800; color: #0ea5e9; line-height: 1.2; margin-top: 4px; }',
+				'.summary-item .pct { font-size: 11px; font-weight: 700; margin-top: 3px; }',
+				'.positive { color: #10b981; }',
+				'.negative { color: #ef4444; }',
+				'.zero { color: #64748b; }'
+			].join('\n');
+		}
+
+		const branchLabel = this.branches.find(b => b.id === this.branchId)?.name || this.branchId || '-';
+		const nowLabel = new Date().toLocaleString('th-TH');
+		const sessLabel = this.v53GetActiveSession()?.sessionId?.slice(-12) || '-';
+		const modeLabel = this.reportMode === 'team' ? '🌐 รวมทีม' : '📱 เครื่องนี้';
+
+		// ===== สรุปภาพรวม =====
+		const overviewRows = [
+			['เวอร์ชัน', CONFIG.VERSION],
+			['วันที่ออกรายงาน', nowLabel],
+			['สาขา', branchLabel],
+			['ผู้ใช้', this.v5UserName || '-'],
+			['Session', sessLabel],
+			['Report Mode', modeLabel],
+			['สินค้าทั้งหมด', this.products.length],
+			['LOT ทั้งหมด', inv.length],
+			['รายการนับ', counts.length],
+			['  ⬆️ เกิน (Over)', overItems.length + ' รายการ'],
+			['  ⬇️ ขาด (Short)', shortItems.length + ' รายการ'],
+			['ยังไม่นับ', uncounted.length],
+			['สต็อก 0', this.getZeroStockRows().length]
+		];
+		const overviewHtml = overviewRows.map(r =>
+			'<tr><th style="text-align:left;width:40%;">' + esc(r[0]) + '</th><td>' + esc(String(r[1])) + '</td></tr>'
+		).join('');
+
+		// ===== 4 การ์ดการเงิน =====
+		const summaryHtml = '<div class="summary">'
+			+ '<h3>💰 สรุปผลต่างทางการเงิน</h3>'
+			+ '<div class="summary-grid">'
+			+ '<div class="summary-item"><div class="label">💰 ทุนรวม</div><div class="value">' + fmtN(totalCostValue) + '</div></div>'
+			+ '<div class="summary-item"><div class="label">💵 ขายรวม</div><div class="value">' + fmtN(totalSellValue) + '</div></div>'
+			+ '<div class="summary-item"><div class="label">ผลต่างทุน</div><div class="value ' + (totalCostDiff >= 0 ? 'positive' : 'negative') + '">' + (totalCostDiff >= 0 ? '+' : '') + fmtN(totalCostDiff) + '</div><div class="pct ' + (totalCostDiff >= 0 ? 'positive' : 'negative') + '">' + fmtP(costDiffPct) + '</div></div>'
+			+ '<div class="summary-item"><div class="label">ผลต่างขาย</div><div class="value ' + (totalSellDiff >= 0 ? 'positive' : 'negative') + '">' + (totalSellDiff >= 0 ? '+' : '') + fmtN(totalSellDiff) + '</div><div class="pct ' + (totalSellDiff >= 0 ? 'positive' : 'negative') + '">' + fmtP(sellDiffPct) + '</div></div>'
+			+ '</div></div>';
+
+		// ===== Diff columns =====
+		const diffCols = (d) => [
+			d.name,
+			d.lot || '-',
+			d.system_qty,
+			d.totalCounted,
+			(d.difference > 0 ? '+' : '') + d.difference,
+			(d.cost_diff > 0 ? '+' : '') + fmtN(d.cost_diff),
+			(d.sell_diff > 0 ? '+' : '') + fmtN(d.sell_diff),
+			(d.locations || []).map(l => l.locationName).join(', '),
+			(d.usersArr || []).join(', ')
+		];
+
+		// ===== Count columns (14 คอลัมน์) =====
+		const countFullCols = (c) => [
+			c.barcode || '-',
+			c.name,
+			c.lot || '-',
+			c.locations || '-',
+			c.locations || '-',
+			c.system,
+			c.counted,
+			(c.difference > 0 ? '+' : '') + c.difference,
+			fmtN(c.cost),
+			fmtN(c.sell),
+			(c.costDiff > 0 ? '+' : '') + fmtN(c.costDiff),
+			(c.sellDiff > 0 ? '+' : '') + fmtN(c.sellDiff),
+			(c.age !== null && c.age !== undefined && c.age > 0) ? c.age.toFixed(1) : '-',
+			c.users || '-'
+		];
+
+		// ⭐ [ข้อ 5] Uncounted — เพิ่ม Age
+		const uncCols = (r) => [
+			r.name, r.lot || '-', r.stock,
+			fmtN(r.cost), fmtN(r.sell),
+			r.expiry ? this.formatDate(r.expiry) : '-',
+			(r.age !== null && r.age !== undefined && r.age > 0) ? r.age.toFixed(1) + ' ปี' : '-'
+		];
+
+		// ⭐ [ข้อ 3] สร้างบรรทัด "ผลต่างรวม" แยก Over/Short
+		const overSummaryLine = '<br><span style="font-size:11px;font-weight:500;opacity:0.92;">'
+			+ '📝 ผลต่างทุน: ' + (overCostDiff >= 0 ? '+' : '') + fmtN(overCostDiff) + ' บาท'
+			+ ' | ผลต่างขาย: ' + (overSellDiff >= 0 ? '+' : '') + fmtN(overSellDiff) + ' บาท'
+			+ '</span>';
+
+		const shortSummaryLine = '<br><span style="font-size:11px;font-weight:500;opacity:0.92;">'
+			+ '📝 ผลต่างทุน: ' + (shortCostDiff >= 0 ? '+' : '') + fmtN(shortCostDiff) + ' บาท'
+			+ ' | ผลต่างขาย: ' + (shortSellDiff >= 0 ? '+' : '') + fmtN(shortSellDiff) + ' บาท'
+			+ '</span>';
+
+		// ===== ประกอบ HTML =====
+		const htmlContent = '<!doctype html><html lang="th"><head><meta charset="utf-8">'
+			+ '<title>MediStock v5.3.1 — รายงานสรุปผล</title>'
+			+ '<style>' + cssBlock + '\n' + themeCss + '</style></head><body>'
+			+ '<button class="no-print" onclick="window.print()">🖨️ พิมพ์ / Save as PDF</button>'
+			+ '<h1>📊 MediStock v5.3.1 — Full Report</h1>'
+			+ '<div class="meta">'
+			+ '<strong>วันที่:</strong> ' + esc(nowLabel)
+			+ ' | <strong>สาขา:</strong> ' + esc(branchLabel)
+			+ ' | <strong>ผู้ใช้:</strong> ' + esc(this.v5UserName || '-')
+			+ ' | <strong>Session:</strong> ' + esc(sessLabel)
+			+ ' | <strong>Mode:</strong> ' + esc(modeLabel)
+			+ '</div>'
+
+			// ==== Overview ====
+			+ '<h2>📋 สรุปภาพรวม</h2>'
+			+ '<table class="tbl-overview"><thead><tr><th>หัวข้อ</th><th>ค่า</th></tr></thead>'
+			+ '<tbody>' + overviewHtml + '</tbody></table>'
+
+			// ==== 4 การ์ดการเงิน ====
+			+ summaryHtml
+
+			// ⭐ [ข้อ 3] Diff Section — แสดง "ผลต่างรวม" แยก Over/Short
+			+ '<h2>📋 ผลต่าง (ขาด/เกิน) — ' + diffs.length + ' รายการ</h2>'
+			+ '<table class="tbl-diff"><thead><tr>'
+			+ '<th>สินค้า</th><th>LOT</th><th>ระบบ</th><th>นับ</th><th>ต่าง</th>'
+			+ '<th>มูลค่าต่าง(ทุน)</th><th>มูลค่าต่าง(ขาย)</th><th>ตู้/ชั้น</th><th>ผู้นับ</th>'
+			+ '</tr></thead><tbody>'
+			+ (overItems.length > 0
+				? '<tr class="row-over"><th colspan="9">⬆️ เกิน (Over) — ' + overItems.length + ' รายการ'
+				  + overSummaryLine + '</th></tr>'
+				  + rowsHtml(overItems, diffCols)
+				: '')
+			+ (shortItems.length > 0
+				? '<tr class="row-short"><th colspan="9">⬇️ ขาด (Short) — ' + shortItems.length + ' รายการ'
+				  + shortSummaryLine + '</th></tr>'
+				  + rowsHtml(shortItems, diffCols)
+				: '')
+			+ (diffs.length === 0
+				? '<tr><td colspan="9" style="text-align:center;padding:20px;color:#10b981;font-weight:700;">✓ นับครบ ไม่มีผลต่าง</td></tr>'
+				: '')
+			+ '</tbody></table>'
+
+			// ==== การนับทั้งหมด 14 คอลัมน์ ====
+			+ '<h2 class="pagebreak">📋 รายละเอียดการนับทั้งหมด — ' + counts.length + ' รายการ</h2>'
+			+ '<table class="tbl-count"><thead><tr>'
+			+ '<th>บาร์โค้ด</th><th>ชื่อสินค้า</th><th>LOT</th><th>ประเภท</th><th>ตู้/ชั้น</th>'
+			+ '<th>ระบบ</th><th>นับ</th><th>ต่าง</th><th>ทุน</th><th>ขาย</th>'
+			+ '<th>ต่าง(ทุน)</th><th>ต่าง(ขาย)</th><th>อายุ</th><th>ผู้นับ</th>'
+			+ '</tr></thead><tbody>' + rowsHtml(counts, countFullCols) + '</tbody></table>'
+
+			// ⭐ [ข้อ 5] ยังไม่นับ — เพิ่ม Age
+			+ '<h2 class="pagebreak">⚠️ ยังไม่ได้นับ — ' + uncounted.length + ' รายการ</h2>'
+			+ '<table class="tbl-detail"><thead><tr>'
+			+ '<th>สินค้า</th><th>LOT</th><th>จำนวน</th><th>ทุน</th><th>ขาย</th><th>หมดอายุ</th><th>อายุ</th>'
+			+ '</tr></thead><tbody>' + rowsHtml(uncounted, uncCols) + '</tbody></table>'
+
+			+ '</body></html>';
+
+		this.printViaIframe(htmlContent, this.buildExportFilename('รายงานสรุปผล', 'pdf'));
+	}
 	
 	// ═══════════════════════════════════════════════
 	// [5B-4] Report Dropdown
 	// ═══════════════════════════════════════════════
+    // ⭐ PDF Polish: สร้างชื่อไฟล์ PDF/XLSX/CSV ที่ไม่ชนกัน
+    buildExportFilename(reportType, extension = 'pdf') {
+        const now = new Date();
+        const yy = now.getFullYear();
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const dd = String(now.getDate()).padStart(2, '0');
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mi = String(now.getMinutes()).padStart(2, '0');
+        const ss = String(now.getSeconds()).padStart(2, '0');
+        const stamp = `${yy}${mm}${dd}-${hh}${mi}${ss}`;
+
+        const branchName = (this.branches.find(b => b.id === this.branchId)?.name || this.branchId || 'สาขา')
+            .replace(/[\\\/:*?"<>|]/g, '-')
+            .replace(/\s+/g, '-')
+            .slice(0, 30);
+
+        const safeType = String(reportType || 'report')
+            .replace(/[\\\/:*?"<>|]/g, '-')
+            .replace(/\s+/g, '-')
+            .slice(0, 40);
+
+        return `MediStock_${safeType}_${branchName}_${stamp}.${extension}`;
+    }
 	toggleReportDropdown() {
 		const menu = document.getElementById('reportDropdownMenu');
 		const icon = document.getElementById('reportDropdownIcon');
@@ -8636,157 +9305,206 @@ title="ลบ">
 		}
 	}
 
-	reportDropdownAction(action, param) {
-		// ปิด dropdown ก่อน
-		const menu = document.getElementById('reportDropdownMenu');
-		if (menu) menu.style.display = 'none';
-		const icon = document.getElementById('reportDropdownIcon');
-		if (icon) icon.style.transform = 'rotate(0deg)';
+		reportDropdownAction(action, param) {
+			// ปิด dropdown
+			const menu = document.getElementById('reportDropdownMenu');
+			if (menu) menu.style.display = 'none';
+			const icon = document.getElementById('reportDropdownIcon');
+			if (icon) icon.style.transform = 'rotate(0deg)';
 
-		// เรียก action
-		if (action === 'exportData' && param) {
-			if (typeof this.exportData === 'function') {
+			// ⭐ [ใหม่] PDF Full Report
+			if (action === 'printFullReport') {
+				this.printFullReport();   // → เปิด modal
+				return;
+			}
+
+			// ⭐ Option C: เลือก Excel หรือ CSV — ใช้ Custom Modal
+			if (action === 'exportData' && param === 'choose') {
+				document.getElementById('exportFormatModal').classList.add('show');
+				return;
+			}
+
+			// ⭐ Export Data ปกติ (CSV/XLSX)
+			if (action === 'exportData' && (param === 'csv' || param === 'xlsx')) {
 				this.exportData(param);
-			} else if (typeof exportData === 'function') {
-				exportData(param);
+				return;
 			}
-		} else if (action === 'exportLocationReport') {
-			if (typeof this.exportLocationReport === 'function') {
+
+			// ⭐ รายงานตู้/ชั้น
+			if (action === 'exportLocationReport') {
 				this.exportLocationReport();
-			} else if (typeof exportLocationReport === 'function') {
-				exportLocationReport();
+				return;
 			}
-		} else if (action === 'exportBarcodeMasterXLSX') {
-			if (typeof this.exportBarcodeMasterXLSX === 'function') {
+
+			// ⭐ ฐานข้อมูลบาร์โค้ด
+			if (action === 'exportBarcodeMasterXLSX') {
 				this.exportBarcodeMasterXLSX();
-			} else if (typeof exportBarcodeMasterXLSX === 'function') {
-				exportBarcodeMasterXLSX();
+				return;
 			}
-		} else if (action === 'exportHistory') {
-			if (typeof this.exportHistory === 'function') {
+
+			// ⭐ ประวัตินับ
+			if (action === 'exportHistory') {
 				this.exportHistory();
-			} else if (typeof exportHistory === 'function') {
-				exportHistory();
+				return;
 			}
 		}
-	}
 
     // ================================================================
     // EXPORT: Generic (CSV/XLSX/PDF)
     // ================================================================
-    exportData(format) {
-        if (this.sessionItems.length === 0) {
-            this.showToast('⚠️ ไม่มีข้อมูล', 'warning');
-            return;
-        }
-        const headers = ['บาร์โค้ด', 'ชื่อสินค้า', 'Lot', 'ประเภท', 'ตู้/ชั้น', 'ระบบ', 'นับ', 'ต่าง', 'ทุน', 'ขาย', 'ต่าง(ทุน)', 'ต่าง(ขาย)', 'อายุ', 'หมายเหตุ'];
-        const rows = this.sessionItems.map(item => [
-            item.barcode || '-',
-            item.name,
-            item.lotName || item.lot || '-',
-            item.locationType === 'front' ? 'หน้าร้าน' : item.locationType === 'back' ? 'หลังร้าน' : 'ทั้งร้าน',
-            item.locationName || '-',
-            item.system_qty,
-            item.counted_qty,
-            item.difference,
-            item.cost,
-            item.sellPrice,
-            item.cost_diff,
-            item.sell_diff,
-            item.age !== undefined && item.age !== null && item.age > 0 ? item.age.toFixed(1) : '-',
-            item.note || ''
-        ]);
-        if (format === 'csv') this.exportGenericCSV(headers, rows, 'report');
-        else if (format === 'xlsx') this.exportGenericXLSX(headers, rows, 'report');
-        else if (format === 'pdf') this.exportGenericPDF(headers, rows, 'report');
-    }
+	exportData(format) {
+		if (this.sessionItems.length === 0) {
+			this.showToast('⚠️ ไม่มีข้อมูล', 'warning');
+			return;
+		}
+		const headers = ['บาร์โค้ด', 'ชื่อสินค้า', 'Lot', 'ประเภท', 'ตู้/ชั้น', 'ระบบ', 'นับ', 'ต่าง', 'ทุน', 'ขาย', 'ต่าง(ทุน)', 'ต่าง(ขาย)', 'อายุ', 'ผู้นับ', 'หมายเหตุ'];
+		const rows = this.sessionItems.map(item => [
+			item.barcode || '-',
+			item.name,
+			item.lotName || item.lot || '-',
+			item.locationType === 'front' ? 'หน้าร้าน' : item.locationType === 'back' ? 'หลังร้าน' : 'ทั้งร้าน',
+			item.locationName || '-',
+			item.system_qty,
+			item.counted_qty,
+			item.difference,
+			item.cost,
+			item.sellPrice,
+			item.cost_diff,
+			item.sell_diff,
+			item.age !== undefined && item.age !== null && item.age > 0 ? item.age.toFixed(1) : '-',
+			item.userName || '-',
+			item.note || ''
+		]);
 
-    exportGenericCSV(headers, rows, type) {
-        let csv = '\uFEFF' + headers.join(',') + '\n';
-        rows.forEach(row => {
-            csv += row.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',') + '\n';
-        });
-        this.download(new Blob([csv], { type: 'text/csv;charset=utf-8' }), `${type}_${Date.now()}.csv`);
-        this.showToast('✅ ดาวน์โหลด CSV สำเร็จ', 'success');
-    }
+		// ⭐ PDF ถูกย้ายไป printFullReport() แล้ว — เหลือแค่ CSV/XLSX
+		if (format === 'csv') {
+			const csvRows = rows.map(r => [r[0] ? `="${r[0]}"` : '', ...r.slice(1)]);
+			this.exportGenericCSV(headers, csvRows, 'รายละเอียดการนับ');
+		} else if (format === 'xlsx') {
+			this.exportGenericXLSX(headers, rows, 'รายละเอียดการนับ');
+		}
+	}
 
-    exportGenericXLSX(headers, rows, type) {
-        if (typeof XLSX === 'undefined') {
-            this.showToast('❌ ไม่พบ Excel library', 'error');
-            return;
-        }
-        const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, type);
-        XLSX.writeFile(wb, `${type}_${Date.now()}.xlsx`);
-        this.showToast('✅ ดาวน์โหลด Excel สำเร็จ', 'success');
-    }
+	exportGenericCSV(headers, rows, type) {
+		const branchName = this.branches.find(b => b.id === this.branchId)?.name || this.branchId;
+		const reportDate = new Date().toLocaleString('th-TH');
+		const reportTitle = String(type || 'report').replace(/_/g, ' ');
+
+		let csv = '\uFEFF';
+		csv += `"📊 MediStock v5.3.1 — ${this.v5UserName || '-'}"\n`;
+		csv += `"รายงาน: ${reportTitle}"\n`;
+		csv += `"สาขา: ${branchName} | วันที่: ${reportDate}"\n`;
+		csv += '\n';
+
+		// ⭐ [FIX] แสดงสรุปทุกครั้ง
+		const summaryRows = this.getReportSummaryForExport();
+		summaryRows.forEach(r => {
+			csv += r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',') + '\n';
+		});
+
+		csv += headers.map(h => `"${String(h).replace(/"/g, '""')}"`).join(',') + '\n';
+		rows.forEach(row => {
+			csv += row.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',') + '\n';
+		});
+
+		const filename = this.buildExportFilename(type, 'csv');
+		this.download(new Blob([csv], { type: 'text/csv;charset=utf-8' }), filename);
+		this.showToast('✅ ดาวน์โหลด CSV สำเร็จ', 'success');
+	}
+
+	exportGenericXLSX(headers, rows, type) {
+		if (typeof XLSX === 'undefined') {
+			this.showToast('❌ ไม่พบ Excel library', 'error');
+			return;
+		}
+		const branchName = this.branches.find(b => b.id === this.branchId)?.name || this.branchId;
+		const reportDate = new Date().toLocaleString('th-TH');
+		const reportTitle = (type || 'report').replace(/_/g, ' ');
+
+		// ⭐ [ใหม่] สรุปรายงาน + Header
+		const headerRows = [
+			['📊 MediStock v5.3.1 — ' + (this.v5UserName || '-')],
+			['รายงาน: ' + reportTitle],
+			['สาขา: ' + branchName + ' | วันที่: ' + reportDate],
+			[]
+		];
+		// ⭐ เพิ่มบล็อกสรุป (เฉพาะรายงานที่ต้องการ)
+		// ⭐ [FIX] แสดงสรุปทุกครั้ง
+		const summaryRows = this.getReportSummaryForExport();
+
+		const allRows = [...headerRows, ...summaryRows, headers, ...rows];
+		const ws = XLSX.utils.aoa_to_sheet(allRows);
+
+		// จัดความกว้างคอลัมน์
+		ws['!cols'] = headers.map(h => ({ wch: Math.min(40, Math.max(12, String(h).length + 4)) }));
+
+		const wb = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, type.slice(0, 31).replace(/[\\\/\?\*\[\]:]/g, '_'));
+		const filename = this.buildExportFilename(type, 'xlsx');
+		XLSX.writeFile(wb, filename);
+		this.showToast('✅ ดาวน์โหลด Excel สำเร็จ', 'success');
+	}
 
     exportGenericPDF(headers, rows, type) {
-        // ⭐ v5.3.1 FIX (ข้อ 5 + 7): ใช้ HTML Print + iframe แทน jsPDF
-        // - ฟอนต์ไทยแสดงถูกต้อง 100%
-        // - ทำงานบนมือถือได้ (ไม่ใช้ window.open)
         const esc = escapeHtml;
-        const safeType = String(type || 'report').replace(/[^a-zA-Z0-9_-]/g, '_');
-        const title = `MediStock v5.3.1 — ${safeType}`;
+        const title = `MediStock v5.3.1 — รายงาน: ${type}`;
 
         const tableRows = rows.map(r =>
             '<tr>' + r.map(c => `<td>${esc(String(c ?? ''))}</td>`).join('') + '</tr>'
         ).join('');
 
+        // ⭐ เลือกสีตามประเภทรายงาน
+        let tableClass = 'tbl-overview';
+        if (/ผลต่าง|ขาด|เกิน|diff/i.test(type)) tableClass = 'tbl-diff';
+        else if (/ทุน|ขาย|finance|มูลค่า/i.test(type)) tableClass = 'tbl-finance';
+        else if (/ตู้|ชั้น|รายละเอียด|detail/i.test(type)) tableClass = 'tbl-detail';
+
         const html = `<!doctype html><html lang="th"><head><meta charset="utf-8">
             <title>${esc(title)}</title>
             <style>
-                body{font-family:'Sarabun','Tahoma',Arial,sans-serif;margin:14px;color:#111}
-                h1{color:#0ea5e9;font-size:16px;margin:0 0 6px}
-                .meta{font-size:11px;color:#64748b;margin-bottom:10px}
-                table{border-collapse:collapse;width:100%;font-size:9px}
-                th,td{border:1px solid #bbb;padding:4px;vertical-align:top;word-break:break-word}
-                th{background:#e0f2fe;color:#0369a1;font-weight:700}
-                tr:nth-child(even) td{background:#f8fafc}
+                body{font-family:'Sarabun','TH Sarabun New','Tahoma',Arial,sans-serif;margin:14px;color:#0f172a;font-size:15px;font-weight:500;line-height:1.6}
+                h1{color:#0369a1;font-size:22px;margin:0 0 10px;font-weight:800;border-bottom:3px solid #0ea5e9;padding-bottom:6px}
+                .meta{font-size:13px;color:#64748b;margin-bottom:12px;padding:8px 12px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:8px;font-weight:500}
+                table{border-collapse:collapse;width:100%;font-size:13px;border:2px solid #cbd5e1;border-radius:4px;overflow:hidden}
+                th,td{border:1px solid #cbd5e1;padding:8px 10px;vertical-align:top;text-align:left;line-height:1.5}
+                th{font-weight:800;font-size:14px;white-space:nowrap;text-align:center;letter-spacing:0.3px}
+                .tbl-overview th{background:#0ea5e9!important;color:#fff!important}
+                .tbl-overview td{background:#f0f9ff}
+                .tbl-overview tr:nth-child(even) td{background:#e0f2fe}
+                .tbl-diff th{background:#10b981!important;color:#fff!important}
+                .tbl-diff td{background:#f0fdf4}
+                .tbl-diff tr:nth-child(even) td{background:#dcfce7}
+                .tbl-finance th{background:#6366f1!important;color:#fff!important}
+                .tbl-finance td{background:#eef2ff}
+                .tbl-finance tr:nth-child(even) td{background:#e0e7ff}
+                .tbl-detail th{background:#f59e0b!important;color:#fff!important}
+                .tbl-detail td{background:#fffbeb}
+                .tbl-detail tr:nth-child(even) td{background:#fef3c7}
                 @media print {
                     .no-print { display: none !important }
-                    body{margin:6mm}
+                    body{margin:6mm;font-size:13px}
                 }
             </style></head><body>
-            <button class="no-print" onclick="window.print()" style="padding:10px 20px;background:#0ea5e9;color:#fff;border:none;border-radius:6px;font-weight:700;cursor:pointer;font-size:14px;margin-bottom:10px;">🖨️ พิมพ์ / Save as PDF</button>
+            <button class="no-print" onclick="window.print()" style="padding:12px 24px;background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;border:none;border-radius:8px;font-weight:800;cursor:pointer;font-size:15px;margin-bottom:14px;box-shadow:0 4px 12px rgba(14,165,233,0.3)">🖨️ พิมพ์ / Save as PDF</button>
             <h1>📊 ${esc(title)}</h1>
             <div class="meta">สร้างเมื่อ: ${esc(new Date().toLocaleString('th-TH'))} • สาขา: ${esc(this.branchId || '-')} • ผู้ใช้: ${esc(this.v5UserName || '-')}</div>
-            <table>
+            <table class="${tableClass}">
                 <thead><tr>${headers.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead>
                 <tbody>${tableRows}</tbody>
             </table>
             </body></html>`;
 
-        this.printViaIframe(html);
+        this.printViaIframe(html, this.buildExportFilename(type, 'pdf'));
     }
 
-    exportBarcodeMaster() {
-        const data = this.products.filter(p => p.primaryBarcode || (Array.isArray(p.barcodes) && p.barcodes.length > 0));
-        if (data.length === 0) {
-            this.showToast('⚠️ ไม่มีข้อมูล', 'warning');
-            return;
-        }
-        const headers = ['รหัส', 'ชื่อ', 'Lot', 'บาร์โค้ดหลัก', 'บาร์โค้ดทั้งหมด', 'ทุน', 'ขาย', 'หน่วย', 'ผู้จัดจำหน่าย'];
-        const rows = data.map(p => [
-            p.id, p.name,
-            p.lots && p.lots.length ? p.lots.map(l => l.lot).join(', ') : (p.lot || ''),
-            p.primaryBarcode || '',
-            (p.barcodes || []).join('; '),
-            p.costPerUnit || 0,
-            p.sellPrice1 || 0,
-            p.unit || '',
-            p.supplier || ''
-        ]);
-        this.exportGenericCSV(headers, rows, 'barcode_master');
-    }
 
     exportLocationReport() {
         const rows = this.getLocationDetailRows();
+        // ⭐ เปลี่ยน type เป็นภาษาไทย → exportGenericXLSX จะใส่ชื่อเรื่องให้อัตโนมัติ
         this.exportGenericXLSX(
             ['ประเภท', 'ตู้/ชั้น', 'บาร์โค้ด', 'สินค้า', 'LOT', 'ระบบ', 'นับ', 'ผลต่าง', 'ทุน', 'ขาย', 'หมดอายุ', 'ผู้ตรวจนับ', 'เวลา'],
             rows,
-            'location_detail'
+            'รายงานรายละเอียดตสินค้าของตู้และชั้นวาง'   // ← ภาษาไทย
         );
     }
 
@@ -8795,9 +9513,12 @@ title="ลบ">
             this.showToast('⚠️ ไม่มีประวัติ', 'warning');
             return;
         }
-        const headers = ['วันที่', 'บาร์โค้ด', 'ชื่อ', 'Lot', 'ระบบ', 'นับ', 'ต่าง', 'ทุน', 'ขาย', 'หมายเหตุ'];
+        // ⭐ v5.3.1 Patch 5B-13 + ปัญหา A: ผู้นับ + Session + XLSX (กัน Excel แสดง 8.85E+12)
+        const headers = ['วันที่', 'ผู้นับ', 'Session', 'บาร์โค้ด', 'ชื่อ', 'Lot', 'ระบบ', 'นับ', 'ต่าง', 'ทุน', 'ขาย', 'หมายเหตุ'];
         const rows = this.history.map(item => [
-            new Date(item.timestamp).toLocaleString(),
+            new Date(item.timestamp).toLocaleString('th-TH'),
+            item.userName || '(ไม่ระบุ)',
+            (item.sessionId || '').slice(-12),
             item.barcode || '',
             item.name,
             item.lotName || item.lot || '',
@@ -8808,26 +9529,61 @@ title="ลบ">
             item.sellPrice,
             item.note || ''
         ]);
-        this.exportGenericCSV(headers, rows, 'history');
-    }
 
-    exportUncountedItems() {
-        const uncounted = this.getUncountedReportRows();
-        if (uncounted.length === 0) {
-            this.showToast('✅ นับครบทุกชิ้นแล้ว!', 'success');
+        // ⭐ ปัญหา A: ใช้ XLSX แทน CSV + บังคับบาร์โค้ดเป็น text
+        if (typeof XLSX === 'undefined') {
+            // Fallback: ถ้า XLSX ไม่โหลด → ใช้ CSV (แต่อาจมีปัญหาบาร์โค้ด 8.85E+12)
+            this.exportGenericCSV(headers, rows, 'history');
             return;
         }
-        const headers = ['รหัสสินค้า', 'บาร์โค้ด', 'ชื่อสินค้า', 'Lot', 'จำนวน', 'ทุน/หน่วย', 'ขาย/หน่วย', 'มูลค่ารวม', 'หมดอายุ', 'ผู้จัดจำหน่าย'];
-        const rows = uncounted.map(r => [
-            r.id, r.primaryBarcode, r.name, r.lot, r.stock, r.cost, r.sell,
-            (r.stock * r.cost).toFixed(2),
-            r.expiry || '',
-            r.supplier || ''
-        ]);
-        this.exportGenericCSV(headers, rows, 'uncounted_items');
-        this.exportGenericXLSX(headers, rows, 'uncounted_items');
-        this.showToast(`✅ ส่งออก ${uncounted.length} รายการ`, 'success');
+
+        // ⭐ Header: ประวัตินับ
+        const branchNameH = this.branches.find(b => b.id === this.branchId)?.name || this.branchId;
+        const reportDateH = new Date().toLocaleString('th-TH');
+        const headerRowsH = [
+            ['📊 MediStock v5.3.1 — ' + (this.v5UserName || '-')],
+            ['รายงานประวัติการนับสินค้า'],
+            ['สาขา: ' + branchNameH + ' | วันที่: ' + reportDateH],
+            []
+        ];
+        const ws = XLSX.utils.aoa_to_sheet([...headerRowsH, headers, ...rows]);
+
+        // ⭐ บังคับคอลัมน์ "บาร์โค้ด" (index 3) เป็น text type
+        for (let r = 1; r <= rows.length; r++) {
+            const cellRef = XLSX.utils.encode_cell({ r, c: 3 });  // c=3 = บาร์โค้ด
+            if (ws[cellRef]) {
+                ws[cellRef].t = 's';   // 's' = string (บังคับให้ Excel ไม่ auto-convert)
+                ws[cellRef].v = String(ws[cellRef].v || '');
+                ws[cellRef].z = '@';   // format = text
+            }
+        }
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'History');
+        const filename = this.buildExportFilename('ประวัติการนับ', 'xlsx');
+        XLSX.writeFile(wb, filename);
+        this.showToast('✅ ส่งออกประวัติเป็น Excel แล้ว (บาร์โค้ดเป็น Text)', 'success');
     }
+
+	exportUncountedItems() {
+		const uncounted = this.getUncountedReportRows();
+		if (uncounted.length === 0) {
+			this.showToast('✅ นับครบทุกชิ้นแล้ว!', 'success');
+			return;
+		}
+		// ⭐ [ข้อ 7] เพิ่มคอลัมน์ "อายุ" ก่อนผู้จัดจำหน่าย
+		const headers = ['รหัสสินค้า', 'บาร์โค้ด', 'ชื่อสินค้า', 'Lot', 'จำนวน', 'ทุน/หน่วย', 'ขาย/หน่วย', 'มูลค่ารวม', 'หมดอายุ', 'อายุ', 'ผู้จัดจำหน่าย'];
+		const rows = uncounted.map(r => [
+			r.id, r.primaryBarcode, r.name, r.lot, r.stock, r.cost, r.sell,
+			(r.stock * r.cost).toFixed(2),
+			r.expiry || '',
+			(r.age !== null && r.age !== undefined && r.age > 0) ? r.age.toFixed(1) : '-',   // ⭐ Age
+			r.supplier || ''
+		]);
+		this.exportGenericXLSX(headers, rows, 'รายงานสินค้าที่ยังไม่ได้นับ');
+		this.exportGenericCSV(headers, rows, 'รายงานสินค้าที่ยังไม่ได้นับ');
+		this.showToast(`✅ ส่งออก ${uncounted.length} รายการ`, 'success');
+	}
 
     exportZeroStock() {
         const zeroStock = this.getZeroStockRows();
@@ -8835,9 +9591,30 @@ title="ลบ">
             this.showToast('✅ ไม่มีสินค้าสต็อก 0', 'success');
             return;
         }
-        const headers = ['รหัส', 'ชื่อ', 'Lot', 'หน่วย', 'ผู้จัดจำหน่าย'];
-        const rows = zeroStock.map(r => [r.id, r.name, r.lot, r.unit, r.supplier]);
-        this.exportGenericCSV(headers, rows, 'zero_stock');
+        // ⭐ v5.3.1 Patch: เปลี่ยนเป็น XLSX + Header + ตัด Lot + supplier
+        const headers = ['รหัส', 'ชื่อ', 'ทุน', 'ขาย', 'หน่วย'];
+        const rows = zeroStock.map(r => [r.id, r.name, r.cost, r.sell, r.unit]);
+
+        if (typeof XLSX === 'undefined') {
+            this.exportGenericCSV(headers, rows, 'zero_stock');
+            return;
+        }
+
+        const branchName = this.branches.find(b => b.id === this.branchId)?.name || this.branchId;
+        const reportDate = new Date().toLocaleString('th-TH');
+        const headerRows = [
+            ['📊 MediStock v5.3.1 — ' + (this.v5UserName || '-')],
+            ['รายงานสินค้าสต็อก 0'],
+            ['สาขา: ' + branchName + ' | วันที่: ' + reportDate],
+            []
+        ];
+
+        const ws = XLSX.utils.aoa_to_sheet([...headerRows, headers, ...rows]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'สต็อก 0');
+        const filename = this.buildExportFilename('สต็อก-0', 'xlsx');
+        XLSX.writeFile(wb, filename);
+        this.showToast(`✅ ส่งออก ${zeroStock.length} รายการ (Excel)`, 'success');
     }
 
     exportExpiryReport() {
@@ -8852,7 +9629,8 @@ title="ลบ">
             (r.stock * r.cost).toFixed(2),
             (r.stock * r.sell).toFixed(2)
         ]);
-        this.exportGenericXLSX(headers, rows, 'expiry_report');
+        // ⭐ 3.6: เปลี่ยนเป็นภาษาไทย
+        this.exportGenericXLSX(headers, rows, 'รายงานสินค้าใกล้หมดอายุ');
     }
 
     // ================================================================
@@ -9256,11 +10034,30 @@ ${expiryDisplay}</td></tr>`;
             if (p.lots && p.lots.length > 0) return p.lots.every(l => (l.stock || 0) === 0);
             return (p.stock || 0) === 0;
         });
-        const expiring = this.products.filter(p => {
-            if (!p.expiryDate) return false;
-            const diff = this.diffDaysFromToday(p.expiryDate);
-            return diff !== null && diff >= 0 && diff <= CONFIG.EXPIRY_WARNING_DAYS;
+        
+        // ⭐ Bug Fix: ตรวจทั้ง product.expiryDate + lots[].expiry
+        const expiring = [];
+        const today = this.v52TodayKey();
+        this.products.forEach(p => {
+            // ตรวจ product-level
+            if (p.expiryDate) {
+                const diff = this.diffDaysFromToday(p.expiryDate);
+                if (diff !== null && diff >= 0 && diff <= CONFIG.EXPIRY_WARNING_DAYS) {
+                    expiring.push(p);
+                    return;  // อย่านับซ้ำ
+                }
+            }
+            // ตรวจ lot-level
+            if (Array.isArray(p.lots) && p.lots.length > 0) {
+                const hasExpiringLot = p.lots.some(l => {
+                    if (!l.expiry || (l.stock || 0) <= 0) return false;
+                    const diff = this.diffDaysFromToday(l.expiry);
+                    return diff !== null && diff >= 0 && diff <= CONFIG.EXPIRY_WARNING_DAYS;
+                });
+                if (hasExpiringLot) expiring.push(p);
+            }
         });
+        
         const zc = document.getElementById('zeroStockCount');
         const ec = document.getElementById('expiryCount');
         if (zc) zc.textContent = zeroStock.length;
@@ -10021,7 +10818,11 @@ valueInputOption=USER_ENTERED&key=${config.apiKey}`;
     showMapping() {
         const div = document.getElementById('mappingFields');
         if (!div) return;
-        const fields = [
+
+        // ⭐ 5B-17: ใช้ลำดับที่บันทึกไว้ (ถ้ามี)
+        const savedOrder = JSON.parse(localStorage.getItem('mappingOrder_v531') || 'null');
+
+        const defaultFields = [
             { key: 'code', label: '🏷️ รหัสสินค้า' },
             { key: 'name', label: '📦 ชื่อสินค้า' },
             { key: 'lot', label: '🔖 Lot' },
@@ -10036,30 +10837,133 @@ valueInputOption=USER_ENTERED&key=${config.apiKey}`;
             { key: 'maxStock', label: '📈 Max' },
             { key: 'barcode', label: '📱 บาร์โค้ด' }
         ];
-        div.innerHTML = fields.map(f => `<div style="display:flex;flex-direction:column;gap:2px;">
-            <label style="font-size:12px;font-weight:600;">${f.label}</label>
+
+        // เรียงตาม savedOrder (ถ้ามี)
+        let fields = defaultFields;
+        if (Array.isArray(savedOrder) && savedOrder.length > 0) {
+            fields = savedOrder
+                .map(key => defaultFields.find(f => f.key === key))
+                .filter(Boolean);
+            // เพิ่ม field ที่หายไป
+            defaultFields.forEach(f => {
+                if (!fields.find(x => x.key === f.key)) fields.push(f);
+            });
+        }
+
+        div.innerHTML = fields.map((f, idx) => `<div style="display:flex;flex-direction:column;gap:2px;position:relative;" data-field-key="${f.key}">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <label style="font-size:12px;font-weight:600;">${f.label}</label>
+                <div style="display:flex;gap:2px;">
+                    <button class="btn btn-outline btn-sm" onclick="app.moveMappingField(${idx}, -1)" style="font-size:10px;padding:2px 6px;min-height:22px;" ${idx === 0 ? 'disabled' : ''} title="เลื่อนขึ้น">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="app.moveMappingField(${idx}, 1)" style="font-size:10px;padding:2px 6px;min-height:22px;" ${idx === fields.length - 1 ? 'disabled' : ''} title="เลื่อนลง">
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                </div>
+            </div>
             <select class="input" id="map_${f.key}" style="font-size:13px;padding:6px 8px;min-height:38px;">
                 <option value="">-- เลือกคอลัมน์ --</option>
                 ${this.pendingHeaders.map(h => `<option value="${escapeHtml(h)}">${escapeHtml(h)}</option>`).join('')}
             </select>
         </div>`).join('');
+
+        // Restore ค่าที่เลือกไว้
+        setTimeout(() => this.restoreMappingValues(), 0);
+    }
+
+    // ⭐ 5B-17: เลื่อน field ใน mapping
+    moveMappingField(idx, direction) {
+        const fields = Array.from(document.querySelectorAll('#mappingFields > div[data-field-key]'));
+        const target = fields[idx + direction];
+        const current = fields[idx];
+        if (!target || !current) return;
+
+        // สลับ DOM
+        if (direction === -1) {
+            target.parentNode.insertBefore(current, target);
+        } else {
+            target.parentNode.insertBefore(target, current);
+        }
+
+        // บันทึกลำดับใหม่
+        this.saveMappingOrder();
+    }
+
+    // ⭐ 5B-17: บันทึกลำดับ mapping
+    saveMappingOrder() {
+        const keys = Array.from(document.querySelectorAll('#mappingFields > div[data-field-key]'))
+            .map(el => el.dataset.fieldKey);
+        localStorage.setItem('mappingOrder_v531', JSON.stringify(keys));
+    }
+
+    // ⭐ 5B-17: รีเซ็ตลำดับ
+    resetMappingOrder() {
+        if (!confirm('🔄 รีเซ็ตลำดับคอลัมน์กลับเป็นค่าเริ่มต้น?')) return;
+        localStorage.removeItem('mappingOrder_v531');
+        this.showMapping();
+        this.showToast('✅ รีเซ็ตลำดับแล้ว', 'success');
+    }
+
+    // ⭐ 5B-17: Restore ค่าที่เลือกไว้ (หลัง move)
+    restoreMappingValues() {
+        const saved = JSON.parse(localStorage.getItem('mappingValues_v531') || '{}');
+        Object.entries(saved).forEach(([key, value]) => {
+            const select = document.getElementById('map_' + key);
+            if (select && value) select.value = value;
+        });
     }
 
     async confirmMapping() {
+        // ⭐ ชั้น 2: Import Lock — ป้องกันกดซ้ำ
+        if (this._isImporting) {
+            this.showToast('⏳ กำลังนำเข้าอยู่ — กรุณารอ', 'warning');
+            return;
+        }
+
         if (!this.pendingRows || this.pendingRows.length === 0) {
             this.showToast('⚠️ ไม่มีข้อมูล', 'warning');
             return;
         }
+
         const mapping = {};
         ['code', 'name', 'lot', 'mfgDate', 'expiryDate', 'sellPrice', 'costPerUnit', 'stock', 'unit', 'supplier', 'barcode', 'minStock', 'maxStock'].forEach(f => {
             mapping[f] = document.getElementById('map_' + f).value;
         });
+        localStorage.setItem('mappingValues_v531', JSON.stringify(mapping));
+
         if (!mapping.name) {
             this.showToast('⚠️ กรุณาเลือกคอลัมน์ "ชื่อสินค้า"', 'warning');
             return;
         }
 
+        // ⭐ ชั้น 1: Confirm Dialog — เตือนถ้ามีสินค้าซ้ำ
+        const idxFn = (row, key) => {
+            const col = mapping[key];
+            return col ? this.pendingHeaders.indexOf(col) : -1;
+        };
+        const existingCount = this.pendingRows.filter(row => {
+            const name = idxFn(row, 'name') >= 0 ? String(row[idxFn(row, 'name')] || '').trim() : '';
+            if (!name) return false;
+            return this.products.some(p => p.name === name);
+        }).length;
+
+        if (existingCount > 0) {
+            const proceed = confirm(
+                `⚠️ พบสินค้าซ้ำ ${existingCount} รายการ\n\n` +
+                `• ถ้าเป็น "อัปเดตข้อมูล" → กด OK (จำนวนจะถูกบวกเพิ่ม)\n` +
+                `• ถ้าเป็น "นำเข้าไฟล์เดิมซ้ำ" → กด Cancel\n\n` +
+                `💡 แนะนำ: ถ้าไม่แน่ใจ → Cancel → ล้างข้อมูลก่อน → นำเข้าใหม่\n\n` +
+                `ดำเนินการต่อหรือไม่?`
+            );
+            if (!proceed) {
+                this.showToast('ℹ️ ยกเลิกการนำเข้า', 'info');
+                return;
+            }
+        }
+
         const btn = document.getElementById('confirmMappingBtn');
+        this._isImporting = true;
         if (btn) {
             btn.disabled = true;
             btn.innerHTML = '<span class="loading-inline"></span> กำลังนำเข้า...';
@@ -10068,6 +10972,7 @@ valueInputOption=USER_ENTERED&key=${config.apiKey}`;
         let errorCount = 0,
             successCount = 0;
         this.showToast('📥 กำลังนำเข้าข้อมูล...', 'info');
+
         try {
             for (const row of this.pendingRows) {
                 const idx = (key) => {
@@ -10085,6 +10990,7 @@ valueInputOption=USER_ENTERED&key=${config.apiKey}`;
                 const expiry = idx('expiryDate') >= 0 ? this.normalizeDateValue(row[idx('expiryDate')]) : '';
                 const barcode = idx('barcode') >= 0 ? String(row[idx('barcode')] || '').trim() : '';
                 const supplier = idx('supplier') >= 0 ? this.normalizeSupplierValue(row[idx('supplier')]) : '';
+
                 if (!name) {
                     errorCount++;
                     continue;
@@ -10152,6 +11058,7 @@ valueInputOption=USER_ENTERED&key=${config.apiKey}`;
                     successCount++;
                 }
             }
+
             document.getElementById('mappingCard').style.display = 'none';
             await this.loadProducts();
             this.updateProgress();
@@ -10164,6 +11071,7 @@ valueInputOption=USER_ENTERED&key=${config.apiKey}`;
         } catch (err) {
             this.showToast('❌ นำเข้าไม่สำเร็จ: ' + err.message, 'error');
         } finally {
+            this._isImporting = false;
             if (btn) {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-check"></i> ยืนยันและนำเข้าข้อมูล';
@@ -10248,6 +11156,29 @@ valueInputOption=USER_ENTERED&key=${config.apiKey}`;
         document.getElementById('qrCodeModal')?.classList.remove('show');
         this._qrProduct = null;
     }
+	
+// ═══════════════════════════════════════════════════════════════
+// [v5.3.1 FINAL] Export Format Modal — Helper Functions
+// ═══════════════════════════════════════════════════════════════
+exportDataWithFormat(format) {
+    document.getElementById('exportFormatModal').classList.remove('show');
+    this.exportData(format);
+}
+
+closeExportFormatModal() {
+    document.getElementById('exportFormatModal').classList.remove('show');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// [v5.3.1 FIX] syncProductStock — บังคับ product.stock = sum(lots)
+// ═══════════════════════════════════════════════════════════════
+syncProductStock(product) {
+    if (!product) return 0;
+    if (Array.isArray(product.lots) && product.lots.length > 0) {
+        product.stock = product.lots.reduce((s, l) => s + (Number(l.stock) || 0), 0);
+    }
+    return product.stock || 0;
+}
 
 } // ============ END OF StockApp CLASS ============
 
