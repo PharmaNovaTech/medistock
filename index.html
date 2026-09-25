@@ -1950,6 +1950,26 @@
         font-size: 18px;
     }
 }		
+/* ⭐ PHASE 2: Mapping grid 2 คอลัมน์ */
+#mappingFields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+@media (max-width: 480px) {
+    #mappingFields {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    #mappingFields label {
+        font-size: 11px !important;
+    }
+    #mappingFields select {
+        font-size: 12px !important;
+        padding: 6px 8px !important;
+        min-height: 36px !important;
+    }
+}
     </style>
 </head>
 <body>
@@ -2052,8 +2072,30 @@ infinite;"></div>
          PAGE: IMPORT (นำเข้า)
          ================================================================ -->
     <div class="page active" id="page-import">
-        <div class="card">
-            <div class="card-title"><i class="fas fa-file-import"></i> นำเข้าข้อมูลสินค้า</div>
+		<div class="card">
+			<div class="card-title"><i class="fas fa-file-import"></i> นำเข้าข้อมูลสินค้า</div>
+			
+			<!-- ⭐ PHASE 2: ปุ่มดาวน์โหลด Template -->
+			<button class="btn btn-success btn-block" onclick="app.downloadImportTemplate()" 
+					style="background:#10b981;color:#fff;font-size:14px;padding:12px;min-height:48px;margin-bottom:10px;">
+				<i class="fas fa-file-download"></i> 📥 ดาวน์โหลด Template Excel (ฟรี)
+			</button>
+			
+			<!-- ⭐ PHASE 3: Quick Tips 3 ข้อ -->
+			<div style="background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border:2px solid #f59e0b;border-radius:12px;padding:12px;margin-bottom:10px;">
+				<div style="font-size:13px;font-weight:700;color:#92400e;margin-bottom:6px;">
+					💡 เคล็ดลับ 3 ข้อ (อ่านก่อนกรอก)
+				</div>
+				<div style="font-size:12px;color:#78350f;line-height:1.8;">
+					1️⃣ ใช้หน่วยเล็กสุด (เม็ด/ชิ้น) — ไม่ใช้ "กล่อง"<br>
+					2️⃣ LOT ห้ามว่าง → ใส่ <strong>N/A</strong> แทน<br>
+					3️⃣ วันผลิต + วันหมดอายุ → ต้องมี ไม่งั้นไม่เตือนของหมดอายุ
+				</div>
+				<button class="btn btn-outline btn-sm" onclick="app.showImportGuide()" 
+						style="margin-top:8px;font-size:12px;padding:6px 14px;min-height:34px;border-color:#92400e;color:#92400e;">
+					<i class="fas fa-book-open"></i> 📖 อ่านเพิ่มเติม
+				</button>
+			</div>
             <!-- ⭐ v5.3.1 Patch 5B-6: Append info (คลิกดูรายละเอียด) -->
             <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;padding:4px 10px;background:var(--bg-body);border-radius:var(--radius-sm);cursor:pointer;" 
                  onclick="alert('📥 โหมด Append (เพิ่มต่อ ไม่ทับ)\\n\\n✅ มีสินค้าอยู่แล้ว → เพิ่ม LOT ใหม่\\n✅ ไม่มีสินค้า → สร้างสินค้าใหม่\\n✅ ราคา/หน่วย → เก็บตามไฟล์ ไม่แปลง\\n\\n💡 อัปโหลดซ้ำได้ปลอดภัย ไม่ทับข้อมูลเดิม')">
@@ -2086,16 +2128,17 @@ width:100px;font-size:13px;padding:8px 12px;min-height:42px;">
         <!-- Mapping Card (⭐ 5B-17: + Reorder) -->
         <div class="card" id="mappingCard" style="display:none;">
             <div class="card-title"><i class="fas fa-cog"></i> กำหนดคอลัมน์</div>
-            <div style="font-size:11px;color:var(--text-muted);padding:6px 10px;background:var(--bg-body);border-radius:var(--radius-sm);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
-                <span><i class="fas fa-info-circle"></i> ลากหรือกดปุ่ม ↑↓ เพื่อเรียงลำดับ</span>
-                <button class="btn btn-outline btn-sm" onclick="app.resetMappingOrder()" style="font-size:10px;padding:2px 8px;min-height:26px;">
-                    <i class="fas fa-redo"></i> รีเซ็ต
-                </button>
-            </div>
+			<div style="font-size:12px;color:#0369a1;padding:8px 12px;background:#f0f9ff;border-left:4px solid #0ea5e9;border-radius:6px;margin-bottom:10px;">
+				<i class="fas fa-info-circle"></i> 
+				ช่องที่มี <span style="color:#ef4444;font-weight:800;">*</span> จำเป็นต้องกรอก 
+				(ช่องสีแดง) — ถ้าไม่ครบจะกดยืนยันไม่ได้
+			</div>
             <div class="mapping-grid" id="mappingFields"></div>
-            <button class="btn btn-primary btn-block" id="confirmMappingBtn" onclick="confirmMapping()" style="margin-top:8px;font-size:14px;padding:12px;">
-                <i class="fas fa-check"></i> ยืนยันและนำเข้าข้อมูล
-            </button>
+				<button class="btn btn-primary btn-block" id="confirmMappingBtn" onclick="confirmMapping()" 
+						disabled
+						style="margin-top:8px;font-size:14px;padding:12px;background:#94a3b8;cursor:not-allowed;">
+					<i class="fas fa-check"></i> ยืนยันและนำเข้าข้อมูล
+				</button>
         </div>
 
         <!-- Preview Card -->
@@ -2823,6 +2866,48 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
 				<div class="card-title" style="color:var(--info);font-size:14px;">
 					<i class="fas fa-sync-alt"></i> PWA / แคช
 				</div>
+
+			<!-- ⭐ [PLAN-B 5f] ประวัติการแก้ไข -->
+			<div class="card" style="border:2px solid var(--warning);">
+				<div class="card-title" style="color:#92400e;font-size:14px;">
+					<i class="fas fa-history"></i> ประวัติการแก้ไข
+				</div>
+				<p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">
+					ดู Log ทุกการเปลี่ยนแปลงข้อมูล
+				</p>
+				<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+					<select id="logFilterType" class="input" style="font-size:12px;padding:6px;min-height:36px;" onchange="app.renderChangeLog()">
+						<option value="">📋 ทั้งหมด</option>
+						<option value="edit_product">✏️ แก้ไขสินค้า</option>
+						<option value="delete_item">🗑️ ลบรายการนับ</option>
+						<option value="clear_session">🧹 ล้าง Session</option>
+					</select>
+					<select id="logFilterUser" class="input" style="font-size:12px;padding:6px;min-height:36px;" onchange="app.renderChangeLog()">
+						<option value="">👤 ผู้ใช้ทั้งหมด</option>
+					</select>
+				</div>
+				<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+					<div>
+						<label style="font-size:10px;color:var(--text-muted);font-weight:600;">📅 จากวันที่</label>
+						<input type="date" id="logFilterFrom" class="input" style="font-size:12px;padding:6px;min-height:36px;" onchange="app.renderChangeLog()">
+					</div>
+					<div>
+						<label style="font-size:10px;color:var(--text-muted);font-weight:600;">📅 ถึงวันที่</label>
+						<input type="date" id="logFilterTo" class="input" style="font-size:12px;padding:6px;min-height:36px;" onchange="app.renderChangeLog()">
+					</div>
+				</div>
+				<div id="changeLogList" style="max-height:300px;overflow-y:auto;font-size:12px;border:1px solid var(--border-color);border-radius:8px;padding:6px;background:var(--bg-body);">
+					<div style="text-align:center;color:var(--text-muted);padding:12px;">กำลังโหลด...</div>
+				</div>
+				<div style="display:flex;gap:6px;margin-top:8px;">
+					<button class="btn btn-primary btn-sm" onclick="app.exportChangeLogs()" style="flex:1;font-size:12px;padding:6px;min-height:34px;">
+						<i class="fas fa-file-excel"></i> Export Excel
+					</button>
+					<button class="btn btn-outline btn-sm" onclick="app.renderChangeLog()" style="flex:1;font-size:12px;padding:6px;min-height:34px;">
+						<i class="fas fa-sync"></i> รีเฟรช
+					</button>
+				</div>
+			</div>
 				
         <div class="card" style="border:2px solid var(--info);">
             <div class="card-title" style="color:var(--info);font-size:14px;">
@@ -2882,19 +2967,37 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
         </div>
 
         <!-- Units -->
-        <div class="card">
-            <div class="card-title"><i class="fas fa-weight-scale"></i> จัดการหน่วยนับ</div>
-            <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
-                <input type="text" class="input" id="newUnitName" placeholder="ชื่อหน่วย" style="flex:1;font-size:13px;padding:8px 12px;min-height:38px;">
-                <input type="number" class="input" id="newUnitFactor" placeholder="เท่ากับกี่ชิ้น" style="flex:1;font-size:13px;padding:8px 12px;min-height:38px;" value="12">
-                <button class="btn btn-primary" onclick="addUnit()" style="font-size:13px;padding:8px 14px;min-height:38px;">
-                    <i class="fas fa-plus"></i> เพิ่ม
-                </button>
-            </div>
-            <div id="unitList">
-                <p style="color:var(--text-muted);text-align:center;padding:8px;font-size:13px;">ยังไม่มีหน่วย</p>
-            </div>
-        </div>
+<!-- ⭐ PHASE 4: Master Unit Table -->
+		<div class="card" style="border:2px solid var(--primary);">
+			<div class="card-title" style="color:var(--primary);">
+				<i class="fas fa-weight-scale"></i> 🎯 Master Unit Table (Admin)
+			</div>
+			<p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">
+				ตั้งค่าแปลงหน่วย: "1 กล่อง = 100 เม็ด" → ระบบจะแปลงอัตโนมัติตอน Import
+			</p>
+			
+			<div id="masterUnitList" style="max-height:300px;overflow-y:auto;margin-bottom:10px;"></div>
+			
+			<div style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:10px;padding:10px;">
+				<div style="font-size:13px;font-weight:700;color:#0369a1;margin-bottom:8px;">➕ เพิ่มหน่วยใหม่</div>
+				<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+					<div>
+						<label style="font-size:11px;font-weight:600;">ชื่อหน่วย</label>
+						<input type="text" class="input" id="newUnitName" placeholder="เช่น กล่อง" 
+							   style="font-size:13px;padding:8px;min-height:38px;background:#fff;">
+					</div>
+					<div>
+						<label style="font-size:11px;font-weight:600;">เท่ากับกี่ชิ้น</label>
+						<input type="number" class="input" id="newUnitFactor" placeholder="เช่น 100" value="12"
+							   style="font-size:13px;padding:8px;min-height:38px;background:#fff;">
+					</div>
+				</div>
+				<button class="btn btn-primary btn-block" onclick="addUnit()" 
+						style="font-size:13px;padding:10px;min-height:42px;">
+					<i class="fas fa-plus"></i> เพิ่มหน่วย
+				</button>
+			</div>
+		</div>
 
         <!-- Google Sheets -->
         <div class="card" style="border:2px solid #4285F4;background:#f8f9fa;">
@@ -2947,6 +3050,79 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
 <!-- ================================================================
      MODALS & OVERLAYS
      ================================================================ -->
+
+<!-- ⭐ PHASE 3: Import Guide Modal -->
+<div class="modal-overlay" id="importGuideModal">
+    <div class="modal" style="max-width:520px;">
+        <div class="modal-handle"></div>
+        <div class="modal-title"><i class="fas fa-book-open"></i> 📖 คู่มือการกรอกข้อมูลนำเข้า</div>
+        
+        <div style="max-height:60vh;overflow-y:auto;padding:4px;">
+            <!-- หัวข้อ 1 -->
+            <div style="background:#f0f9ff;border-left:4px solid #0ea5e9;padding:10px 12px;border-radius:8px;margin-bottom:8px;">
+                <div style="font-weight:700;font-size:14px;color:#0369a1;margin-bottom:4px;">1️⃣ หน่วยนับ</div>
+                <div style="font-size:12px;line-height:1.7;color:#0f172a;">
+                    ❌ ผิด: "1 กล่อง" (100 เม็ด)<br>
+                    ✅ ถูก: "100 เม็ด" (แยกเป็นหน่วยเล็กสุด)
+                </div>
+            </div>
+            
+            <!-- หัวข้อ 2 -->
+            <div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:10px 12px;border-radius:8px;margin-bottom:8px;">
+                <div style="font-weight:700;font-size:14px;color:#92400e;margin-bottom:4px;">2️⃣ เลขที่ผลิต (LOT)</div>
+                <div style="font-size:12px;line-height:1.7;color:#0f172a;">
+                    ❌ ผิด: ปล่อยว่าง หรือใส่ "-"<br>
+                    ✅ ถูก: ใส่เลข LOT จริง หรือ <strong>"N/A"</strong> ถ้าไม่มี<br>
+                    💡 ระบบจะ auto-fix: LOT ว่าง → N/A
+                </div>
+            </div>
+            
+            <!-- หัวข้อ 3 -->
+            <div style="background:#d1fae5;border-left:4px solid #10b981;padding:10px 12px;border-radius:8px;margin-bottom:8px;">
+                <div style="font-weight:700;font-size:14px;color:#065f46;margin-bottom:4px;">3️⃣ วันที่ผลิต (MFG)</div>
+                <div style="font-size:12px;line-height:1.7;color:#0f172a;">
+                    ❌ ผิด: "ม.ค. 2567", "01/67"<br>
+                    ✅ ถูก: "2024-01-15" หรือ "15/01/2024"<br>
+                    💡 ไม่ใส่ก็ได้ แต่ระบบจะคำนวณอายุสินค้าไม่ได้
+                </div>
+            </div>
+            
+            <!-- หัวข้อ 4 -->
+            <div style="background:#fee2e2;border-left:4px solid #ef4444;padding:10px 12px;border-radius:8px;margin-bottom:8px;">
+                <div style="font-weight:700;font-size:14px;color:#991b1b;margin-bottom:4px;">4️⃣ วันหมดอายุ (EXP) * จำเป็น</div>
+                <div style="font-size:12px;line-height:1.7;color:#0f172a;">
+                    ❌ ผิด: ปล่อยว่าง → ระบบไม่เตือนของหมดอายุ<br>
+                    ✅ ถูก: "2026-12-31" หรือ "31/12/2026"<br>
+                    ⚠️ ถ้าไม่มีวันหมดอายุ → ใส่วันที่ไกลๆ (เช่น อีก 5 ปี)
+                </div>
+            </div>
+            
+            <!-- หัวข้อ 5 -->
+            <div style="background:#e0e7ff;border-left:4px solid #6366f1;padding:10px 12px;border-radius:8px;margin-bottom:8px;">
+                <div style="font-weight:700;font-size:14px;color:#4338ca;margin-bottom:4px;">5️⃣ ราคาทุน / ราคาขาย</div>
+                <div style="font-size:12px;line-height:1.7;color:#0f172a;">
+                    ❌ ผิด: "100 บาท", "100.-"<br>
+                    ✅ ถูก: "100" หรือ "100.50"<br>
+                    💡 ไม่ใส่ก็ได้ (ระบบใช้ 0)
+                </div>
+            </div>
+            
+            <!-- หัวข้อ 6 -->
+            <div style="background:#f1f5f9;border-left:4px solid #64748b;padding:10px 12px;border-radius:8px;">
+                <div style="font-weight:700;font-size:14px;color:#334155;margin-bottom:4px;">6️⃣ บาร์โค้ด / จำนวน</div>
+                <div style="font-size:12px;line-height:1.7;color:#0f172a;">
+                    บาร์โค้ด: ตัวเลข 8, 12, 13 หลัก<br>
+                    จำนวน: ตัวเลขเท่านั้น (ห้ามใส่ "ชิ้น")
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn btn-primary btn-block" onclick="app.closeImportGuide()" 
+                style="margin-top:12px;font-size:15px;padding:12px;min-height:48px;">
+            ✅ เข้าใจแล้ว
+        </button>
+    </div>
+</div>
 
 <!-- Update Banner -->
 <div class="update-banner" id="updateBanner">
@@ -3966,11 +4142,13 @@ normalizeLotValue(lotRaw) {
     // ⭐ 2) Excel/Google Sheets serial number → ทิ้ง
     // ตัวอย่าง: "31564.00046296296" หรือ "31564"
     // Excel serial 20000 = 1954-09-18, 90000 = 2146-05-16
-    const num = Number(s);
-    if (!isNaN(num) && num >= 20000 && num < 90000) {
-        console.warn('[FIX-2] LOT เป็น Excel serial → ทิ้ง:', s);
-        return '-';
-    }
+	// ⭐ [FIX-BUG] ลบเงื่อนไข Excel serial ออก — LOT เป็นตัวเลขได้ตามปกติ
+	// (ปัญหาคือ LOT จริงอย่าง 69163 ถูกกรองทิ้ง)
+	// const num = Number(s);
+	// if (!isNaN(num) && num >= 20000 && num < 90000) {
+	//     console.warn('[FIX-2] LOT เป็น Excel serial → ทิ้ง:', s);
+	//     return '-';
+	// }
 
     // 3) Date string จาก Google Sheets → ทิ้ง
     // ตัวอย่าง: "Mon Sep 22 2026 00:00:00 GMT+0700"
@@ -4767,10 +4945,11 @@ if (m) {
         }
         if (name === 'layout') this.renderMap();
         if (name === 'analytics') this.runAnalytics();
-        if (name === 'settings') {
-            this.renderUnitList();
-            this.v53RenderDedupStatus();
-        }
+		if (name === 'settings') {
+			this.renderUnitList();
+			this.v53RenderDedupStatus();
+			this.renderChangeLog();   // ⭐ [PLAN-B 5f]
+		}
     }
 
     updateScanBadge() {
@@ -5192,19 +5371,39 @@ if (m) {
         return this.convertUnit(value, unit, 'ชิ้น');
     }
 
-    renderUnitList() {
-        const container = document.getElementById('unitList');
-        if (!container) return;
-        const units = Object.keys(this.unitMap);
-        if (units.length === 0) {
-            container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:8px;font-size:13px;">ยังไม่มีหน่วย</p>';
-            return;
-        }
-        container.innerHTML = units.map(name => `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid var(--border-color);">
-            <span><strong>${escapeHtml(name)}</strong> = ${this.unitMap[name]} ชิ้น</span>
-            <button class="btn btn-danger btn-sm" onclick="app && app.deleteUnit('${escapeHtml(name)}')" style="font-size:10px;padding:2px 8px;min-height:28px;"><i class="fas fa-trash"></i></button>
-        </div>`).join('');
-    }
+	renderUnitList() {
+		const container = document.getElementById('masterUnitList');
+		if (!container) return;
+		
+		const units = Object.keys(this.unitMap);
+		if (units.length === 0) {
+			container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:12px;font-size:13px;">ยังไม่มีหน่วย</p>';
+			return;
+		}
+		
+		container.innerHTML = units.map(name => {
+			const factor = this.unitMap[name];
+			const isBase = name === 'ชิ้น';
+			const bgColor = isBase ? '#dcfce7' : '#ffffff';
+			const borderColor = isBase ? '#10b981' : '#e2e8f0';
+			
+			return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;margin-bottom:6px;background:${bgColor};border:2px solid ${borderColor};border-radius:8px;">
+				<div>
+					<div style="font-weight:700;font-size:13px;">
+						${isBase ? '🔒 ' : ''}${escapeHtml(name)}
+					</div>
+					<div style="font-size:11px;color:var(--text-muted);">
+						1 ${escapeHtml(name)} = ${factor} ชิ้น
+					</div>
+				</div>
+				${isBase ? '<span style="font-size:10px;color:#065f46;background:#d1fae5;padding:3px 8px;border-radius:6px;font-weight:600;">หน่วยฐาน</span>' 
+						 : `<button class="btn btn-danger btn-sm" onclick="app.deleteUnit('${escapeHtml(name)}')" 
+								  style="font-size:11px;padding:4px 10px;min-height:30px;">
+							  <i class="fas fa-trash"></i> ลบ
+						   </button>`}
+			</div>`;
+		}).join('');
+	}
 
     addUnit() {
         const name = document.getElementById('newUnitName').value.trim();
@@ -6652,15 +6851,20 @@ async closeFullscreenScanner() {
         document.getElementById('editProductModal').classList.add('show');
     }
 
-    async saveEditProductInfo() {
-        const id = document.getElementById('editProductId').value;
-        const product = this.products.find(p => p.id === id);
-        if (!product) return;
-        const newName = document.getElementById('editProductName').value.trim();
-        if (!newName) {
-            this.showToast('⚠️ กรุณาใส่ชื่อสินค้า', 'warning');
-            return;
-        }
+		async saveEditProductInfo() {
+			console.log('🔵 saveEditProductInfo called');
+			const id = document.getElementById('editProductId').value;
+			const product = this.products.find(p => p.id === id);
+			if (!product) return;
+			
+			// ⭐ [FIX] เก็บ snapshot เก่า ก่อนแก้ทุกอย่าง!
+			const oldProduct = JSON.parse(JSON.stringify(product));
+			
+			const newName = document.getElementById('editProductName').value.trim();
+			if (!newName) {
+				this.showToast('⚠️ กรุณาใส่ชื่อสินค้า', 'warning');
+				return;
+			}
 
         product.name = newName;
         product.primaryBarcode = document.getElementById('editProductBarcode').value.trim();
@@ -6682,6 +6886,35 @@ async closeFullscreenScanner() {
             });
             this.showToast('✅ อัปเดตทุก LOT ด้วย', 'success');
         }
+		
+				// ⭐ [PLAN-B 5d] บันทึก Log ก่อน Save
+			const changes = {};
+		if (oldProduct.name !== product.name) changes.name = { from: oldProduct.name, to: product.name };
+		if (oldProduct.costPerUnit !== product.costPerUnit) changes.costPerUnit = { from: oldProduct.costPerUnit, to: product.costPerUnit };
+		if (oldProduct.sellPrice1 !== product.sellPrice1) changes.sellPrice1 = { from: oldProduct.sellPrice1, to: product.sellPrice1 };
+		if (oldProduct.primaryBarcode !== product.primaryBarcode) changes.primaryBarcode = { from: oldProduct.primaryBarcode, to: product.primaryBarcode };
+		if (oldProduct.lot !== product.lot) changes.lot = { from: oldProduct.lot, to: product.lot };
+		if (oldProduct.minStock !== product.minStock) changes.minStock = { from: oldProduct.minStock, to: product.minStock };
+		if (oldProduct.maxStock !== product.maxStock) changes.maxStock = { from: oldProduct.maxStock, to: product.maxStock };
+		if (oldProduct.supplier !== product.supplier) changes.supplier = { from: oldProduct.supplier, to: product.supplier };
+		if (Object.keys(changes).length > 0) {
+			this.saveChangeLog({
+				type: 'edit_product',
+				productId: product.id,
+				productName: product.name,
+				barcode: product.primaryBarcode,
+				changes: changes
+			});
+		}
+			// ⭐ Sync ชื่อใหม่ไปยัง sessionItems ที่ยังไม่ยืนยัน
+			if (oldProduct.name !== product.name) {
+				this.sessionItems.forEach(item => {
+					if (item.productId === product.id) {
+						item.name = product.name;
+					}
+				});
+				this.saveSession();   // บันทึก sessionItems
+		}
 
         try {
             await this.saveProduct(product);
@@ -7524,7 +7757,18 @@ async closeFullscreenScanner() {
             return;
         }
         if (!confirm(`🗑️ ยืนยันล้างข้อมูล ${this.sessionItems.length} รายการ?`)) return;
-        this.sessionItems = [];
+        // ⭐ [PLAN-B 5e-2] บันทึก Log ก่อนล้าง Session
+		this.saveChangeLog({
+			type: 'clear_session',
+			itemsCount: this.sessionItems.length,
+			itemsSnapshot: this.sessionItems.slice(0, 50).map(i => ({
+				productId: i.productId,
+				name: i.name,
+				counted_qty: i.counted_qty
+			})),
+			totalCounted: this.sessionItems.reduce((s, i) => s + (Number(i.counted_qty) || 0), 0)
+		});
+		this.sessionItems = [];
         localStorage.removeItem('sessionItems_' + CONFIG.STORE_ID);
         this.recalculateGroupDifferences();
         this.renderRecentScans();
@@ -7593,6 +7837,21 @@ async closeFullscreenScanner() {
         }
         if (!confirm('🗑️ ยืนยันลบ?')) return;
         const item = this.sessionItems[index];
+		// ⭐ [PLAN-B 5e] บันทึก Log ก่อนลบ
+		if (item) {
+			this.saveChangeLog({
+				type: 'delete_item',
+				itemId: item.id,
+				productId: item.productId,
+				productName: item.name,
+				barcode: item.barcode || '',
+				lot: item.lotName || item.lot || '',
+				counted: item.counted_qty,
+				system: item.system_qty,
+				difference: item.difference,
+				location: item.locationName || ''
+			});
+		}
         this.sessionItems.splice(index, 1);
         const qIdx = this.offlineQueue.findIndex(q => q.id === item.id);
         if (qIdx !== -1) this.offlineQueue.splice(qIdx, 1);
@@ -7611,6 +7870,21 @@ async closeFullscreenScanner() {
         if (!confirm('🗑️ ยืนยันลบ?')) return;
         const item = this.sessionItems[index];
         if (!item) return;
+		// ⭐ [PLAN-B 5e] บันทึก Log ก่อนลบ
+		if (item) {
+			this.saveChangeLog({
+				type: 'delete_item',
+				itemId: item.id,
+				productId: item.productId,
+				productName: item.name,
+				barcode: item.barcode || '',
+				lot: item.lotName || item.lot || '',
+				counted: item.counted_qty,
+				system: item.system_qty,
+				difference: item.difference,
+				location: item.locationName || ''
+			});
+		}
         this.sessionItems.splice(index, 1);
         const qIdx = this.offlineQueue.findIndex(q => q.id === item.id);
         if (qIdx !== -1) this.offlineQueue.splice(qIdx, 1);
@@ -7644,13 +7918,15 @@ async closeFullscreenScanner() {
         const items = this.sessionItems.slice(-showCount).reverse();
         container.innerHTML = items.map((item, idx) => {
             const realIdx = this.sessionItems.length - 1 - idx;
+			const wasEdited = this.hasProductBeenEdited(item.productId);
+			const editBadge = wasEdited ? '<span style="background:#fef3c7;color:#92400e;font-size:9px;padding:2px 6px;border-radius:6px;margin-left:4px;font-weight:600;">✏️ แก้</span>' : '';
             const diffClass = item.difference > 0 ? 'positive' : item.difference < 0 ? 'negative' : 'zero';
             const diffText = item.difference > 0 ? '+' + item.difference : item.difference;
             const typeIcon = item.locationType === 'front' ? '🏪' : '📦';
             const lotDisplay = (item.lotName || item.lot) ? ` LOT: ${item.lotName || item.lot}` : '';
             return `<div class="recent-item">
                 <div>
-                    <div class="name">${escapeHtml(item.name)}</div>
+                    <div class="name">${escapeHtml(item.name)}${editBadge}</div>
                     <div class="detail">${escapeHtml(lotDisplay)} ระบบ: ${item.system_qty || 0} | นับ: ${item.counted_qty || 0}${item.locationName ? 
 
 ' | ' + typeIcon + ' ' + escapeHtml(item.locationName) : ''}${item.note ? ' | 📝 ' + escapeHtml(item.note) : ''}</div>
@@ -10814,98 +11090,189 @@ valueInputOption=USER_ENTERED&key=${config.apiKey}`;
         }
         table.innerHTML = html;
     }
-
-    showMapping() {
-        const div = document.getElementById('mappingFields');
-        if (!div) return;
-
-        // ⭐ 5B-17: ใช้ลำดับที่บันทึกไว้ (ถ้ามี)
-        const savedOrder = JSON.parse(localStorage.getItem('mappingOrder_v531') || 'null');
-
-        const defaultFields = [
-            { key: 'code', label: '🏷️ รหัสสินค้า' },
-            { key: 'name', label: '📦 ชื่อสินค้า' },
-            { key: 'lot', label: '🔖 Lot' },
-            { key: 'mfgDate', label: '📅 วันที่ผลิต' },
-            { key: 'expiryDate', label: '⏳ วันหมดอายุ' },
-            { key: 'sellPrice', label: '💰 ราคาขาย' },
-            { key: 'costPerUnit', label: '💵 ราคาทุน' },
-            { key: 'stock', label: '🔢 จำนวน' },
-            { key: 'unit', label: '📦 หน่วย' },
-            { key: 'supplier', label: '🏢 ผู้จัดจำหน่าย' },
-            { key: 'minStock', label: '📉 Min' },
-            { key: 'maxStock', label: '📈 Max' },
-            { key: 'barcode', label: '📱 บาร์โค้ด' }
-        ];
-
-        // เรียงตาม savedOrder (ถ้ามี)
-        let fields = defaultFields;
-        if (Array.isArray(savedOrder) && savedOrder.length > 0) {
-            fields = savedOrder
-                .map(key => defaultFields.find(f => f.key === key))
-                .filter(Boolean);
-            // เพิ่ม field ที่หายไป
-            defaultFields.forEach(f => {
-                if (!fields.find(x => x.key === f.key)) fields.push(f);
-            });
-        }
-
-        div.innerHTML = fields.map((f, idx) => `<div style="display:flex;flex-direction:column;gap:2px;position:relative;" data-field-key="${f.key}">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-                <label style="font-size:12px;font-weight:600;">${f.label}</label>
-                <div style="display:flex;gap:2px;">
-                    <button class="btn btn-outline btn-sm" onclick="app.moveMappingField(${idx}, -1)" style="font-size:10px;padding:2px 6px;min-height:22px;" ${idx === 0 ? 'disabled' : ''} title="เลื่อนขึ้น">
-                        <i class="fas fa-arrow-up"></i>
-                    </button>
-                    <button class="btn btn-outline btn-sm" onclick="app.moveMappingField(${idx}, 1)" style="font-size:10px;padding:2px 6px;min-height:22px;" ${idx === fields.length - 1 ? 'disabled' : ''} title="เลื่อนลง">
-                        <i class="fas fa-arrow-down"></i>
-                    </button>
-                </div>
-            </div>
-            <select class="input" id="map_${f.key}" style="font-size:13px;padding:6px 8px;min-height:38px;">
-                <option value="">-- เลือกคอลัมน์ --</option>
-                ${this.pendingHeaders.map(h => `<option value="${escapeHtml(h)}">${escapeHtml(h)}</option>`).join('')}
-            </select>
-        </div>`).join('');
-
-        // Restore ค่าที่เลือกไว้
-        setTimeout(() => this.restoreMappingValues(), 0);
+	
+// ⭐ PHASE 2: สร้าง Template Excel 14 คอลัมน์
+downloadImportTemplate() {
+    if (typeof XLSX === 'undefined') {
+        this.showToast('❌ ไม่พบ Excel library — ลองรีเฟรชหน้า', 'error');
+        return;
     }
+    
+    const wb = XLSX.utils.book_new();
+    
+    // ===== ชีต 1: Template =====
+    const headers = [
+        'รหัสสินค้า', 'ชื่อสินค้า *', 'บาร์โค้ด', 'LOT *', 
+        'วันที่ผลิต (MFG)', 'วันหมดอายุ (EXP) *', 'ราคาทุน', 'ราคาขาย',
+        'จำนวน *', 'หน่วย *', 'Stock Min', 'Stock Max', 'ผู้จัดจำหน่าย', 'หมายเหตุ'
+    ];
+    
+    // แถวตัวอย่าง 3 แถว
+    const sampleRows = [
+        ['P001', 'พาราเซตามอล 500mg', '8850001', 'LOT2401', '2024-01-15', '2026-01-15', 0.50, 1.00, 1000, 'เม็ด', 100, 5000, 'บ.ยาไทย', ''],
+        ['P002', 'อะม็อกซิซิลิน 250mg', '8850002', 'N/A', '2024-03-01', '2025-03-01', 1.20, 2.50, 500, 'แคปซูล', 50, 2000, 'บ.เภสัช', 'ไม่มี LOT'],
+        ['P003', 'วิตามินซี 1000mg', '', 'LOT2403', '', '2027-12-31', 0.80, 1.50, 2000, 'เม็ด', 200, 10000, '', 'รอวันผลิต']
+    ];
+    
+    const wsData = [headers, ...sampleRows];
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    
+    // ตั้งความกว้างคอลัมน์
+    ws['!cols'] = [
+        {wch: 12}, {wch: 25}, {wch: 14}, {wch: 12},
+        {wch: 16}, {wch: 16}, {wch: 10}, {wch: 10},
+        {wch: 10}, {wch: 10}, {wch: 10}, {wch: 10},
+        {wch: 18}, {wch: 20}
+    ];
+    
+    XLSX.utils.book_append_sheet(wb, ws, 'Template');
+    
+    // ===== ชีต 2: คำแนะนำ =====
+    const guideRows = [
+        ['📖 คำแนะนำการกรอกข้อมูล MediStock v5.3.1'],
+        [],
+        ['🎯 หลักการสำคัญ'],
+        ['1. ใช้หน่วยเล็กสุด (เม็ด/แคปซูล/ชิ้น) — ห้ามใช้ "กล่อง"'],
+        ['2. LOT ห้ามว่าง → ใส่ "N/A" ถ้าไม่มี'],
+        ['3. วันหมดอายุ (EXP) จำเป็น — ไม่งั้นไม่เตือนของหมดอายุ'],
+        ['4. วันที่กรอกได้ 2 แบบ: 2024-01-15 หรือ 15/01/2024'],
+        ['5. บาร์โค้ด: ตัวเลข 8, 12, 13 หลัก'],
+        [],
+        ['📋 คำอธิบายคอลัมน์ (14 คอลัมน์)'],
+        ['คอลัมน์', 'จำเป็น?', 'คำอธิบาย', 'ตัวอย่าง'],
+        ['รหัสสินค้า', 'ไม่บังคับ', 'รหัสภายในของร้าน', 'P001'],
+        ['ชื่อสินค้า *', '⭐ บังคับ', 'ชื่อสินค้า + ขนาดยา', 'พาราเซตามอล 500mg'],
+        ['บาร์โค้ด', 'ไม่บังคับ', 'ตัวเลขบนกล่อง', '8850001234567'],
+        ['LOT *', '⭐ บังคับ', 'เลขที่ผลิต (ห้ามว่าง → N/A)', 'LOT2401'],
+        ['วันที่ผลิต (MFG)', 'ไม่บังคับ', 'วันที่ผลิต (ช่วยคำนวณอายุ)', '2024-01-15'],
+        ['วันหมดอายุ (EXP) *', '⭐ บังคับ', 'วันหมดอายุ', '2026-01-15'],
+        ['ราคาทุน', 'ไม่บังคับ', 'ราคาทุนต่อหน่วย', '0.50'],
+        ['ราคาขาย', 'ไม่บังคับ', 'ราคาขายต่อหน่วย', '1.00'],
+        ['จำนวน *', '⭐ บังคับ', 'จำนวนที่มี', '1000'],
+        ['หน่วย *', '⭐ บังคับ', 'หน่วยเล็กสุด (เม็ด/ชิ้น)', 'เม็ด'],
+        ['Stock Min', 'ไม่บังคับ', 'จำนวนต่ำสุด (default 5)', '100'],
+        ['Stock Max', 'ไม่บังคับ', 'จำนวนสูงสุด (default 100)', '5000'],
+        ['ผู้จัดจำหน่าย', 'ไม่บังคับ', 'ชื่อบริษัท/ร้าน', 'บ.ยาไทย'],
+        ['หมายเหตุ', 'ไม่บังคับ', 'บันทึกเพิ่มเติม', 'รอตรวจ'],
+        [],
+        ['❌ ตัวอย่างที่ผิด / ✅ ตัวอย่างที่ถูก'],
+        [],
+        ['❌ ผิด', '✅ ถูก', 'เหตุผล'],
+        ['1 กล่อง', '100 เม็ด', 'ใช้หน่วยเล็กสุด'],
+        ['LOT ว่าง', 'N/A', 'ห้ามว่าง'],
+        ['ม.ค. 67', '2024-01-15', 'ใช้วันที่สากล'],
+        ['100 บาท', '100', 'ใส่ตัวเลขเท่านั้น'],
+        ['EXP ว่าง', '2026-12-31', 'ต้องมีวันหมดอายุ']
+    ];
+    
+    const ws2 = XLSX.utils.aoa_to_sheet(guideRows);
+    ws2['!cols'] = [{wch: 25}, {wch: 20}, {wch: 35}, {wch: 20}];
+    XLSX.utils.book_append_sheet(wb, ws2, 'คำแนะนำ');
+    
+    // ดาวน์โหลด
+    const filename = `MediStock_Template_v5.3.1_${new Date().toISOString().slice(0,10)}.xlsx`;
+    XLSX.writeFile(wb, filename);
+    
+    this.showToast('✅ ดาวน์โหลด Template สำเร็จ!', 'success', 'เปิดไฟล์ Excel แล้วกรอกข้อมูลตามตัวอย่าง');
+}
 
-    // ⭐ 5B-17: เลื่อน field ใน mapping
-    moveMappingField(idx, direction) {
-        const fields = Array.from(document.querySelectorAll('#mappingFields > div[data-field-key]'));
-        const target = fields[idx + direction];
-        const current = fields[idx];
-        if (!target || !current) return;
+// ⭐ PHASE 3: เปิด/ปิด Guide Modal
+showImportGuide() {
+    document.getElementById('importGuideModal').classList.add('show');
+}
 
-        // สลับ DOM
-        if (direction === -1) {
-            target.parentNode.insertBefore(current, target);
-        } else {
-            target.parentNode.insertBefore(target, current);
-        }
+closeImportGuide() {
+    document.getElementById('importGuideModal').classList.remove('show');
+}
 
-        // บันทึกลำดับใหม่
-        this.saveMappingOrder();
-    }
+	showMapping() {
+		const div = document.getElementById('mappingFields');
+		if (!div) return;
 
-    // ⭐ 5B-17: บันทึกลำดับ mapping
-    saveMappingOrder() {
-        const keys = Array.from(document.querySelectorAll('#mappingFields > div[data-field-key]'))
-            .map(el => el.dataset.fieldKey);
-        localStorage.setItem('mappingOrder_v531', JSON.stringify(keys));
-    }
+		// ⭐ ลำดับคงที่ 14 คอลัมน์ (เรียงซ้าย-ขวา 7 แถว)
+		const fields = [
+			{ key: 'code',        label: '🏷️ รหัสสินค้า',       required: false },
+			{ key: 'name',        label: '📦 ชื่อสินค้า',        required: true  },
+			{ key: 'barcode',     label: '📱 บาร์โค้ด',         required: false },
+			{ key: 'lot',         label: '🔖 เลขที่ผลิต (LOT)',  required: true  },
+			{ key: 'mfgDate',     label: '📅 วันที่ผลิต (MFG)',   required: false },
+			{ key: 'expiryDate',  label: '⏳ วันหมดอายุ (EXP)',  required: true  },
+			{ key: 'costPerUnit', label: '💰 ราคาทุน',          required: false },
+			{ key: 'sellPrice',   label: '💵 ราคาขาย',          required: false },
+			{ key: 'stock',       label: '🔢 จำนวน',            required: true  },
+			{ key: 'unit',        label: '📦 หน่วย',             required: true  },
+			{ key: 'minStock',    label: '📉 Stock Min',         required: false },
+			{ key: 'maxStock',    label: '📈 Stock Max',         required: false },
+			{ key: 'supplier',    label: '🏢 ผู้จัดจำหน่าย',      required: false },
+			{ key: 'note',        label: '📝 หมายเหตุ',          required: false }
+		];
 
-    // ⭐ 5B-17: รีเซ็ตลำดับ
-    resetMappingOrder() {
-        if (!confirm('🔄 รีเซ็ตลำดับคอลัมน์กลับเป็นค่าเริ่มต้น?')) return;
-        localStorage.removeItem('mappingOrder_v531');
-        this.showMapping();
-        this.showToast('✅ รีเซ็ตลำดับแล้ว', 'success');
-    }
+		div.innerHTML = fields.map(f => {
+			const requiredStar = f.required 
+				? '<span style="color:#ef4444;font-weight:800;margin-left:3px;">*</span>' 
+				: '';
+			const labelColor = f.required ? '#991b1b' : '#0f172a';
+			const bgColor = f.required ? '#fef2f2' : '#ffffff';
+			const borderColor = f.required ? '#fecaca' : '#e2e8f0';
+			
+			return `<div style="display:flex;flex-direction:column;gap:4px;padding:8px;background:${bgColor};border:2px solid ${borderColor};border-radius:8px;">
+				<label style="font-size:12px;font-weight:700;color:${labelColor};">
+					${f.label}${requiredStar}
+				</label>
+				<select class="input" id="map_${f.key}" 
+						data-required="${f.required}" 
+						onchange="app.validateMapping()"
+						style="font-size:13px;padding:8px 10px;min-height:40px;background:#fff;border:1px solid #cbd5e1;">
+					<option value="">-- เลือกคอลัมน์ --</option>
+					${this.pendingHeaders.map(h => `<option value="${escapeHtml(h)}">${escapeHtml(h)}</option>`).join('')}
+				</select>
+			</div>`;
+		}).join('');
 
-    // ⭐ 5B-17: Restore ค่าที่เลือกไว้ (หลัง move)
+		setTimeout(() => this.restoreMappingValues(), 0);
+		this.validateMapping();
+	}
+
+	// ⭐ ตรวจสอบช่องบังคับ
+	validateMapping() {
+		const requiredKeys = ['name', 'lot', 'expiryDate', 'stock', 'unit'];
+		let allFilled = true;
+		const missing = [];
+		
+		requiredKeys.forEach(key => {
+			const select = document.getElementById('map_' + key);
+			if (!select || !select.value) {
+				allFilled = false;
+				missing.push(key);
+				if (select) {
+					select.style.borderColor = '#ef4444';
+					select.style.background = '#fef2f2';
+				}
+			} else {
+				if (select) {
+					select.style.borderColor = '#10b981';
+					select.style.background = '#f0fdf4';
+				}
+			}
+		});
+		
+		const btn = document.getElementById('confirmMappingBtn');
+		if (btn) {
+			if (allFilled) {
+				btn.disabled = false;
+				btn.innerHTML = '<i class="fas fa-check"></i> ยืนยันและนำเข้าข้อมูล';
+				btn.style.background = 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)';
+				btn.style.cursor = 'pointer';
+			} else {
+				btn.disabled = true;
+				btn.innerHTML = `⚠️ กรอกช่องบังคับให้ครบ (เหลือ ${missing.length} ช่อง)`;
+				btn.style.background = '#94a3b8';
+				btn.style.cursor = 'not-allowed';
+			}
+		}
+		return allFilled;
+	}
+	
     restoreMappingValues() {
         const saved = JSON.parse(localStorage.getItem('mappingValues_v531') || '{}');
         Object.entries(saved).forEach(([key, value]) => {
@@ -11179,6 +11546,184 @@ syncProductStock(product) {
     }
     return product.stock || 0;
 }
+
+    // ═══════════════════════════════════════════════════════════════
+    // [PLAN-B] saveChangeLog — บันทึก Log การเปลี่ยนแปลง
+    // ═══════════════════════════════════════════════════════════════
+    saveChangeLog(logData) {
+        console.log('🟢 saveChangeLog called:', logData?.type);
+		try {
+            const log = {
+                id: 'changelog_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+                timestamp: new Date().toISOString(),
+                userId: this.v5UserId,
+                userName: this.v5UserName || 'ไม่ระบุ',
+                deviceId: this.v5DeviceId,
+                sessionId: this.v53GetActiveSession()?.sessionId || '',
+                branchId: this.branchId,
+                ...logData
+            };
+            const key = 'changeLogs_' + this.branchId;
+            const logs = JSON.parse(localStorage.getItem(key) || '[]');
+            logs.push(log);
+            if (logs.length > 5000) logs.splice(0, logs.length - 5000);
+            localStorage.setItem(key, JSON.stringify(logs));
+            console.log('📝 ChangeLog:', log.type, log.id);
+            return log;
+        } catch (e) {
+            console.warn('saveChangeLog failed:', e);
+            return null;
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // [PLAN-B] getChangeLogs — ดึง Log ทั้งหมด
+    // ═══════════════════════════════════════════════════════════════
+    getChangeLogs(filter = {}) {
+        try {
+            const key = 'changeLogs_' + this.branchId;
+            let logs = JSON.parse(localStorage.getItem(key) || '[]');
+            if (filter.type) logs = logs.filter(l => l.type === filter.type);
+            if (filter.userId) logs = logs.filter(l => l.userId === filter.userId);
+            if (filter.userName) logs = logs.filter(l => l.userName === filter.userName);   // ⭐ เพิ่ม
+			if (filter.from) logs = logs.filter(l => l.timestamp >= filter.from);
+            if (filter.to) logs = logs.filter(l => l.timestamp <= filter.to);
+            return logs.reverse();
+        } catch (e) {
+            return [];
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // [PLAN-B 5f] renderChangeLog
+    // ═══════════════════════════════════════════════════════════════
+		renderChangeLog() {
+			console.log('🟣 renderChangeLog called');
+			const container = document.getElementById('changeLogList');
+			if (!container) return;
+			
+			const typeFilter = document.getElementById('logFilterType')?.value || '';
+			const userFilter = document.getElementById('logFilterUser')?.value || '';
+			const fromFilter = document.getElementById('logFilterFrom')?.value || '';
+			const toFilter = document.getElementById('logFilterTo')?.value || '';
+			
+			// ⭐ Populate user dropdown
+			const userSelect = document.getElementById('logFilterUser');
+			if (userSelect && userSelect.options.length <= 1) {
+				const allLogs = this.getChangeLogs();
+				const users = [...new Set(allLogs.map(l => l.userName).filter(Boolean))];
+				users.forEach(u => {
+					const opt = document.createElement('option');
+					opt.value = u;
+					opt.textContent = '👤 ' + u;
+					userSelect.appendChild(opt);
+				});
+			}
+			
+			const filter = {};
+			if (typeFilter) filter.type = typeFilter;
+			if (userFilter) filter.userId = userFilter;
+			if (fromFilter) filter.from = fromFilter + 'T00:00:00.000Z';
+			if (toFilter) filter.to = toFilter + 'T23:59:59.999Z';
+			
+			let logs = this.getChangeLogs(filter);
+			
+			// ⭐ Filter by userName (userId ไม่ตรงกัน — ใช้ userName)
+			if (userFilter) {
+				logs = logs.filter(l => l.userName === userFilter);
+			}
+        if (logs.length === 0) {
+            container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:16px;">ไม่มีประวัติ</div>';
+            return;
+        }
+        container.innerHTML = logs.slice(0, 100).map(log => {
+            const time = new Date(log.timestamp).toLocaleString('th-TH');
+            let icon = '📝', color = 'var(--info)', desc = '';
+            if (log.type === 'edit_product') {
+                icon = '✏️'; color = 'var(--primary)';
+                const items = Object.entries(log.changes || {}).map(([f, c]) =>
+                    `<span style="color:#64748b;">${f}:</span> ${escapeHtml(String(c.from))} → <strong>${escapeHtml(String(c.to))}</strong>`
+                ).join('<br>');
+                desc = `<div style="margin-top:4px;font-size:11px;line-height:1.5;">${items}</div>`;
+            } else if (log.type === 'delete_item') {
+                icon = '🗑️'; color = 'var(--danger)';
+                desc = `<div style="margin-top:4px;font-size:11px;">ลบ: <strong>${escapeHtml(log.productName)}</strong> | นับ: ${log.counted} | ต่าง: ${log.difference}</div>`;
+            } else if (log.type === 'clear_session') {
+                icon = '🧹'; color = 'var(--warning)';
+                desc = `<div style="margin-top:4px;font-size:11px;">ลบทั้งหมด: <strong>${log.itemsCount}</strong> รายการ | รวม: <strong>${log.totalCounted}</strong> ชิ้น</div>`;
+            }
+            return `<div style="padding:8px;border-bottom:1px solid var(--border-color);">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span>${icon}</span>
+                        <strong style="color:${color};font-size:12px;">${escapeHtml(log.productName || '-')}</strong>
+                    </div>
+                    <span style="font-size:10px;color:var(--text-muted);">${time}</span>
+                </div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">👤 ${escapeHtml(log.userName)} | 🏪 ${escapeHtml(log.branchId)}</div>
+                ${desc}
+            </div>`;
+        }).join('');
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // [PLAN-B 5f] exportChangeLogs
+    // ═══════════════════════════════════════════════════════════════
+    exportChangeLogs() {
+		const typeFilter = document.getElementById('logFilterType')?.value || '';
+		const userFilter = document.getElementById('logFilterUser')?.value || '';
+		const fromFilter = document.getElementById('logFilterFrom')?.value || '';
+		const toFilter = document.getElementById('logFilterTo')?.value || '';
+		
+		const filter = {};
+		if (typeFilter) filter.type = typeFilter;
+		if (userFilter) filter.userName = userFilter;
+		if (fromFilter) filter.from = fromFilter + 'T00:00:00.000Z';
+		if (toFilter) filter.to = toFilter + 'T23:59:59.999Z';
+		
+		const logs = this.getChangeLogs(filter);
+        if (logs.length === 0) {
+            this.showToast('⚠️ ไม่มีประวัติ', 'warning');
+            return;
+        }
+        if (typeof XLSX === 'undefined') {
+            this.showToast('❌ ไม่พบ Excel library', 'error');
+            return;
+        }
+        const headers = ['วันที่', 'ผู้ใช้', 'ประเภท', 'สินค้า', 'บาร์โค้ด', 'รายละเอียด', 'Session'];
+        const rows = logs.map(log => {
+            let detail = '';
+            if (log.type === 'edit_product') {
+                detail = Object.entries(log.changes || {}).map(([f, c]) => `${f}: ${c.from} → ${c.to}`).join(' | ');
+            } else if (log.type === 'delete_item') {
+                detail = `ลบ: ${log.productName} | นับ ${log.counted} | ต่าง ${log.difference}`;
+            } else if (log.type === 'clear_session') {
+                detail = `ลบทั้งหมด ${log.itemsCount} รายการ (${log.totalCounted} ชิ้น)`;
+            }
+            return [
+                new Date(log.timestamp).toLocaleString('th-TH'),
+                log.userName || '-',
+                log.type === 'edit_product' ? 'แก้ไขสินค้า' : log.type === 'delete_item' ? 'ลบรายการ' : 'ล้าง Session',
+                log.productName || '-',
+                log.barcode || '-',
+                detail,
+                log.sessionId?.slice(-12) || '-'
+            ];
+        });
+        const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'ChangeLog');
+        XLSX.writeFile(wb, `MediStock_ChangeLog_${this.branchId}_${Date.now()}.xlsx`);
+        this.showToast(`✅ Export ${logs.length} รายการ`, 'success');
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // [PLAN-B 5f] hasProductBeenEdited
+    // ═══════════════════════════════════════════════════════════════
+    hasProductBeenEdited(productId) {
+        const logs = this.getChangeLogs({ type: 'edit_product' });
+        return logs.some(l => l.productId === productId);
+    }
 
 } // ============ END OF StockApp CLASS ============
 
