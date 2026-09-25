@@ -13,7 +13,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -82,7 +82,7 @@
         /* ========== Reset ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
             background: var(--bg-body);
             color: var(--text-main);
             font-size: var(--font-base);
@@ -383,7 +383,7 @@
             justify-content: center;
             gap: 6px;
             box-shadow: var(--shadow-sm);
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
             min-height: 46px;
         }
         .btn:active { transform: scale(0.96); }
@@ -418,7 +418,7 @@
             color: var(--text-main);
             background: var(--bg-body);
             transition: var(--transition);
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
             min-height: 48px;
         }
         .input:focus {
@@ -1323,7 +1323,7 @@
             font-size: 13px;
             cursor: pointer;
             transition: var(--transition);
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
             min-height: 56px;
         }
         .report-mode-btn.active {
@@ -1914,7 +1914,7 @@
     font-weight: 700;
     cursor: pointer;
     transition: var(--transition);
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
     box-shadow: 0 2px 8px rgba(14,165,233,0.15);
 }
 
@@ -2273,7 +2273,8 @@ muted);color:#fff;">
 			<!-- v5.3.1 [5B-tips] Scanner Tips — FIX-2-P5 -->
 			<div class="card" id="scannerTipsCard" style="padding:8px;background:var(--info-light);border:1px solid var(--info);border-radius:var(--radius-md);">
 				<div style="font-size:11px;color:#1e40af;line-height:1.5;">
-					💡 <strong>Tips:</strong> วางบาร์โค้ดบนพื้นเรียบ • ถ้ากระดาษมันให้เอียง 45° ลดแสงสะท้อน • ระยะ 10-20 ซม. • แตะจอเพื่อโฟกัส
+					💡 <strong>Tips:</strong> วางบาร์โค้ดบนพื้นเรียบ • ถ้ากระดาษมันให้เอียง 45° • ระยะ 10-20 ซม. • แตะจอเพื่อโฟกัส<br>
+<strong style="color:#dc2626;">📸 อ่านยาก?</strong> กด "ถ่ายรูปบาร์โค้ด" • <strong style="color:#dc2626;">⌨️ ยังไม่อ่าน?</strong> กด "ใส่รหัส" แทน
 				</div>
 			</div>
 		</div>           <!-- ✅ เพิ่ม: ปิด Scanner Card -->
@@ -3050,6 +3051,29 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
 <!-- ================================================================
      MODALS & OVERLAYS
      ================================================================ -->
+
+<!-- ⭐ PHASE 5: Unit Conversion Preview Modal -->
+<div class="modal-overlay" id="unitConversionModal">
+    <div class="modal" style="max-width:560px;">
+        <div class="modal-handle"></div>
+        <div class="modal-title"><i class="fas fa-exchange-alt"></i> 🔄 ตรวจพบการแปลงหน่วย</div>
+        
+        <div id="unitConversionContent" style="max-height:55vh;overflow-y:auto;padding:4px;">
+            <!-- Dynamic content -->
+        </div>
+        
+        <div style="display:flex;gap:8px;margin-top:12px;">
+            <button class="btn btn-success btn-block" onclick="app.confirmUnitConversionAndImport()" 
+                    style="font-size:15px;padding:12px;min-height:48px;">
+                <i class="fas fa-check"></i> ยืนยันแปลง + นำเข้า
+            </button>
+            <button class="btn btn-outline btn-block" onclick="app.closeUnitConversionModal()" 
+                    style="font-size:15px;padding:12px;min-height:48px;">
+                <i class="fas fa-times"></i> ยกเลิก
+            </button>
+        </div>
+    </div>
+</div>
 
 <!-- ⭐ PHASE 3: Import Guide Modal -->
 <div class="modal-overlay" id="importGuideModal">
@@ -5370,6 +5394,348 @@ if (m) {
     convertToBase(value, unit) {
         return this.convertUnit(value, unit, 'ชิ้น');
     }
+
+	// ═══════════════════════════════════════════════════════════════
+    // ⭐ PHASE 5: AUTO-CONVERT UNIT (แปลงหน่วยอัตโนมัติ)
+    // ═══════════════════════════════════════════════════════════════
+    
+    // แปลงหน่วย + คำนวณราคาใหม่
+    convertUnitForImport(quantity, unit, cost, sellPrice) {
+        // ⭐ ถ้าไม่มีหน่วย → ใช้ "ชิ้น" เป็นค่าเริ่มต้น
+        if (!unit || !unit.trim()) {
+            return {
+                quantity: quantity,
+                cost: cost,
+                sellPrice: sellPrice,
+                originalUnit: 'ชิ้น',
+                newUnit: 'ชิ้น',
+                converted: false,
+                factor: 1
+            };
+        }
+        
+        const unitName = unit.trim();
+        const factor = this.unitMap[unitName];
+        
+        // ⭐ ถ้าไม่รู้จักหน่วยนี้ → เก็บตามเดิม + เตือน
+        if (!factor || factor === undefined) {
+            console.warn(`⚠️ ไม่รู้จักหน่วย "${unitName}" → ใช้ตามเดิม`);
+            return {
+                quantity: quantity,
+                cost: cost,
+                sellPrice: sellPrice,
+                originalUnit: unitName,
+                newUnit: unitName,
+                converted: false,
+                factor: 1,
+                warning: `ไม่รู้จักหน่วย "${unitName}" — ใช้ค่าตามเดิม`
+            };
+        }
+        
+        // ⭐ ถ้าเป็น "ชิ้น" (หน่วยฐาน) → ไม่ต้องแปลง
+        if (factor === 1) {
+            return {
+                quantity: quantity,
+                cost: cost,
+                sellPrice: sellPrice,
+                originalUnit: unitName,
+                newUnit: 'ชิ้น',
+                converted: false,
+                factor: 1
+            };
+        }
+        
+        // ⭐ แปลงหน่วยใหญ่ → หน่วยเล็ก (ชิ้น)
+        const newQuantity = quantity * factor;
+        const newCost = cost > 0 ? cost / factor : 0;
+        const newSellPrice = sellPrice > 0 ? sellPrice / factor : 0;
+        
+        console.log(`🔄 แปลงหน่วย: ${quantity} ${unitName} → ${newQuantity} ชิ้น`);
+        console.log(`   ทุน: ${cost} บาท/${unitName} → ${newCost.toFixed(4)} บาท/ชิ้น`);
+        console.log(`   ขาย: ${sellPrice} บาท/${unitName} → ${newSellPrice.toFixed(4)} บาท/ชิ้น`);
+        
+        return {
+            quantity: newQuantity,
+            cost: newCost,
+            sellPrice: newSellPrice,
+            originalUnit: unitName,
+            newUnit: 'ชิ้น',
+            converted: true,
+            factor: factor
+        };
+    }
+
+    // Preview การแปลงก่อนนำเข้า + ตรวจจับหน่วยแปลก
+    previewUnitConversions() {
+        if (!this.pendingRows || this.pendingRows.length === 0) {
+            return { conversions: [], unitSummary: {}, unknownUnits: [] };
+        }
+        
+        const mapping = {};
+        ['unit', 'stock', 'costPerUnit', 'sellPrice'].forEach(f => {
+            const el = document.getElementById('map_' + f);
+            if (el) mapping[f] = el.value;
+        });
+        
+        const unitCol = mapping.unit ? this.pendingHeaders.indexOf(mapping.unit) : -1;
+        const stockCol = mapping.stock ? this.pendingHeaders.indexOf(mapping.stock) : -1;
+        const costCol = mapping.costPerUnit ? this.pendingHeaders.indexOf(mapping.costPerUnit) : -1;
+        const sellCol = mapping.sellPrice ? this.pendingHeaders.indexOf(mapping.sellPrice) : -1;
+        
+        if (unitCol < 0) return { conversions: [], unitSummary: {}, unknownUnits: [] };
+        
+        const conversions = [];
+        const unitSummary = {};
+        const unknownUnitsMap = new Map();   // ⭐ เก็บหน่วยแปลก
+        
+        this.pendingRows.forEach((row, idx) => {
+            const unit = String(row[unitCol] || '').trim();
+            const stock = stockCol >= 0 ? parseFloat(row[stockCol]) || 0 : 0;
+            const cost = costCol >= 0 ? parseFloat(row[costCol]) || 0 : 0;
+            const sell = sellCol >= 0 ? parseFloat(row[sellCol]) || 0 : 0;
+            
+            if (!unit) return;
+            
+            // ⭐ ตรวจว่าหน่วยรู้จักไหม
+            const factor = this.unitMap[unit];
+            
+            if (!factor || factor === undefined) {
+                // หน่วยแปลก → เก็บไว้
+                if (!unknownUnitsMap.has(unit)) {
+                    unknownUnitsMap.set(unit, { 
+                        name: unit, 
+                        count: 0, 
+                        sampleRows: [] 
+                    });
+                }
+                const u = unknownUnitsMap.get(unit);
+                u.count++;
+                if (u.sampleRows.length < 3) {
+                    u.sampleRows.push({
+                        row: idx + 2,
+                        quantity: stock,
+                        cost: cost,
+                        sell: sell
+                    });
+                }
+                return;
+            }
+            
+            // หน่วยรู้จัก → ตรวจต่อ
+            const result = this.convertUnitForImport(stock, unit, cost, sell);
+            if (result.converted) {
+                conversions.push({
+                    row: idx + 2,
+                    original: `${stock} ${unit}`,
+                    converted: `${result.quantity} ${result.newUnit}`,
+                    factor: result.factor,
+                    oldCost: cost, newCost: result.cost,
+                    oldSell: sell, newSell: result.sellPrice
+                });
+                
+                if (!unitSummary[unit]) {
+                    unitSummary[unit] = { count: 0, factor: result.factor };
+                }
+                unitSummary[unit].count++;
+            }
+        });
+        
+        return { 
+            conversions, 
+            unitSummary, 
+            unknownUnits: Array.from(unknownUnitsMap.values())   // ⭐ ส่งออก
+        };
+    }
+	
+    // แสดง Modal Preview การแปลง + เตือนหน่วยแปลก
+    showUnitConversionPreview() {
+        const result = this.previewUnitConversions();
+        const hasConversions = result.conversions && result.conversions.length > 0;
+        const hasUnknown = result.unknownUnits && result.unknownUnits.length > 0;
+        
+        // ถ้าไม่มีทั้งคู่ → ไม่ต้องเปิด Modal
+        if (!hasConversions && !hasUnknown) {
+            return false;
+        }
+        
+        const { conversions, unitSummary, unknownUnits } = result;
+        
+        const modal = document.getElementById('unitConversionModal');
+        const content = document.getElementById('unitConversionContent');
+        if (!modal || !content) return false;
+        
+        let html = '';
+        
+        // ⭐ ส่วนที่ 1: เตือนหน่วยแปลก (ถ้ามี)
+        if (hasUnknown) {
+            html += `
+                <div style="background:#fee2e2;border-left:4px solid #dc2626;padding:10px 12px;border-radius:8px;margin-bottom:10px;font-size:12px;color:#991b1b;">
+                    <strong>⚠️ พบหน่วยที่ไม่ได้ตั้งค่า ${unknownUnits.length} ตัว</strong>
+                    <div style="margin-top:4px;">ถ้าปล่อยไว้ → ระบบจะเก็บค่าตามเดิม → <strong>ผลลัพธ์อาจผิด!</strong></div>
+                </div>
+                
+                <div style="font-size:12px;font-weight:700;margin-bottom:6px;">🔧 เพิ่มหน่วยด่วน (Quick Add):</div>
+                <div id="quickAddUnitList" style="margin-bottom:12px;">
+                    ${unknownUnits.map(u => `
+                        <div style="background:#fef2f2;border:2px solid #fecaca;border-radius:8px;padding:10px;margin-bottom:8px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+								<div style="font-weight:700;font-size:13px;color:#991b1b;">
+									❓ "${escapeHtml(u.name)}" — พบ ${u.count} รายการในไฟล์
+								</div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center;">
+                                <div style="display:flex;align-items:center;gap:6px;font-size:12px;">
+                                    <span>1 ${escapeHtml(u.name)} =</span>
+                                    <input type="number" id="quickUnit_${this.escapeId(u.name)}" 
+                                           placeholder="จำนวน" min="1" value=""
+                                           style="flex:1;padding:6px 8px;border:2px solid #cbd5e1;border-radius:6px;font-size:13px;min-height:34px;">
+                                    <span>ชิ้น</span>
+                                </div>
+                                <button class="btn btn-success btn-sm" 
+                                        onclick="app.quickAddUnit('${escapeHtml(u.name).replace(/'/g, "\\'")}')"
+                                        style="font-size:11px;padding:6px 10px;min-height:34px;">
+                                    <i class="fas fa-plus"></i> เพิ่ม
+                                </button>
+                            </div>
+							${u.sampleRows.length > 0 ? `
+								<div style="font-size:10px;color:#64748b;margin-top:4px;">
+									📄 แถวที่: ${u.sampleRows.map(r => r.row).join(', ')} (นับจากหัวตารางแถวที่ 1)
+								</div>
+							` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        // ⭐ ส่วนที่ 2: แปลงหน่วยปกติ (ถ้ามี)
+        if (hasConversions) {
+            const summaryHtml = Object.entries(unitSummary).map(([unit, data]) =>
+                `<div style="display:inline-block;background:#e0f2fe;color:#0369a1;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:600;margin:2px;">
+                    ${data.count} แถว: 1 ${escapeHtml(unit)} = ${data.factor} ชิ้น
+                </div>`
+            ).join('');
+            
+            const tableRows = conversions.slice(0, 5).map(c =>
+                `<tr style="font-size:11px;border-bottom:1px solid #e2e8f0;">
+                    <td style="padding:4px 8px;">แถว ${c.row}</td>
+                    <td style="padding:4px 8px;color:#dc2626;">${escapeHtml(c.original)}</td>
+                    <td style="padding:4px 8px;">→</td>
+                    <td style="padding:4px 8px;color:#10b981;font-weight:600;">${escapeHtml(c.converted)}</td>
+                    <td style="padding:4px 8px;font-size:10px;color:#64748b;">
+                        ทุน: ${c.oldCost} → ${c.newCost.toFixed(4)}<br>
+                        ขาย: ${c.oldSell} → ${c.newSell.toFixed(4)}
+                    </td>
+                </tr>`
+            ).join('');
+            
+            const moreText = conversions.length > 5 ?
+                `<div style="text-align:center;font-size:11px;color:#64748b;padding:6px;">... และอีก ${conversions.length - 5} แถว</div>` : '';
+            
+            html += `
+                ${hasUnknown ? '<hr style="border:0;border-top:2px dashed #cbd5e1;margin:12px 0;">' : ''}
+                <div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:10px 12px;border-radius:8px;margin-bottom:10px;font-size:12px;color:#92400e;">
+                    <strong>⚠️ ระบบจะแปลงหน่วยใหญ่เป็นหน่วยเล็กอัตโนมัติ</strong>
+                </div>
+                
+                <div style="margin-bottom:8px;font-size:12px;font-weight:700;">📊 สรุปหน่วยที่จะแปลง:</div>
+                <div style="margin-bottom:10px;">${summaryHtml}</div>
+                
+                <div style="font-size:12px;font-weight:700;margin-bottom:6px;">📋 ตัวอย่างการแปลง (5 แถวแรก):</div>
+                <table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:6px;">
+                    <thead>
+                        <tr style="background:#f8fafc;font-size:11px;color:#64748b;">
+                            <th style="padding:6px;text-align:left;">แถว</th>
+                            <th style="padding:6px;text-align:left;">เดิม</th>
+                            <th></th>
+                            <th style="padding:6px;text-align:left;">ใหม่</th>
+                            <th style="padding:6px;text-align:left;">ราคา</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tableRows}</tbody>
+                </table>
+                ${moreText}
+                
+                <div style="background:#d1fae5;border-left:4px solid #10b981;padding:8px 12px;border-radius:6px;margin-top:10px;font-size:12px;color:#065f46;">
+                    ✅ <strong>ทุนและราคาขายจะถูกคำนวณใหม่</strong>
+                    <br>ตัวอย่าง: 1 กล่อง = 100 เม็ด | ทุน 50 บาท/กล่อง → 0.50 บาท/เม็ด
+                </div>
+            `;
+        }
+        
+        content.innerHTML = html;
+        modal.classList.add('show');
+        return true;
+    }
+    
+    // ⭐ Helper: escape ID
+    escapeId(str) {
+        return String(str).replace(/[^a-zA-Z0-9]/g, '_');
+    }
+    
+    // ⭐ PHASE 5.5.2: Quick Add Unit — เพิ่มหน่วยใน Modal ทันที
+    quickAddUnit(unitName) {
+        const input = document.getElementById('quickUnit_' + this.escapeId(unitName));
+        if (!input) {
+            this.showToast('❌ ไม่พบช่องกรอก', 'error');
+            return;
+        }
+        
+        const factor = parseInt(input.value);
+        if (!factor || factor < 1) {
+            this.showToast('⚠️ กรุณากรอกจำนวน (>= 1)', 'warning');
+            input.focus();
+            return;
+        }
+        
+        // เพิ่มใน unitMap
+        this.unitMap[unitName] = factor;
+        
+        // Save ลง IndexedDB
+        this.saveUnit(unitName, factor).catch(err => {
+            console.warn('Save unit failed:', err);
+        });
+        
+        this.showToast(`✅ เพิ่มหน่วย "${unitName}" = ${factor} ชิ้น`, 'success');
+        
+        // รีเฟรช Modal
+        setTimeout(() => {
+            this.showUnitConversionPreview();
+        }, 300);
+    }
+
+    closeUnitConversionModal() {
+        document.getElementById('unitConversionModal').classList.remove('show');
+    }
+
+    async confirmUnitConversionAndImport() {
+        // ⭐ ตรวจว่ายังมีหน่วยแปลกเหลือไหม
+        const preview = this.previewUnitConversions();
+        
+        if (preview.unknownUnits && preview.unknownUnits.length > 0) {
+            const remaining = preview.unknownUnits.map(u => `"${u.name}"`).join(', ');
+            const proceed = confirm(
+                `⚠️ ยังมีหน่วยที่ไม่ได้ตั้งค่า ${preview.unknownUnits.length} ตัว:\n\n` +
+                `${remaining}\n\n` +
+                `ถ้ายืนยัน → ระบบจะเก็บชื่อหน่วยนี้ตามเดิม (ไม่แปลง)\n` +
+                `⚠️ ผลลัพธ์อาจผิดถ้าหน่วยนี้เป็นหน่วยใหญ่\n\n` +
+                `💡 แนะนำ: กด "ยกเลิก" → กรอก factor ให้ครบก่อน\n\n` +
+                `ยืนยันนำเข้าต่อหรือไม่?`
+            );
+            
+            if (!proceed) {
+                this.showToast('ℹ️ ยกเลิก — กรุณากรอก factor ให้ครบ', 'info');
+                return;
+            }
+        }
+        
+        this.closeUnitConversionModal();
+        await this._doImport(true);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // ⭐ จบ PHASE 5 (ขั้น 1)
+    // ═══════════════════════════════════════════════════════════════
 
 	renderUnitList() {
 		const container = document.getElementById('masterUnitList');
@@ -8378,20 +8744,25 @@ title="ลบ">
         try {
             let countedItems = [];
 
-            if (mode === 'team') {
-                // ⭐ โหมดทีม: ดึงจาก Sheets
-                const teamRows = this._v51LastTeamRows || [];
-                countedItems = teamRows.map(r => ({
-                    productId: r[4] || '',
-                    name: r[5] || '',
-                    lot: r[6] || '',
-                    system_qty: Number(r[7]) || 0,
-                    counted_qty: Number(r[8]) || 0,
-                    difference: Number(r[9]) || 0,
-                    userName: r[2] || '',
-                    locationName: r[10] || '',
-                    note: r[11] || ''
-                }));
+			if (mode === 'team') {
+				// ⭐ โหมดทีม: ดึงจาก Sheets (v5.3.1 — เพิ่ม cost/sell)
+				const teamRows = this._v51LastTeamRows || [];
+				countedItems = teamRows.map(r => ({
+					productId: r[4] || '',
+					name: r[5] || '',
+					lot: r[6] || '',
+					system_qty: Number(r[7]) || 0,
+					counted_qty: Number(r[8]) || 0,
+					difference: Number(r[9]) || 0,
+					userName: r[2] || '',
+					locationName: r[10] || '',
+					note: r[11] || '',   // ⭐ ใส่ comma!
+					// ⭐ v5.3.1 — เพิ่ม 4 ค่า
+					cost: Number(r[15]) || 0,
+					sellPrice: Number(r[16]) || 0,
+					cost_diff: Number(r[17]) || 0,
+					sell_diff: Number(r[18]) || 0
+				}));
             } else {
                 // ⭐ โหมด Local
                 countedItems = this.sessionItems;
@@ -10539,7 +10910,12 @@ valueInputOption=USER_ENTERED&key=${config.apiKey}`;
             item?.group_difference ?? item?.difference ?? '',
             item?.locationName || '',
             item?.note || '',
-            session?.sessionId || ''
+			session?.sessionId || '',   // ⭐ ใส่ comma!
+			// ⭐ v5.3.1 — เพิ่ม 4 ค่า
+			Number(item?.cost) || 0,
+			Number(item?.sellPrice) || 0,
+			Number(item?.cost_diff) || 0,
+			Number(item?.sell_diff) || 0
         ];
         try {
             if (c.endpoint && c.token) {
@@ -11103,15 +11479,15 @@ downloadImportTemplate() {
     // ===== ชีต 1: Template =====
     const headers = [
         'รหัสสินค้า', 'ชื่อสินค้า *', 'บาร์โค้ด', 'LOT *', 
-        'วันที่ผลิต (MFG)', 'วันหมดอายุ (EXP) *', 'ราคาทุน', 'ราคาขาย',
+        'วันที่ผลิต (MFG)', 'วันหมดอายุ (EXP) *', 'ราคาขาย', 'ราคาทุน',
         'จำนวน *', 'หน่วย *', 'Stock Min', 'Stock Max', 'ผู้จัดจำหน่าย', 'หมายเหตุ'
     ];
     
     // แถวตัวอย่าง 3 แถว
     const sampleRows = [
-        ['P001', 'พาราเซตามอล 500mg', '8850001', 'LOT2401', '2024-01-15', '2026-01-15', 0.50, 1.00, 1000, 'เม็ด', 100, 5000, 'บ.ยาไทย', ''],
-        ['P002', 'อะม็อกซิซิลิน 250mg', '8850002', 'N/A', '2024-03-01', '2025-03-01', 1.20, 2.50, 500, 'แคปซูล', 50, 2000, 'บ.เภสัช', 'ไม่มี LOT'],
-        ['P003', 'วิตามินซี 1000mg', '', 'LOT2403', '', '2027-12-31', 0.80, 1.50, 2000, 'เม็ด', 200, 10000, '', 'รอวันผลิต']
+        ['P001', 'พาราเซตามอล 500mg', '8850001', 'LOT2401', '2024-01-15', '2026-01-15', 1.00, 0.50, 1000, 'เม็ด', 100, 5000, 'บ.ยาไทย', ''],
+        ['P002', 'อะม็อกซิซิลิน 250mg', '8850002', 'N/A', '2024-03-01', '2025-03-01', 2.50, 1.20, 500, 'แคปซูล', 50, 2000, 'บ.เภสัช', 'ไม่มี LOT'],
+        ['P003', 'วิตามินซี 1000mg', '', 'LOT2403', '', '2027-12-31', 1.50, 0.80, 2000, 'เม็ด', 200, 10000, '', 'รอวันผลิต']
     ];
     
     const wsData = [headers, ...sampleRows];
@@ -11146,8 +11522,8 @@ downloadImportTemplate() {
         ['LOT *', '⭐ บังคับ', 'เลขที่ผลิต (ห้ามว่าง → N/A)', 'LOT2401'],
         ['วันที่ผลิต (MFG)', 'ไม่บังคับ', 'วันที่ผลิต (ช่วยคำนวณอายุ)', '2024-01-15'],
         ['วันหมดอายุ (EXP) *', '⭐ บังคับ', 'วันหมดอายุ', '2026-01-15'],
-        ['ราคาทุน', 'ไม่บังคับ', 'ราคาทุนต่อหน่วย', '0.50'],
-        ['ราคาขาย', 'ไม่บังคับ', 'ราคาขายต่อหน่วย', '1.00'],
+	['ราคาขาย', 'ไม่บังคับ', 'ราคาขายต่อหน่วย', '1.00'],
+	['ราคาทุน', 'ไม่บังคับ', 'ราคาทุนต่อหน่วย', '0.50'],
         ['จำนวน *', '⭐ บังคับ', 'จำนวนที่มี', '1000'],
         ['หน่วย *', '⭐ บังคับ', 'หน่วยเล็กสุด (เม็ด/ชิ้น)', 'เม็ด'],
         ['Stock Min', 'ไม่บังคับ', 'จำนวนต่ำสุด (default 5)', '100'],
@@ -11197,8 +11573,8 @@ closeImportGuide() {
 			{ key: 'lot',         label: '🔖 เลขที่ผลิต (LOT)',  required: true  },
 			{ key: 'mfgDate',     label: '📅 วันที่ผลิต (MFG)',   required: false },
 			{ key: 'expiryDate',  label: '⏳ วันหมดอายุ (EXP)',  required: true  },
-			{ key: 'costPerUnit', label: '💰 ราคาทุน',          required: false },
 			{ key: 'sellPrice',   label: '💵 ราคาขาย',          required: false },
+			{ key: 'costPerUnit', label: '💰 ราคาทุน',          required: false },
 			{ key: 'stock',       label: '🔢 จำนวน',            required: true  },
 			{ key: 'unit',        label: '📦 หน่วย',             required: true  },
 			{ key: 'minStock',    label: '📉 Stock Min',         required: false },
@@ -11281,8 +11657,8 @@ closeImportGuide() {
         });
     }
 
+    // ⭐ PHASE 5: confirmMapping — ตรวจการแปลงหน่วยก่อนนำเข้า
     async confirmMapping() {
-        // ⭐ ชั้น 2: Import Lock — ป้องกันกดซ้ำ
         if (this._isImporting) {
             this.showToast('⏳ กำลังนำเข้าอยู่ — กรุณารอ', 'warning');
             return;
@@ -11295,12 +11671,21 @@ closeImportGuide() {
 
         const mapping = {};
         ['code', 'name', 'lot', 'mfgDate', 'expiryDate', 'sellPrice', 'costPerUnit', 'stock', 'unit', 'supplier', 'barcode', 'minStock', 'maxStock'].forEach(f => {
-            mapping[f] = document.getElementById('map_' + f).value;
+            const el = document.getElementById('map_' + f);
+            if (el) mapping[f] = el.value;
         });
         localStorage.setItem('mappingValues_v531', JSON.stringify(mapping));
 
         if (!mapping.name) {
             this.showToast('⚠️ กรุณาเลือกคอลัมน์ "ชื่อสินค้า"', 'warning');
+            return;
+        }
+
+        // ⭐ ตรวจสอบช่องบังคับครบไหม
+        const required = ['name', 'lot', 'expiryDate', 'stock', 'unit'];
+        const missing = required.filter(k => !mapping[k]);
+        if (missing.length > 0) {
+            this.showToast(`⚠️ กรุณาเลือกคอลัมน์บังคับให้ครบ (เหลือ ${missing.length} ช่อง)`, 'warning');
             return;
         }
 
@@ -11329,6 +11714,23 @@ closeImportGuide() {
             }
         }
 
+        // ⭐ PHASE 5 + 5.5: ตรวจการแปลงหน่วย + หน่วยแปลก
+        const unitPreview = this.previewUnitConversions();
+        const hasConversions = unitPreview && unitPreview.conversions && unitPreview.conversions.length > 0;
+        const hasUnknown = unitPreview && unitPreview.unknownUnits && unitPreview.unknownUnits.length > 0;
+        
+        if (hasConversions || hasUnknown) {
+            // มีหน่วยต้องแปลง หรือมีหน่วยแปลก → แสดง Modal
+            this.showUnitConversionPreview();
+            return;
+        }
+
+        // ไม่มีหน่วยต้องแปลง → นำเข้าปกติ
+        await this._doImport(false);
+    }
+
+    // ⭐ PHASE 5: _doImport — ฟังก์ชันนำเข้าหลัก
+    async _doImport(useUnitConversion) {
         const btn = document.getElementById('confirmMappingBtn');
         this._isImporting = true;
         if (btn) {
@@ -11336,8 +11738,15 @@ closeImportGuide() {
             btn.innerHTML = '<span class="loading-inline"></span> กำลังนำเข้า...';
         }
 
-        let errorCount = 0,
-            successCount = 0;
+        const mapping = {};
+        ['code', 'name', 'lot', 'mfgDate', 'expiryDate', 'sellPrice', 'costPerUnit', 'stock', 'unit', 'supplier', 'barcode', 'minStock', 'maxStock'].forEach(f => {
+            const el = document.getElementById('map_' + f);
+            if (el) mapping[f] = el.value;
+        });
+
+        let errorCount = 0;
+        let successCount = 0;
+        let convertedCount = 0;
         this.showToast('📥 กำลังนำเข้าข้อมูล...', 'info');
 
         try {
@@ -11350,10 +11759,10 @@ closeImportGuide() {
                 const name = idx('name') >= 0 ? String(row[idx('name')] || '').trim() : '';
                 const lot = idx('lot') >= 0 ? this.normalizeLotValue(row[idx('lot')]) : '-';
                 const mfg = idx('mfgDate') >= 0 ? this.normalizeDateValue(row[idx('mfgDate')]) : '';
-                const stock = idx('stock') >= 0 ? parseFloat(row[idx('stock')]) || 0 : 0;
-                const unit = idx('unit') >= 0 ? String(row[idx('unit')] || '').trim() : 'ชิ้น';
-                const cost = idx('costPerUnit') >= 0 ? parseFloat(row[idx('costPerUnit')]) || 0 : 0;
-                const sellPrice = idx('sellPrice') >= 0 ? parseFloat(row[idx('sellPrice')]) || 0 : 0;
+                let stock = idx('stock') >= 0 ? parseFloat(row[idx('stock')]) || 0 : 0;
+                let unit = idx('unit') >= 0 ? String(row[idx('unit')] || '').trim() : 'ชิ้น';
+                let cost = idx('costPerUnit') >= 0 ? parseFloat(row[idx('costPerUnit')]) || 0 : 0;
+                let sellPrice = idx('sellPrice') >= 0 ? parseFloat(row[idx('sellPrice')]) || 0 : 0;
                 const expiry = idx('expiryDate') >= 0 ? this.normalizeDateValue(row[idx('expiryDate')]) : '';
                 const barcode = idx('barcode') >= 0 ? String(row[idx('barcode')] || '').trim() : '';
                 const supplier = idx('supplier') >= 0 ? this.normalizeSupplierValue(row[idx('supplier')]) : '';
@@ -11361,6 +11770,18 @@ closeImportGuide() {
                 if (!name) {
                     errorCount++;
                     continue;
+                }
+
+                // ⭐ PHASE 5: แปลงหน่วย (ถ้าเปิด)
+                if (useUnitConversion && unit) {
+                    const converted = this.convertUnitForImport(stock, unit, cost, sellPrice);
+                    if (converted.converted) {
+                        stock = converted.quantity;
+                        cost = converted.cost;
+                        sellPrice = converted.sellPrice;
+                        unit = converted.newUnit;
+                        convertedCount++;
+                    }
                 }
 
                 let product = null;
@@ -11392,6 +11813,7 @@ closeImportGuide() {
                     if (supplier) product.supplier = supplier;
                     if (unit) product.unit = unit;
                     if (mfg) product.mfgDate = mfg;
+                    this.syncProductStock(product);
                     try {
                         await this.saveProduct(product);
                     } catch (e) {
@@ -11410,12 +11832,13 @@ closeImportGuide() {
                         sellPrice1: sellPrice || 0,
                         unit: unit || 'ชิ้น',
                         stock: stock || 0,
-                        minStock: 5,
-                        maxStock: 100,
+                        minStock: idx('minStock') >= 0 ? parseInt(row[idx('minStock')]) || 5 : 5,
+                        maxStock: idx('maxStock') >= 0 ? parseInt(row[idx('maxStock')]) || 100 : 100,
                         mfgDate: mfg || '',
                         lots: lot ? [{ lot, mfg, stock, cost, sellPrice, expiry, unit }] : [],
                         createdAt: new Date().toISOString()
                     };
+                    newProduct.stock = newProduct.lots.reduce((s, l) => s + (Number(l.stock) || 0), 0) || (stock || 0);
                     try {
                         await this.saveProduct(newProduct);
                     } catch (e) {
@@ -11431,8 +11854,11 @@ closeImportGuide() {
             this.updateProgress();
             this.updateAlerts();
             this.runAnalytics();
+            
             let msg = `✅ นำเข้าสำเร็จ ${successCount} รายการ`;
-            if (errorCount > 0) msg += `, ข้าม ${errorCount} รายการ`;
+            if (convertedCount > 0) msg += ` (แปลงหน่วย ${convertedCount})`;
+            if (errorCount > 0) msg += `, ข้าม ${errorCount}`;
+            
             this.updateStatus(msg);
             this.showToast(msg, 'success');
         } catch (err) {
