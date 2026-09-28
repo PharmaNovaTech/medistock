@@ -4255,25 +4255,27 @@ class StockApp {
         return s;
     }
 
-    v53RenderSessionBanner() {
-        const banner = document.getElementById('sessionBanner');
-        if (!banner) return;
+	v53RenderSessionBanner() {
+		const banner = document.getElementById('sessionBanner');
+		if (!banner) return;
 
-        const s = this.v53GetActiveSession();
-        const userEl = document.getElementById('sessionUserName');
-        const idEl = document.getElementById('sessionIdDisplay');
-        const timeEl = document.getElementById('sessionTimeDisplay');
+		const s = this.v53GetActiveSession();
+		const userEl = document.getElementById('sessionUserName');
+		const idEl = document.getElementById('sessionIdDisplay');
+		const timeEl = document.getElementById('sessionTimeDisplay');
 
-        if (!s) {
-            banner.classList.add('inactive');
-            if (userEl) userEl.textContent = 'ไม่มี Session';
-            if (idEl) idEl.textContent = 'sess_----';
-            if (timeEl) timeEl.textContent = 'เริ่ม: --:--';
-            return;
-        }
+		if (!s) {
+			banner.classList.add('inactive');
+			if (userEl) userEl.textContent = 'ไม่มี Session';
+			if (idEl) idEl.textContent = 'sess_----';
+			if (timeEl) timeEl.textContent = 'เริ่ม: --:--';
+			return;
+		}
 
-        banner.classList.remove('inactive');
-        if (userEl) userEl.textContent = s.userName || 'ไม่ระบุ';
+		banner.classList.remove('inactive');
+		// ⭐ FIX: ใช้ this.v5UserName ก่อน (ค่าล่าสุด) ถ้าไม่มีค่อยใช้ s.userName
+		const displayName = this.v5UserName || s.userName || 'ไม่ระบุ';
+		if (userEl) userEl.textContent = displayName;
         if (idEl) idEl.textContent = s.sessionId.slice(-12);
         if (timeEl) {
             const startTime = new Date(s.startedAt);
@@ -4294,7 +4296,9 @@ class StockApp {
             if (el) el.textContent = val;
         };
         setVal('sdSessionId', s.sessionId);
-        setVal('sdUser', `${s.userName} (${s.userId.slice(0, 12)})`);
+        // ⭐ FIX: ใช้ this.v5UserName ก่อน
+		const displayUser = this.v5UserName || s.userName || 'ไม่ระบุ';
+		setVal('sdUser', `${displayUser} (${s.userId.slice(0, 12)})`);
         setVal('sdBranch', this.branches.find(b => b.id === s.branchId)?.name || s.branchId);
         setVal('sdDevice', s.deviceId.slice(0, 20));
         setVal('sdStarted', new Date(s.startedAt).toLocaleString('th-TH'));
@@ -11243,18 +11247,31 @@ valueInputOption=USER_ENTERED&key=${config.apiKey}`;
         if (st) st.textContent = this.v5UserName ? `👤 ${this.v5UserName}` : '⚠️ ยังไม่ได้ตั้งชื่อ';
     }
 
-    v51SaveIdentity() {
-        const name = (document.getElementById('v51UserName')?.value || '').trim();
-        if (!name) {
-            this.showToast('⚠️ กรุณาตั้งชื่อ', 'warning');
-            return;
-        }
-        this.v5UserName = name;
-        localStorage.setItem('medistock_user_name', name);
-        this.v51LoadIdentity();
-        this.v53RenderSessionBanner();
-        this.showToast('✅ บันทึกชื่อสำเร็จ', 'success');
-    }
+	v51SaveIdentity() {
+		const name = (document.getElementById('v51UserName')?.value || '').trim();
+		if (!name) {
+			this.showToast('⚠️ กรุณาตั้งชื่อ', 'warning');
+			return;
+		}
+		this.v5UserName = name;
+		localStorage.setItem('medistock_user_name', name);
+		
+		// ⭐ FIX: อัปเดต Session ปัจจุบันด้วย
+		const s = this.v53GetActiveSession();
+		if (s) {
+			s.userName = name;
+			try {
+				localStorage.setItem('v53_active_session_' + this.branchId, JSON.stringify(s));
+			} catch (e) {}
+			this.v53ActiveSession = s;
+			console.log('✅ อัปเดต Session userName =', name);
+		}
+		
+		this.v51LoadIdentity();
+		this.v53RenderSessionBanner();
+		this.v53RenderSessionDetail();
+		this.showToast('✅ บันทึกชื่อสำเร็จ', 'success');
+	}
 
     v51SaveSyncConfig() {
         const ep = (document.getElementById('v51SyncEndpoint')?.value || '').trim();
@@ -13048,15 +13065,15 @@ const MANUAL_FULL = [
             <p>MediStock ทำงานแบบ <strong>Offline-first PWA</strong>:</p>
             <div class="box">
 ┌─────────────────────────────────────────┐
-│         		📱 อุปกรณ์ผู้ใช้            	  │
-│  			 (มือถือ / แท็บเล็ต / คอมพิวเตอร์) │
+│         		📱 อุปกรณ์ผู้ใช้                      	  │
+│  			 (มือถือ / แท็บเล็ต / คอมพิวเตอร์)      	  │
 └──────────────────┬──────────────────────┘
                    │
                    ▼
 ┌─────────────────────────────────────────┐
 │        🌐 MediStock Web App (PWA)   	  │
 │  			• HTML/CSS/JavaScript     	  │
-│ 		    • Service Worker (แคช) 		  │
+│ 		    • Service Worker (แคช)   		  │
 └──────────────────┬──────────────────────┘
                    │
         ┌──────────┴──────────┐
@@ -13064,8 +13081,8 @@ const MANUAL_FULL = [
 ┌───────────────┐    ┌──────────────────┐
 │ 💾 IndexedDB 	│    │ ☁️ Google Sheets	│
 │ (Local DB)    │    │ (Multi-user)		│
-│ • ข้อมูลนับ    	│    │ • Sync ทีม    	│
-│ • สินค้า 		│    │ • Backup         │
+│ • ข้อมูลนับ     	│    │ • Sync ทีม    	    │
+│ • สินค้า      	    │    │ • Backup         │
 └───────────────┘    └──────────────────┘
             </div>
             <p>
@@ -13241,7 +13258,7 @@ const MANUAL_FULL = [
 ┌────────────────────────────────────────────────────┐
 │ 💊 MediStock v5.3.1  🏪  ☁️  🌙        			     │  ← Header
 ├────────────────────────────────────────────────────┤
-│ 📥 นำเข้า │ 📷 นับ │ 🗺️ ผัง │ 📊 รายงาน │ 📈 วิเคราะห์ │⚙️ ตั้งค่า│  ← Tab
+│ 📥 นำเข้า │ 📷 นับ │ 🗺️ ผัง │ 📊 รายงาน │ 📈 วิเคราะห์ │ ⚙️ ตั้งค่า	 │  ← Tab
 ├────────────────────────────────────────────────────┤
 │                                          			 │
 │         [เนื้อหาของ Tab]                  			 │
@@ -13693,7 +13710,7 @@ const MANUAL_FULL = [
             <h3>4.4 ปุ่มในหน้าจอสแกน</h3>
             <div class="box">
 ┌─────────────────────────────────────┐
-│  📷 วางบาร์โค้ดในกรอบ              	  │  ← ข้อความแนะนำ
+│  📷 วางบาร์โค้ดในกรอบ                                 	  │  ← ข้อความแนะนำ
 │  ┌───────────────┐                  │
 │  │               │                  │  ← กรอบสแกน
 │  │   [BARCODE]   │                  │
@@ -13703,7 +13720,7 @@ const MANUAL_FULL = [
 │              [1x] [2x] [3x] [4x]    │  ← ปุ่มซูม
 │              [A] [↺]            	  │
 │                                     │
-│              [💡 วิธีใช้]         	  │  ← ปุ่มช่วยเหลือ
+│              [💡 วิธีใช้]         			  │  ← ปุ่มช่วยเหลือ
 └─────────────────────────────────────┘
             </div>
 
@@ -14129,48 +14146,48 @@ const MANUAL_FULL = [
 			<h4>4.18.1 Flow Chart: สแกนเจอของใหม่</h4>
             <div class="box">
 ┌─────────────────────────────┐
-│      📷 สแกนบาร์โค้ด     	  │
+│      📷 สแกนบาร์โค้ด                       │
 └──────────┬──────────────────┘
            │
            ▼
 ┌─────────────────────────────┐
-│        ระบบหาสินค้า     	  │
+│        ระบบหาสินค้า         	      │
 └──────────┬──────────────────┘
            │
       ┌────┴────┐
       ▼         ▼
-     ✅ เจอ    ❌ ไม่เจอ
+     ✅ เจอ           ❌ ไม่เจอ
       │         │
       ▼         ▼
   ┌──────┐  ┌────────────────────┐
-  │ เลือก │  │      ระบบถาม:    	 │
-  │ LOT  │  │     • 🔍 ค้นหาชื่อ  	 │
-  │ยืนยัน  │  │     • ➕ เพิ่มใหม่	 │
-  └──────┘  │     • ❌ ยกเลิก   	 │
+  │ เลือก	 │  │      ระบบถาม:       	 │
+  │ LOT  │  │     • 🔍 ค้นหาชื่อ    	 │
+  │ยืนยัน 	 │  │     • ➕ เพิ่มใหม่    	 │
+  └──────┘  │     • ❌ ยกเลิก   	     │
             └────────┬───────────┘
                      │
               ┌──────┴───────┐
               ▼              ▼
-           ➕ เพิ่มใหม่        🔍 ค้นหา
+           ➕ เพิ่มใหม่                  🔍 ค้นหา
               │              │
               ▼              ▼
       ┌─────────────┐  ┌──────────────┐
-      │ กรอกข้อมูล: 	│  │   เจอ → จับคู่  │
-      │    • ชื่อ *  	│  │   ไม่เจอ → ➕  │
+      │   กรอกข้อมูล:   	│  │   เจอ → จับคู่	  │
+      │    • ชื่อ *      	│  │   ไม่เจอ → ➕ 	  │
       │    • LOT    │  └──────────────┘
       │    • EXP    │
       │    • ราคา	│
-      │    • หน่วย  	│
+      │    • หน่วย      	│
       └──────┬──────┘
              │
              ▼
       ┌─────────────┐
-      │    💾 บันทึก 	│
+      │    💾 บันทึก     	│
       └──────┬──────┘
              │
              ▼
       ┌─────────────┐
-      │    นับต่อได้ 	│
+      │    นับต่อได้      	│
       └─────────────┘
             </div>
 
@@ -14533,9 +14550,9 @@ const MANUAL_FULL = [
 
             <div class="box">
 ┌──────────────┬──────────────┬──────────────┬──────────────┐
-│📊 รายการนับ	   │  ⚠️ ผลต่าง 	  │  💰 ผลต่างทุน	 │  💵 ผลต่างขาย 	│
+│ 📊 รายการนับ 	   │  ⚠️ ผลต่าง      	  │  💰 ผลต่างทุน	 │  💵 ผลต่างขาย     	│
 │      45 	   │      3       │   -1,250.00  │   -2,100.00  │
-│  จาก 50  	   │6.7% ของรายการ │   -5.2% 	 │     -4.8%    │
+│  จาก 50       	   │6.7% ของรายการ  │   -5.2% 	 │     -4.8%    │
 └──────────────┴──────────────┴──────────────┴──────────────┘
             </div>
 
@@ -15015,8 +15032,8 @@ Min Stock ≈ ยอดขายเฉลี่ยต่อวัน × ระ�
             <p>ระบบ Multi-user มี 3 ส่วนหลัก:</p>
             <div class="box">
 ┌──────────────────────────────────────────────┐
-│  ส่วนที่ 1: เครื่องผู้ใช้ (Client)               	   │
-│  • มือถือ/แท็บเล็ตของพนักงาน                 	   │
+│  ส่วนที่ 1: เครื่องผู้ใช้ (Client)                	   │
+│  • มือถือ/แท็บเล็ตของพนักงาน                                      	   │
 │  • MediStock Web App                         │
 │  • เก็บข้อมูลใน IndexedDB (local)         	   │
 └────────────────┬─────────────────────────────┘
@@ -15024,33 +15041,33 @@ Min Stock ≈ ยอดขายเฉลี่ยต่อวัน × ระ�
                  │ GET ทุก 30 วิ
                  ▼
 ┌──────────────────────────────────────────────┐
-│  ส่วนที่ 2: Apps Script (Backend)         	   │
-│  • ตรวจ Token                         	   │
-│  • Dedup (กันข้อมูลซ้ำ)                   	   │
-│  • เขียนลง Google Sheet             		   │
+│  ส่วนที่ 2: Apps Script (Backend)         		   │
+│  • ตรวจ Token                         		   │
+│  • Dedup (กันข้อมูลซ้ำ)                      				   │
+│  • เขียนลง Google Sheet             			   │
 └────────────────┬─────────────────────────────┘
                  │
                  ▼
 ┌──────────────────────────────────────────────┐
 │  ส่วนที่ 3: Google Sheet (Database)    		   │
-│  • MultiUserSync: ข้อมูลการนับ            	   │
-│  • SyncLog: ประวัติการ sync              	   │
+│  • MultiUserSync: ข้อมูลการนับ              			   │
+│  • SyncLog: ประวัติการ sync              	       │
 └──────────────────────────────────────────────┘
             </div>
 
             <p><strong>ภาพรวมลำดับการทำงาน:</strong></p>
             <div class="box">
 ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
-│ เครื่อง A   	  │  │ เครื่อง B  	   │  │ เครื่อง C		│
+│ เครื่อง A   	  │  │ เครื่อง B  	   │  │ เครื่อง C  	    │
 └──────┬──────┘  └──────┬──────┘  └──────┬──────┘
        │                │                │
-       │  			ส่งข้อมูลเมื่อนับเสร็จ    	 │
+       │  			ส่งข้อมูลเมื่อนับเสร็จ       	 │
        └────────────────┼────────────────┘
                         │ POST + Token
                         ▼
               ┌──────────────────────┐
               │   Apps Script        │
-              │  (ตรวจ Token, Dedup) │
+              │  (ตรวจ Token, Dedup)	 │
               └──────────┬───────────┘
                          │ append
                          ▼
@@ -15062,8 +15079,8 @@ Min Stock ≈ ยอดขายเฉลี่ยต่อวัน × ระ�
         ┌────────────────┼────────────────┐
         ▼                ▼                ▼
 ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
-│ เครื่อง A  	  │  │ เครื่อง B	   │  │ เครื่อง C   	│
-│(เห็นทุกคน)	  │  │(เห็นทุกคน	   │  │ (เห็นทุกคน) 	│
+│ เครื่อง A  	  │  │ เครื่อง B   	   │  │ เครื่อง C   	│
+│ (เห็นทุกคน) 	  │  │ (เห็นทุกคน) 	   │  │ (เห็นทุกคน) 	│
 └─────────────┘  └─────────────┘  └─────────────┘
             </div>
 
