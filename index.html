@@ -8360,33 +8360,94 @@ async closeFullscreenScanner() {
         input.value = Math.max(0, (parseInt(input.value) || 0) + delta);
     }
 
-    async saveEditItem() {
-        const index = this.editingIndex;
-        if (index < 0 || index >= this.sessionItems.length) {
-            this.closeEditItemModal();
-            return;
-        }
-        const item = this.sessionItems[index];
-        const newQty = parseInt(document.getElementById('editQtyInput').value) || 0;
-        const newNote = document.getElementById('editNoteInput').value.trim() || '';
-        item.counted_qty = newQty;
-        item.difference = newQty - item.system_qty;
-        item.cost_diff = item.difference * item.cost;
-        item.sell_diff = item.difference * item.sellPrice;
-        item.note = newNote;
-        item.timestamp = new Date().toISOString();
-        item.updatedAt = item.timestamp;
-        this.sessionItems[index] = item;
-        this.recalculateGroupDifferences();
-        const qIdx = this.offlineQueue.findIndex(q => q.id === item.id);
-        if (qIdx !== -1) this.offlineQueue[qIdx] = item;
-        localStorage.setItem('offlineQueue', JSON.stringify(this.offlineQueue));
-        this.saveSession();
-        this.renderRecentScans();
-        this.closeEditItemModal();
-        this.runAnalytics();
-        this.showToast(`✅ แก้ไขสำเร็จ`, 'success');
-    }
+	async saveEditItem() {
+		const index = this.editingIndex;
+		if (index < 0 || index >= this.sessionItems.length) {
+			this.closeEditItemModal();
+			return;
+		}
+		const item = this.sessionItems[index];
+		const newQty = parseInt(document.getElementById('editQtyInput').value) || 0;
+		const newNote = document.getElementById('editNoteInput').value.trim() || '';
+		
+		// ⭐ เก็บค่าเก่าไว้
+		const oldQty = item.counted_qty;
+		const oldDiff = item.difference;
+		
+		item.counted_qty = newQty;
+		item.difference = newQty - item.system_qty;
+		item.cost_diff = item.difference * item.cost;
+		item.sell_diff = item.difference * item.sellPrice;
+		item.note = newNote;
+		item.timestamp = new Date().toISOString();
+		item.updatedAt = item.timestamp;
+		this.sessionItems[index] = item;
+		this.recalculateGroupDifferences();
+		const qIdx = this.offlineQueue.findIndex(q => q.id === item.id);
+		if (qIdx !== -1) this.offlineQueue[qIdx] = item;
+		localStorage.setItem('offlineQueue', JSON.stringify(this.offlineQueue));
+		
+		// ⭐ FIX: สร้าง Event ใหม่สำหรับ Sync
+		const session = this.v53EnsureSession();
+		const editEvent = {
+			id: this.v52NewEventId('evt'),
+			eventId: '',
+			schemaVersion: this.v52SchemaVersion,
+			deviceId: this.v5DeviceId,
+			sessionId: session.sessionId,
+			productId: item.productId,
+			barcode: item.barcode || '',
+			name: item.name,
+			lot: item.lotName || item.lot || '',
+			lotName: item.lotName || item.lot || '',
+			mfg: item.mfg,
+			age: item.age,
+			system_qty: item.system_qty,
+			counted_qty: newQty,               // ⭐ ค่าใหม่
+			system_unit: item.system_unit,
+			counted_unit: item.counted_unit,
+			difference: item.difference,
+			cost: item.cost,
+			sellPrice: item.sellPrice,
+			cost_diff: item.cost_diff,
+			sell_diff: item.sell_diff,
+			profit_loss: item.difference * (item.sellPrice - item.cost),
+			expiry: item.expiry,
+			location: item.location,
+			locationName: item.locationName,
+			locationType: item.locationType,
+			timestamp: new Date().toISOString(),
+			note: `[แก้ไข: ${oldQty} → ${newQty}] ${newNote}`.trim(),
+			userName: this.v5UserName || '',
+			userId: this.v5UserId,
+			isEdit: true
+		};
+		this.v52NormalizeEvent(editEvent);
+		
+		// ⭐ Push ไป Apps Script
+		if (typeof this.v51PushItemToSheet === 'function') {
+			this.offlineQueue.push(editEvent);
+			localStorage.setItem('offlineQueue', JSON.stringify(this.offlineQueue));
+			
+			this.v51PushItemToSheet(editEvent)
+				.then(ok => {
+					if (ok) {
+						this.offlineQueue = this.offlineQueue.filter(x => x.id !== editEvent.id);
+						localStorage.setItem('offlineQueue', JSON.stringify(this.offlineQueue));
+						console.log('✅ Push edit สำเร็จ:', editEvent.eventId);
+					} else {
+						console.warn('⚠️ Push edit ไม่สำเร็จ — เข้า queue');
+					}
+				})
+				.catch(err => console.warn('Push edit failed:', err));
+		}
+		
+		this.saveSession();
+		this.renderRecentScans();
+		this.closeEditItemModal();
+		this.runAnalytics();
+		this.showToast(`✅ แก้ไขสำเร็จ`, 'success');
+	}
 
     async deleteEditItem() {
         const index = this.editingIndex;
@@ -8419,11 +8480,61 @@ async closeFullscreenScanner() {
         this.saveSession();
         this.renderRecentScans();
         this.updateProgress();
-        this.updateScanBadge();
-        this.closeEditItemModal();
-        this.v53RenderSessionBanner();
-        this.showToast(`🗑️ ลบ ${item.name} เรียบร้อย`, 'info');
-    }
+		this.updateScanBadge();
+		this.closeEditItemModal();
+		this.v53RenderSessionBanner();
+		
+		// ⭐ NEW: Sync การลบไป Apps Script
+		try {
+			const session = this.v53EnsureSession();
+			const deleteEvent = {
+				id: this.v52NewEventId('evt'),
+				eventId: '',
+				schemaVersion: this.v52SchemaVersion,
+				deviceId: this.v5DeviceId,
+				sessionId: session.sessionId,
+				productId: item.productId,
+				barcode: item.barcode || '',
+				name: item.name,
+				lot: item.lotName || item.lot || '',
+				lotName: item.lotName || item.lot || '',
+				mfg: item.mfg || '',
+				age: item.age || null,
+				system_qty: item.system_qty,
+				counted_qty: 0,
+				system_unit: item.system_unit || '',
+				counted_unit: item.counted_unit || '',
+				difference: -item.system_qty,
+				cost: item.cost || 0,
+				sellPrice: item.sellPrice || 0,
+				cost_diff: -(item.system_qty || 0) * (item.cost || 0),
+				sell_diff: -(item.system_qty || 0) * (item.sellPrice || 0),
+				profit_loss: -(item.system_qty || 0) * ((item.sellPrice || 0) - (item.cost || 0)),
+				expiry: item.expiry || '',
+				location: item.location || '',
+				locationName: item.locationName || '',
+				locationType: item.locationType || '',
+				timestamp: new Date().toISOString(),
+				note: `[ลบรายการ: ${item.counted_qty} ชิ้น] ${item.note || ''}`.trim(),
+				userName: this.v5UserName || '',
+				userId: this.v5UserId,
+				isDelete: true
+			};
+			this.v52NormalizeEvent(deleteEvent);
+			
+			if (typeof this.v51PushItemToSheet === 'function') {
+				this.v51PushItemToSheet(deleteEvent)
+					.then(ok => {
+						if (ok) console.log('✅ Sync delete สำเร็จ:', deleteEvent.eventId);
+					})
+					.catch(err => console.warn('Push delete failed:', err));
+			}
+		} catch (e) {
+			console.warn('Sync delete error:', e);
+		}
+		
+		this.showToast(`🗑️ ลบ ${item.name} เรียบร้อย`, 'info');
+	}
 
     async deleteEditItemDirect(index) {
         if (!confirm('🗑️ ยืนยันลบ?')) return;
@@ -8454,9 +8565,60 @@ async closeFullscreenScanner() {
         this.updateProgress();
         this.updateScanBadge();
         this.runAnalytics();
-        this.v53RenderSessionBanner();
-        this.showToast(`🗑️ ลบเรียบร้อย`, 'info');
-    }
+        this.runAnalytics();
+		this.v53RenderSessionBanner();
+		
+		// ⭐ NEW: Sync การลบไป Apps Script
+		try {
+			const session = this.v53EnsureSession();
+			const deleteEvent = {
+				id: this.v52NewEventId('evt'),
+				eventId: '',
+				schemaVersion: this.v52SchemaVersion,
+				deviceId: this.v5DeviceId,
+				sessionId: session.sessionId,
+				productId: item.productId,
+				barcode: item.barcode || '',
+				name: item.name,
+				lot: item.lotName || item.lot || '',
+				lotName: item.lotName || item.lot || '',
+				mfg: item.mfg || '',
+				age: item.age || null,
+				system_qty: item.system_qty,
+				counted_qty: 0,
+				system_unit: item.system_unit || '',
+				counted_unit: item.counted_unit || '',
+				difference: -item.system_qty,
+				cost: item.cost || 0,
+				sellPrice: item.sellPrice || 0,
+				cost_diff: -(item.system_qty || 0) * (item.cost || 0),
+				sell_diff: -(item.system_qty || 0) * (item.sellPrice || 0),
+				profit_loss: -(item.system_qty || 0) * ((item.sellPrice || 0) - (item.cost || 0)),
+				expiry: item.expiry || '',
+				location: item.location || '',
+				locationName: item.locationName || '',
+				locationType: item.locationType || '',
+				timestamp: new Date().toISOString(),
+				note: `[ลบรายการ: ${item.counted_qty} ชิ้น] ${item.note || ''}`.trim(),
+				userName: this.v5UserName || '',
+				userId: this.v5UserId,
+				isDelete: true
+			};
+			this.v52NormalizeEvent(deleteEvent);
+			
+			if (typeof this.v51PushItemToSheet === 'function') {
+				this.v51PushItemToSheet(deleteEvent)
+					.then(ok => {
+						if (ok) console.log('✅ Sync delete สำเร็จ:', deleteEvent.eventId);
+					})
+					.catch(err => console.warn('Push delete failed:', err));
+			}
+		} catch (e) {
+			console.warn('Sync delete error:', e);
+		}
+		
+		this.showToast(`🗑️ ลบเรียบร้อย`, 'info');
+	}
 
     // ================================================================
     // Recent Scans
