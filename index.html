@@ -8037,19 +8037,48 @@ async closeFullscreenScanner() {
         const cabinetId = document.getElementById('locationCabinet').value;
         const shelfSelect = document.getElementById('locationShelf');
         if (!shelfSelect) return;
-        shelfSelect.innerHTML = '<option value="new">➕ สร้างชั้นใหม่</option>';
+
+        // ⭐ หาข้อมูลตู้ก่อน
+        let cabinetName = '';
+        let shelfCount = 0;
+        let cabinet = null;
+
         if (cabinetId !== 'new') {
-            const cabinet = this.locations.find(l => String(l.id) === String(cabinetId));
-            if (cabinet && cabinet.shelves) {
-                cabinet.shelves.forEach(s => {
-                    shelfSelect.innerHTML += `<option value="${escapeHtml(s.id)}">📚 ${escapeHtml(s.name)}</option>`;
-                });
+            cabinet = this.locations.find(l => String(l.id) === String(cabinetId));
+            if (cabinet) {
+                cabinetName = cabinet.name;
+                shelfCount = (cabinet.shelves || []).length;
             }
         }
+
+        // ⭐ สร้าง option แรกแบบ dynamic
+        const firstLabel = shelfCount > 0
+            ? `➕ สร้างชั้นใหม่ (ตู้นี้มี ${shelfCount} ชั้น)`
+            : `➕ สร้างชั้นใหม่`;
+
+        shelfSelect.innerHTML = `<option value="new">${firstLabel}</option>`;
+
+        // ⭐ เพิ่ม optgroup แสดงชั้นของตู้นั้น
+        if (cabinet && cabinet.shelves && cabinet.shelves.length > 0) {
+            const optgroup = document.createElement('optgroup');
+            optgroup.label = `📚 ชั้นของ "${cabinet.name}"`;
+            
+            cabinet.shelves.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                opt.textContent = `📚 ${s.name}`;
+                optgroup.appendChild(opt);
+            });
+            
+            shelfSelect.appendChild(optgroup);
+        }
+
+        // อัปเดตปุ่ม + / ตู้ + / ชั้น
         const btnCab = document.getElementById('btnAddCabinetScan');
         const btnShelf = document.getElementById('btnAddShelfScan');
         if (btnCab) btnCab.style.display = cabinetId === 'new' ? 'inline-flex' : 'none';
         if (btnShelf) btnShelf.style.display = shelfSelect.value === 'new' && cabinetId !== 'new' ? 'inline-flex' : 'none';
+
         this.updateLocationDisplay();
     }
 
@@ -8725,7 +8754,8 @@ async closeFullscreenScanner() {
             shelves: [],
             createdAt: new Date().toISOString(),
             order: this.locations.length,
-            x: 0,
+            // ⭐ NEW: คำนวณ x,y ให้ตู้ใหม่ไม่ทับกัน
+            x: this.getNextCabinetPosition(),
             y: 0
         });
         this.saveLocations();
@@ -8733,6 +8763,16 @@ async closeFullscreenScanner() {
         this.updateLocationDropdowns();
         document.getElementById('newCabinetName').value = '';
         this.showToast('✅ เพิ่มตู้ ' + name + ' สำเร็จ', 'success');
+    }
+
+    // ⭐ เพิ่มฟังก์ชันใหม่ต่อท้าย addCabinet()
+    getNextCabinetPosition() {
+        // หา x สูงสุดของตู้ที่มีอยู่ → +18 (เว้นช่อง)
+        if (this.locations.length === 0) return 5;
+        const maxX = Math.max(...this.locations.map(l => Number(l.x) || 0));
+        const nextX = maxX + 18;
+        // ถ้าเกิน 80% → ขึ้นแถวใหม่
+        return nextX > 80 ? 5 : nextX;
     }
 
     deleteCabinet(id) {
@@ -8899,8 +8939,9 @@ title="ลบ">
         if (!grid) return;
         if (this.locations.length === 0) {
             grid.innerHTML = `<div style="text-align:center;color:var(--text-muted);padding:28px;grid-column:1/-1;font-size:14px;"><i 
-
-    class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opacity:0.5;"></i>ยังไม่มีตู้สินค้า<br><small>เพิ่มตู้ด้านบนเพื่อเริ่มจัดผังร้าน</small></div>`;
+class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opacity:0.5;"></i>ยังไม่มีตู้สินค้า<br><small>เพิ่มตู้ด้านบนเพื่อเริ่มจัดผังร้าน</small></div>`;
+            // ⭐ เพิ่ม: refresh blueprint ด้วย
+            this.renderBlueprint();
             return;
         }
         const front = this.locations.filter(l => l.type === 'front');
@@ -8915,7 +8956,10 @@ title="ลบ">
             html += this.renderCabinetBlock(c);
         });
         grid.innerHTML = html;
-    }
+        
+        // ⭐⭐⭐ เพิ่มบรรทัดนี้! — refresh blueprint อัตโนมัติ
+        this.renderBlueprint();
+    }    // ⬅️ ปิดฟังก์ชัน
 
     selectScanLocation(locationId) {
         const raw = String(locationId || '');
