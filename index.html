@@ -11545,76 +11545,64 @@ valueInputOption=USER_ENTERED&key=${config.apiKey}`;
 
     async v51SyncNow() {
         const c = this.v51SyncConfig();
-        if (!c.spreadsheetId || !c.apiKey) {
-            if (!(c.endpoint && c.token)) {
-                this.showToast('⚠️ กรุณาตั้งค่า Google Sheets หรือ Shared Sync ก่อน', 'warning');
-                return;
+        
+        // ⭐ ใช้ Apps Script Endpoint + Token เท่านั้น (ไม่ใช้ Sheets API ตรง)
+        // เพื่อหลีกเลี่ยงการเด้ง "บันทึกรหัสผ่าน" ของ Chrome
+        
+        if (!c.endpoint || !c.token) {
+            const statusEl = document.getElementById('v51SyncStatus');
+            if (statusEl) {
+                statusEl.textContent = '⚠️ กรุณาตั้งค่า Endpoint + Token ที่ ⚙️ ตั้งค่า → Shared Sync';
+                statusEl.style.color = 'var(--warning)';
             }
-            try {
-                const res = await fetch(c.endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: 'read', sheet: 'MultiUserSync', token: c.token, branchId: this.branchId || '' })
-                });
-                if (!res.ok) throw new Error('Sync endpoint HTTP ' + res.status);
-                const payload = await res.json();
-                const teamRows = Array.isArray(payload.values) ?
-                    payload.values.slice(payload.values[0]?.[0] === 'timestamp' ? 1 : 0) :
-                    Array.isArray(payload.rows) ? payload.rows : [];
-                this._v51LastTeamRows = teamRows;
-                this.v51RenderTeamData(teamRows);
-                this.v51RenderConflicts(teamRows);
-                const statusEl = document.getElementById('v51SyncStatus');
-                if (statusEl) {
-                    statusEl.textContent = `🟢 โหลดข้อมูลทีม ${teamRows.length} รายการ สำเร็จ`;
-                    statusEl.style.color = 'var(--success)';
-                }
-                return;
-            } catch (e) {
-                this.showToast('❌ Shared Sync อ่านไม่สำเร็จ: ' + e.message, 'error');
-                return;
-            }
+            this.showToast('⚠️ กรุณาตั้งค่า Endpoint + Token ก่อน', 'warning');
+            return;
         }
+        
         const statusEl = document.getElementById('v51SyncStatus');
         if (statusEl) {
             statusEl.textContent = '⏳ กำลังโหลดข้อมูลทีม...';
             statusEl.style.color = 'var(--warning)';
         }
+        
         try {
-            const sheetName = 'MultiUserSync';
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${c.spreadsheetId}/values/${sheetName}!A:M?key=${c.apiKey}`;
-            const res = await fetch(url);
-            if (!res.ok) {
-                const errBody = await res.json().catch(() => ({}));
-                throw new Error(errBody?.error?.message || 'HTTP ' + res.status);
-            }
-            const data = await res.json();
-            const rows = data.values || [];
-            if (rows.length <= 1) {
-                if (statusEl) {
-                    statusEl.textContent = '✅ ยังไม่มีข้อมูลทีม';
-                    statusEl.style.color = 'var(--success)';
-                }
-                this.showToast('ℹ️ ยังไม่มีข้อมูลจากทีม', 'info');
-                return;
-            }
-            const dataRows = rows.slice(1);
-            const myBranch = this.branchId || '';
-            const teamRows = dataRows.filter(r => !myBranch || (r[3] || '') === myBranch || myBranch === '');
+            const res = await fetch(c.endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({
+                    action: 'read',
+                    sheet: 'MultiUserSync',
+                    token: c.token,
+                    branchId: this.branchId || ''
+                })
+            });
+            
+            if (!res.ok) throw new Error('Sync endpoint HTTP ' + res.status);
+            
+            const payload = await res.json();
+            
+            // ⭐ รองรับทั้ง 2 รูปแบบ response
+            const teamRows = Array.isArray(payload.values)
+                ? payload.values.slice(payload.values[0]?.[0] === 'timestamp' ? 1 : 0)
+                : Array.isArray(payload.rows)
+                    ? payload.rows
+                    : [];
+            
             this._v51LastTeamRows = teamRows;
             this.v51RenderTeamData(teamRows);
             this.v51RenderConflicts(teamRows);
+            
             if (statusEl) {
                 statusEl.textContent = `🟢 โหลดข้อมูลทีม ${teamRows.length} รายการ สำเร็จ`;
                 statusEl.style.color = 'var(--success)';
             }
-            this.showToast(`✅ โหลดข้อมูลทีม ${teamRows.length} รายการ`, 'success');
+            
         } catch (e) {
             if (statusEl) {
                 statusEl.textContent = '❌ โหลดไม่สำเร็จ: ' + e.message;
                 statusEl.style.color = 'var(--danger)';
             }
-            this.showToast('❌ ' + e.message, 'error');
+            this.showToast('❌ โหลดไม่สำเร็จ: ' + e.message, 'error');
         }
     }
 
