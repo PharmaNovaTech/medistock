@@ -12772,8 +12772,14 @@ syncProductStock(product) {
         return `
             <div class="doc-cover">
                 <div class="doc-brand">💊 MediStock</div>
-                <h1>${escapeHtml(title)}</h1>
-                <p class="doc-subtitle">${escapeHtml(subtitle)}</p>
+				<h1>นวัตกรรมระบบบริหารจัดการสต็อกสินค้าในร้านยา</h1>
+                <p style="font-size:15px;color:#0369a1;font-weight:600;margin:12px 0 20px;">
+					ยกระดับการนับสต็อกสินค้าของร้านยา<br>สู่ความรวดเร็ว แม่นยำ และไร้รอยต่อ
+				</p>
+				<h2 style="font-size:18px;color:#64748b;margin-top:20px;border-top:2px solid #e2e8f0;padding-top:15px;">
+					${escapeHtml(title)}
+				</h2>
+				<p class="doc-subtitle">${escapeHtml(subtitle)}</p>
                 <div class="doc-meta">
                     <strong>เวอร์ชัน:</strong> v${CONFIG.VERSION} (Schema ${CONFIG.SCHEMA_VERSION})<br>
                     <strong>สาขา:</strong> ${escapeHtml(branchName)}<br>
@@ -13241,7 +13247,7 @@ const MANUAL_FULL = [
             <h3>1.1 MediStock คืออะไร?</h3>
             <p>
                 <strong>MediStock</strong> คือระบบนับสต็อกสินค้าสำหรับ<strong>ร้านขายยา</strong>
-                และ<strong>คลินิก</strong> ที่ทำงานบนเว็บเบราว์เซอร์ (ไม่ต้องติดตั้งแอป)
+               ที่ทำงานบนเว็บเบราว์เซอร์ (ไม่ต้องติดตั้งแอป)
                 ออกแบบมาเพื่อให้พนักงานนับสต็อกได้<strong>รวดเร็ว แม่นยำ และใช้งานได้แม้ไม่มีอินเทอร์เน็ต</strong>
                 โดยใช้กล้องมือถือสแกนบาร์โค้ดแทนการพิมพ์ด้วยมือ
             </p>
@@ -13320,9 +13326,9 @@ const MANUAL_FULL = [
 			<h3>1.6 Use Case — ใครควรใช้?</h3>
             <p><strong>✅ เหมาะกับ:</strong></p>
             <ul>
-                <li>ร้านขายยา 1-10 สาขา</li>
-                <li>คลินิกที่มีเภสัชกร</li>
-                <li>ร้านยาชุมชน (ร้าน ย.1, ย.2)</li>
+                <li>ร้านยาที่มีเภสัชกรคนเดียวในร้าน</li>
+                <li>ร้านยาคุณภาพ</li>
+                <li>ร้านยาขนาดเล็ก </li>
                 <li>ผู้ช่วยเภสัชกร / พนักงานขายยา</li>
                 <li>Admin ที่ต้องดูรายงานสต็อก</li>
             </ul>
