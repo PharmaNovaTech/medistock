@@ -9811,14 +9811,6 @@ class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opaci
                 activeHeader.style.top = '0';
                 activeHeader.style.bottom = 'auto';
             }
-        } else {
-            el.innerHTML = `
-                ${frontHeader}
-                ${backHeader}
-                ${frontHtml}
-                ${backHtml}
-            `;
-        }
 
         el.querySelectorAll('.blueprint-cab').forEach(node => {
             let dragged = false;
