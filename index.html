@@ -1220,7 +1220,8 @@
         }
         .blueprint-map {
             position: relative;
-            height: 360px;
+            min-height: 360px;
+            height: auto;
             border: 2px dashed var(--primary-light);
             border-radius: var(--radius-md);
             margin-bottom: 8px;
@@ -1228,21 +1229,160 @@
                 linear-gradient(to right, rgba(14,165,233,.10) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(14,165,233,.10) 1px, transparent 1px);
             background-size: 20px 20px;
-            overflow: hidden;
+            overflow: visible;
+            padding-bottom: 20px;
+            transform-origin: top left;
+            transition: transform 0.2s ease;
         }
+		        /* ⭐ โหมด 2 โซน — แบ่งครึ่ง */
+        .blueprint-map.dual-zone::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 2px;
+            background: repeating-linear-gradient(
+                to right,
+                #f59e0b 0px,
+                #f59e0b 8px,
+                transparent 8px,
+                transparent 16px
+            );
+            z-index: 1;
+            pointer-events: none;
+        }
+        .blueprint-map.dual-zone {
+            background-image: 
+                linear-gradient(to bottom, 
+                    rgba(245, 158, 11, 0.05) 0%,
+                    rgba(245, 158, 11, 0.05) 50%,
+                    rgba(16, 185, 129, 0.05) 50%,
+                    rgba(16, 185, 129, 0.05) 100%
+                ),
+                linear-gradient(to right, rgba(14,165,233,.10) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(14,165,233,.10) 1px, transparent 1px);
+            background-size: 100% 100%, 20px 20px, 20px 20px;
+        }
+        /* ⭐ Wrapper */
+        #blueprintWrapper {
+            position: relative;
+            margin-bottom: 8px;
+        }
+        #blueprintWrapper.zoomed {
+            overflow: auto;
+            max-height: 600px;
+        }
+        /* ⭐ Combo A: Blueprint Cabinet */
         .blueprint-cab {
             position: absolute;
-            width: 16%;
-            min-width: 72px;
-            min-height: 44px;
+            min-width: 60px;
+            min-height: 40px;
             padding: 5px;
             border: 2px solid var(--primary);
             border-radius: 8px;
             background: var(--bg-card);
             box-shadow: var(--shadow-sm);
-            cursor: move;
+            cursor: pointer;
             text-align: center;
             user-select: none;
+            transition: box-shadow 0.2s, transform 0.2s;
+            z-index: 1;
+        }
+        .blueprint-cab:hover {
+            box-shadow: 0 4px 20px rgba(14,165,233,0.4);
+            transform: translateY(-2px);
+            z-index: 10;
+        }
+        .blueprint-cab.dragging {
+            opacity: 0.7;
+            box-shadow: 0 8px 30px rgba(14,165,233,0.6);
+            z-index: 100;
+            cursor: move;
+        }
+        /* Size variants */
+        .blueprint-cab.size-S  { width: 11%; }
+        .blueprint-cab.size-M  { width: 16%; }
+        .blueprint-cab.size-L  { width: 22%; }
+        .blueprint-cab.size-XL { width: 30%; }
+        /* Zone colors */
+        .blueprint-cab.front {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        }
+        .blueprint-cab.front:hover {
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5);
+        }
+        .blueprint-cab.front.dragging {
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.7);
+        }
+        .blueprint-cab.back {
+            border-color: #f59e0b;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        }
+        .blueprint-cab.back:hover {
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.5);
+        }
+        .blueprint-cab.back.dragging {
+            box-shadow: 0 8px 30px rgba(245, 158, 11, 0.7);
+        }
+        /* Zone Headers */
+        .blueprint-zone-header {
+            position: absolute;
+            left: 0;
+            right: 0;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px dashed;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .blueprint-zone-header.front {
+            top: 0;
+            background: rgba(16, 185, 129, 0.15);
+            color: #065f46;
+            border-bottom-color: #10b981;
+        }
+        .blueprint-zone-header.back {
+            top: 50%;
+            background: rgba(245, 158, 11, 0.15);
+            color: #92400e;
+            border-bottom-color: #f59e0b;
+        }
+        .blueprint-zone-header .zone-toggle {
+            pointer-events: auto;
+            cursor: pointer;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.7);
+            border: 1px solid currentColor;
+        }
+        /* Filter buttons */
+        .bp-filter-btn {
+            padding: 6px 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .bp-filter-btn:hover {
+            border-color: var(--primary-light);
+            color: var(--primary);
+        }
+        .bp-filter-btn.active {
+            background: var(--primary-gradient);
+            color: #fff;
+            border-color: var(--primary);
         }
         .pharmacy-grid {
             display: grid;
@@ -2563,6 +2703,13 @@ id="costDisplay">0.00</span>
 				</select>
 				<input type="text" class="input" id="newCabinetName" placeholder="ชื่อตู้ใหม่" style="flex:2;font-size:13px;padding:8px 12px;min-height:42px;">
 			</div>
+			<!-- ⭐ เพิ่ม: ขนาดตู้ -->
+			<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center;">
+				<span style="font-size:12px;font-weight:600;color:var(--text-muted);white-space:nowrap;">📐 ขนาด (cm.):</span>
+				<input type="number" class="input" id="newCabinetWidth" placeholder="กว้าง" min="0" style="flex:1;font-size:13px;padding:8px 12px;min-height:42px;">
+				<span style="font-size:12px;color:var(--text-muted);">×</span>
+				<input type="number" class="input" id="newCabinetLength" placeholder="ยาว" min="0" style="flex:1;font-size:13px;padding:8px 12px;min-height:42px;">
+			</div>
 			<button class="btn btn-primary btn-block" onclick="addCabinet()" style="font-size:14px;padding:12px 16px;min-height:46px;margin-bottom:8px;">
 				<i class="fas fa-plus"></i> เพิ่มตู้
 			</button>
@@ -2581,7 +2728,33 @@ id="costDisplay">0.00</span>
             </div>
 
             <!-- Blueprint Map -->
-            <div id="blueprintMap" class="blueprint-map" style="display:none;"></div>
+            <!-- ⭐ Combo A: Legend + Filter -->
+			<div id="blueprintControls" style="display:none;gap:10px;margin-bottom:8px;padding:8px 12px;background:var(--bg-body);border-radius:8px;font-size:11px;font-weight:600;flex-wrap:wrap;align-items:center;">
+				<span style="display:inline-flex;align-items:center;gap:4px;">
+					<span style="display:inline-block;width:14px;height:14px;background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:2px solid #10b981;border-radius:3px;"></span>
+					🏪 หน้าร้าน
+				</span>
+				<span style="display:inline-flex;align-items:center;gap:4px;">
+					<span style="display:inline-block;width:14px;height:14px;background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #f59e0b;border-radius:3px;"></span>
+					📦 หลังร้าน
+				</span>
+				<div style="flex:1;"></div>
+				<button class="bp-filter-btn active" data-filter="all" onclick="app.filterBlueprintZone('all')">ทั้งหมด</button>
+				<button class="bp-filter-btn" data-filter="front" onclick="app.filterBlueprintZone('front')">🏪 หน้าร้าน</button>
+				<button class="bp-filter-btn" data-filter="back" onclick="app.filterBlueprintZone('back')">📦 หลังร้าน</button>
+			</div>
+
+			<!-- ⭐ Blueprint Map + ปุ่มซูม -->
+			<div style="position:relative;display:none;" id="blueprintWrapper">
+				<div id="blueprintMap" class="blueprint-map"></div>
+				<!-- ⭐ ปุ่มซูม -->
+				<div id="blueprintZoomControls" style="position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:4px;background:rgba(255,255,255,0.95);padding:4px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.15);z-index:10;">
+					<button class="bp-zoom-btn" onclick="app.zoomBlueprint('in')" title="ขยาย" style="width:32px;height:32px;border:1px solid var(--border-color);background:#fff;border-radius:6px;cursor:pointer;font-size:16px;font-weight:800;color:var(--primary);display:flex;align-items:center;justify-content:center;">+</button>
+					<button class="bp-zoom-btn" onclick="app.zoomBlueprint('out')" title="ย่อ" style="width:32px;height:32px;border:1px solid var(--border-color);background:#fff;border-radius:6px;cursor:pointer;font-size:16px;font-weight:800;color:var(--primary);display:flex;align-items:center;justify-content:center;">−</button>
+					<button class="bp-zoom-btn" onclick="app.zoomBlueprint('reset')" title="รีเซ็ต" style="width:32px;height:32px;border:1px solid var(--border-color);background:#fff;border-radius:6px;cursor:pointer;font-size:14px;font-weight:800;color:var(--primary);display:flex;align-items:center;justify-content:center;">↺</button>
+					<div id="bpZoomLevel" style="text-align:center;font-size:9px;font-weight:800;color:var(--primary);padding:2px 0;">100%</div>
+				</div>
+			</div> 
 
             <!-- Pharmacy Map -->
             <div class="pharmacy-map" id="pharmacyMap">
@@ -3420,10 +3593,25 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
         <input type="text" class="input" id="newProductBarcode" placeholder="📱 บาร์โค้ด (ถ้ามี)" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;">
         <input type="text" class="input" id="newProductName" placeholder="📦 ชื่อสินค้า *" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;">
         <input type="text" class="input" id="newProductLot" placeholder="🔖 เลขที่ผลิต (Lot)" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;">
-        <input type="text" class="input" id="newProductMfg" placeholder="📅 วันที่ผลิต (YYYY-MM-DD)" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;">
+        <!-- ⭐ วันที่ผลิต — date picker -->
+		<div style="margin-bottom:6px;">
+			<label style="font-weight:600;font-size:12px;display:block;margin-bottom:4px;color:var(--text-main);">
+				📅 วันที่ผลิต
+			</label>
+			<input type="date" class="input" id="newProductMfg" style="font-size:14px;padding:10px 14px;min-height:44px;">
+		</div>
         <input type="number" class="input" id="newProductSellPrice" placeholder="💰 ราคาขาย" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;" step="0.01">
         <input type="text" class="input" id="newProductUnit" placeholder="📦 หน่วยนับ" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;">
-        <input type="date" class="input" id="newProductExpiry" placeholder="⏳ วันหมดอายุ" style="margin-bottom:6px;font-size:14px;padding:10px 14px;min-height:44px;">
+        <!-- ⭐ วันหมดอายุ — date picker -->
+		<div style="margin-bottom:6px;">
+			<label style="font-weight:600;font-size:12px;display:block;margin-bottom:4px;color:var(--text-main);">
+				⏳ วันหมดอายุ
+			</label>
+			<input type="date" class="input" id="newProductExpiry" style="font-size:14px;padding:10px 14px;min-height:44px;">
+			<div style="font-size:10px;color:var(--text-muted);margin-top:3px;line-height:1.3;">
+				💡 ปฏิทินใช้ พ.ศ. อัตโนมัติ — ระบบแปลงเป็น ค.ศ. ให้
+			</div>
+		</div>
         <div style="display:flex;gap:6px;margin-top:4px;">
             <input type="number" class="input" id="newProductMinStock" placeholder="Min" style="flex:1;font-size:14px;padding:10px 14px;min-height:44px;" value="5">
             <input type="number" class="input" id="newProductMaxStock" placeholder="Max" style="flex:1;font-size:14px;padding:10px 14px;min-height:44px;" value="100">
@@ -3535,7 +3723,33 @@ height:48px;">
         <div class="modal-handle"></div>
         <div class="modal-title"><i class="fas fa-edit"></i> แก้ไขชื่อตู้</div>
         <input type="hidden" id="editCabinetId">
-        <input type="text" class="input" id="editCabinetName" placeholder="ชื่อตู้ใหม่" style="margin-bottom:8px;font-size:15px;padding:12px;min-height:48px;">
+        <input type="text" class="input" id="editCabinetName" placeholder="ชื่อตู้ใหม่" style="margin-bottom:12px;font-size:15px;padding:12px;min-height:48px;">
+        
+        <!-- ⭐ เพิ่ม: ขนาดตู้ -->
+        <label style="font-weight:600;font-size:13px;display:block;margin-bottom:6px;">📐 ขนาดตู้ (cm.):</label>
+        <div style="display:flex;gap:6px;margin-bottom:12px;align-items:center;">
+            <input type="number" class="input" id="editCabinetWidth" placeholder="กว้าง" min="0" style="flex:1;font-size:14px;padding:10px 12px;min-height:44px;">
+            <span style="font-size:13px;color:var(--text-muted);font-weight:700;">×</span>
+            <input type="number" class="input" id="editCabinetLength" placeholder="ยาว" min="0" style="flex:1;font-size:14px;padding:10px 12px;min-height:44px;">
+            <span style="font-size:11px;color:var(--text-muted);">cm.</span>
+        </div>
+
+		<!-- ⭐ Combo A: เลือกขนาดตู้ -->
+		<label style="font-weight:600;font-size:13px;display:block;margin-bottom:6px;">📐 ขนาดตู้:</label>
+		<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px;">
+			<button type="button" class="size-btn" data-size="S" onclick="app.selectCabinetSize('S')" style="padding:10px 4px;border:2px solid var(--border-color);background:var(--bg-card);border-radius:8px;font-weight:700;cursor:pointer;font-size:13px;color:var(--text-main);transition:all 0.2s;font-family:inherit;">
+				S<br><small style="font-size:9px;font-weight:500;">เล็ก</small>
+			</button>
+			<button type="button" class="size-btn" data-size="M" onclick="app.selectCabinetSize('M')" style="padding:10px 4px;border:2px solid var(--border-color);background:var(--bg-card);border-radius:8px;font-weight:700;cursor:pointer;font-size:13px;color:var(--text-main);transition:all 0.2s;font-family:inherit;">
+				M<br><small style="font-size:9px;font-weight:500;">กลาง</small>
+			</button>
+			<button type="button" class="size-btn" data-size="L" onclick="app.selectCabinetSize('L')" style="padding:10px 4px;border:2px solid var(--border-color);background:var(--bg-card);border-radius:8px;font-weight:700;cursor:pointer;font-size:13px;color:var(--text-main);transition:all 0.2s;font-family:inherit;">
+				L<br><small style="font-size:9px;font-weight:500;">ใหญ่</small>
+			</button>
+			<button type="button" class="size-btn" data-size="XL" onclick="app.selectCabinetSize('XL')" style="padding:10px 4px;border:2px solid var(--border-color);background:var(--bg-card);border-radius:8px;font-weight:700;cursor:pointer;font-size:13px;color:var(--text-main);transition:all 0.2s;font-family:inherit;">
+				XL<br><small style="font-size:9px;font-weight:500;">ใหญ่พิเศษ</small>
+			</button>
+		</div>
         <div style="display:flex;gap:6px;">
             <button class="btn btn-success btn-block" onclick="app.saveEditCabinet()" style="font-size:15px;padding:12px;min-height:48px;">
                 <i class="fas fa-save"></i> บันทึก
@@ -3565,6 +3779,19 @@ height:48px;">
                 <i class="fas fa-times"></i> ยกเลิก
             </button>
         </div>
+    </div>
+</div>
+
+<!-- ⭐ Combo A: Blueprint Cabinet Detail Modal -->
+<div class="modal-overlay" id="blueprintCabinetModal">
+    <div class="modal">
+        <div class="modal-handle"></div>
+        <div class="modal-title" id="bpCabinetTitle"><i class="fas fa-archive"></i> รายละเอียดตู้</div>
+        <div id="bpCabinetMeta" style="font-size:13px;color:var(--text-muted);margin-bottom:12px;padding:10px 12px;background:var(--bg-body);border-radius:8px;line-height:1.7;"></div>
+        <div id="bpCabinetShelves" style="max-height:50vh;overflow-y:auto;"></div>
+        <button class="btn btn-outline btn-block" onclick="app.closeBlueprintCabinetModal()" style="margin-top:10px;font-size:14px;padding:12px;min-height:44px;">
+            <i class="fas fa-times"></i> ปิด
+        </button>
     </div>
 </div>
 
@@ -8228,6 +8455,16 @@ async closeFullscreenScanner() {
         }
         document.getElementById('editCabinetId').value = cabinetId;
         document.getElementById('editCabinetName').value = cabinet.name;
+        
+        // ⭐ แสดงขนาดเดิม
+        const wEl = document.getElementById('editCabinetWidth');
+        const lEl = document.getElementById('editCabinetLength');
+        if (wEl) wEl.value = cabinet.width || '';
+        if (lEl) lEl.value = cabinet.length || '';
+        
+        // ⭐ เลือกขนาดปัจจุบัน (S/M/L/XL)
+        this.selectCabinetSize(cabinet.size || 'M');
+        
         document.getElementById('editCabinetModal').classList.add('show');
         setTimeout(() => document.getElementById('editCabinetName').focus(), 100);
     }
@@ -8246,11 +8483,23 @@ async closeFullscreenScanner() {
         const cabinet = this.locations.find(l => String(l.id) === String(id));
         if (!cabinet) return;
         cabinet.name = newName;
+        
+        // ⭐ บันทึกขนาด S/M/L/XL
+        if (this._selectedCabinetSize) {
+            cabinet.size = this._selectedCabinetSize;
+        }
+        
+        // ⭐ บันทึกขนาด cm.
+        const wEl = document.getElementById('editCabinetWidth');
+        const lEl = document.getElementById('editCabinetLength');
+        cabinet.width = wEl ? (parseFloat(wEl.value) || 0) : (cabinet.width || 0);
+        cabinet.length = lEl ? (parseFloat(lEl.value) || 0) : (cabinet.length || 0);
+        
         await this.saveLocations();
         this.renderMap();
         this.updateLocationDropdowns();
         this.closeEditCabinetModal();
-        this.showToast(`✅ แก้ชื่อตู้ "${newName}" สำเร็จ`, 'success');
+        this.showToast(`✅ แก้ไขตู้ "${newName}" สำเร็จ`, 'success');
     }
 
     // ================================================================
@@ -8746,7 +8995,12 @@ async closeFullscreenScanner() {
             this.showToast('⚠️ กรุณาใส่ชื่อตู้', 'warning');
             return;
         }
+        // ⭐ อ่านขนาด
+        const width = parseFloat(document.getElementById('newCabinetWidth')?.value) || 0;
+        const length = parseFloat(document.getElementById('newCabinetLength')?.value) || 0;
+        
         const cabId = 'cab_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+        const pos = this.getNextCabinetPosition();
         this.locations.push({
             id: cabId,
             name,
@@ -8754,14 +9008,20 @@ async closeFullscreenScanner() {
             shelves: [],
             createdAt: new Date().toISOString(),
             order: this.locations.length,
-            // ⭐ NEW: คำนวณ x,y ให้ตู้ใหม่ไม่ทับกัน
-            x: this.getNextCabinetPosition(),
-            y: 0
+            x: pos.x,
+            y: pos.y,
+            width: width,      // ⭐ ใหม่
+            length: length     // ⭐ ใหม่
         });
         this.saveLocations();
         this.renderMap();
         this.updateLocationDropdowns();
         document.getElementById('newCabinetName').value = '';
+        // ⭐ เคลียร์ช่องขนาด
+        const wEl = document.getElementById('newCabinetWidth');
+        const lEl = document.getElementById('newCabinetLength');
+        if (wEl) wEl.value = '';
+        if (lEl) lEl.value = '';
         this.showToast('✅ เพิ่มตู้ ' + name + ' สำเร็จ', 'success');
     }
 
@@ -8998,133 +9258,378 @@ class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opaci
         const nowLabel = new Date().toLocaleString('th-TH');
         const esc = escapeHtml;
         
-        // แยกตู้หน้า/หลังร้าน
         const front = this.locations.filter(l => l.type === 'front');
         const back = this.locations.filter(l => l.type === 'back');
+        const stats = this.getBlueprintStats();
         
-        // สร้างการ์ดแต่ละตู้
-        const renderCabinetCard = (cab, idx) => {
-            const shelves = (cab.shelves || []).map(s => esc(s.name)).join(', ') || '(ไม่มีชั้น)';
-            const counted = this.sessionItems.filter(i => 
-                i.location && (i.location === 'cab_' + cab.id || i.location.startsWith('cab_' + cab.id + '_shelf_'))
-            ).length;
-            return `
-                <div class="cab-card">
-                    <div class="cab-num">${idx + 1}</div>
-                    <div class="cab-name">📦 ${esc(cab.name)}</div>
-                    <div class="cab-shelves">📚 ชั้น: ${shelves}</div>
-                    <div class="cab-stats">
-                        <span>${cab.shelves.length} ชั้น</span>
-                        ${counted > 0 ? '<span class="badge-counted">✓ นับแล้ว ' + counted + '</span>' : '<span class="badge-empty">ยังไม่นับ</span>'}
-                    </div>
-                </div>
-            `;
+        // ⭐ ลำดับโซน — หลังร้านอยู่บน (default)
+        const firstZone = back;
+        const firstZoneType = 'back';
+        const secondZone = front;
+        const secondZoneType = 'front';
+        
+        // ⭐ ส่วนที่ 1: แผนผังเหมือนจริง (แยกโซนบน-ล่าง)
+        const renderRealisticCab = (cab) => {
+            const x = Number.isFinite(cab.x) ? cab.x : 5;
+            const y = Number.isFinite(cab.y) ? cab.y : 5;
+            const zoneClass = cab.type === 'front' ? 'front' : 'back';
+            const size = cab.size || 'M';
+            const shelves = (cab.shelves || []).map(s => s.name).join(', ') || '-';
+            // ⭐ ขนาดตู้
+            const sizeText = (cab.width || cab.length) 
+                ? `${cab.width || '-'}×${cab.length || '-'} cm.` 
+                : '';
+            
+            return `<div class="bp-real-cab ${zoneClass} size-${size}" style="left:${x}%;top:${y}%;">
+                <div class="bp-real-cab-name">${esc(cab.name)}</div>
+                ${sizeText ? `<div class="bp-real-cab-size">${sizeText}</div>` : ''}
+                <div class="bp-real-cab-shelves">📚 ${esc(shelves)}</div>
+            </div>`;
         };
         
-        // คำนวณสถิติ
-        const totalShelves = this.locations.reduce((s, l) => s + (l.shelves?.length || 0), 0);
+        const buildRealisticZone = (cabinets, zoneType) => {
+            if (cabinets.length === 0) {
+                return `<div class="bp-real-zone-empty">
+                    <div class="bp-real-zone-empty-label">
+                        ${zoneType === 'back' ? '📦 หลังร้าน' : '🏪 หน้าร้าน'} — ไม่มีตู้
+                    </div>
+                </div>`;
+            }
+            
+            const isBack = zoneType === 'back';
+            const zoneLabel = isBack ? '📦 Zone หลังร้าน' : '🏪 Zone หน้าร้าน';
+            const zoneSubLabel = isBack ? 'สต็อกหลัก' : 'ของโชว์';
+            
+            return `<div class="bp-real-zone ${zoneType}">
+                <div class="bp-real-zone-label ${zoneType}">
+                    <span class="bp-real-zone-title">${zoneLabel}</span>
+                    <span class="bp-real-zone-count">${cabinets.length} ตู้ • ${zoneSubLabel}</span>
+                </div>
+                <div class="bp-real-zone-canvas">
+                    ${cabinets.map(renderRealisticCab).join('')}
+                </div>
+            </div>`;
+        };
         
+        // ⭐ ส่วนที่ 2: การ์ดรายละเอียดตู้
+        const renderDetailCard = (cab, idx) => {
+            const zoneClass = cab.type === 'front' ? 'front' : 'back';
+            const zoneIcon = cab.type === 'front' ? '🏪' : '📦';
+            const zoneLabel = cab.type === 'front' ? 'หน้าร้าน' : 'หลังร้าน';
+            const shelves = cab.shelves || [];
+            const shelfCount = shelves.length;
+            const shelfNames = shelves.map(s => s.name).join(', ') || '-';
+            const uncountedShelves = this.getUncountedShelves(cab.id);
+            const countedShelves = shelfCount - uncountedShelves;
+            const cabStats = this.getCabinetStats(cab.id);
+            const sizeLabel = { S: 'เล็ก', M: 'กลาง', L: 'ใหญ่', XL: 'ใหญ่พิเศษ' }[cab.size || 'M'];
+            // ⭐ ขนาด cm.
+            const cmText = (cab.width || cab.length)
+                ? ` • 📐 ${cab.width || '-'}×${cab.length || '-'} cm.`
+                : '';
+            
+            return `<div class="bp-detail-card ${zoneClass}">
+                <div class="bp-detail-num ${zoneClass}">#${idx + 1}</div>
+                <div class="bp-detail-name">${esc(cab.name)}</div>
+                <div class="bp-detail-meta">
+                    ${zoneIcon} ${zoneLabel} • 📐 ${sizeLabel}${cmText}
+                </div>
+                <div class="bp-detail-shelves">
+                    <div>📚 ${shelfCount} ชั้น</div>
+                    <div class="bp-detail-shelf-names">${esc(shelfNames)}</div>
+                </div>
+                <div class="bp-detail-status">
+                    ${countedShelves > 0 ? `<span class="bp-stat-ok">✅ นับแล้ว ${countedShelves}</span>` : ''}
+                    ${uncountedShelves > 0 ? `<span class="bp-stat-warn">⏳ ยังไม่นับ ${uncountedShelves}</span>` : ''}
+                    ${shelfCount === 0 ? '<span class="bp-stat-empty">ไม่มีชั้น</span>' : ''}
+                </div>
+                <div class="bp-detail-stats">
+                    <div class="bp-stat-row">
+                        <span>📦 สินค้า:</span>
+                        <strong>${cabStats.count} รายการ</strong>
+                    </div>
+                    <div class="bp-stat-row">
+                        <span>💰 ทุนรวม:</span>
+                        <strong class="bp-stat-cost">${cabStats.cost.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>
+                    </div>
+                    <div class="bp-stat-row">
+                        <span>💵 ขายรวม:</span>
+                        <strong class="bp-stat-sell">${cabStats.sell.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>
+                    </div>
+                </div>
+            </div>`;
+        };
+        
+        const buildDetailGrid = (cabinets, startIdx = 0) => {
+            if (cabinets.length === 0) return '';
+            const cells = cabinets.map((c, i) => renderDetailCard(c, startIdx + i));
+            const remainder = cabinets.length % 3;
+            if (remainder !== 0) {
+                for (let i = remainder; i < 3; i++) {
+                    cells.push('<div class="bp-detail-card empty"></div>');
+                }
+            }
+            return `<div class="bp-detail-grid">${cells.join('')}</div>`;
+        };
+        
+        // ⭐ HTML
         const htmlContent = `<!doctype html><html lang="th"><head><meta charset="utf-8">
             <title>MediStock v5.3.1 — ผังร้าน ${esc(branchName)}</title>
             <style>
-                @page { size: A4 portrait; margin: 15mm; }
+                @page { size: A4 portrait; margin: 10mm; }
                 * { box-sizing: border-box; }
                 body { 
                     font-family: 'Inter','Sarabun','TH Sarabun New','Tahoma',Arial,sans-serif; 
-                    margin: 0; padding: 0; color: #0f172a; font-size: 13px; line-height: 1.5; font-weight: 500;
+                    margin: 0; padding: 0; color: #0f172a; font-size: 12px; line-height: 1.5;
                     -webkit-print-color-adjust: exact; print-color-adjust: exact;
                 }
-                h1 { 
-                    color: #0369a1; font-size: 24px; margin: 0 0 10px; font-weight: 800; 
-                    border-bottom: 3px solid #0ea5e9; padding-bottom: 8px;
-                }
-                .meta { 
-                    font-size: 12px; margin-bottom: 14px; padding: 10px 14px; 
-                    background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 8px; 
-                    color: #0369a1; font-weight: 500;
-                }
-                .meta strong { color: #0369a1; }
+                h1 { color: #0f172a; font-size: 22px; margin: 0 0 10px; font-weight: 800; 
+                     border-bottom: 3px solid #0f172a; padding-bottom: 8px; }
+                .meta { font-size: 11px; margin-bottom: 12px; padding: 8px 12px; 
+                        background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 8px; 
+                        color: #475569; font-weight: 500; }
                 
-                h2 { 
-                    color: #0369a1; font-size: 17px; margin: 18px 0 10px; 
-                    padding: 8px 12px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%); 
-                    border-left: 5px solid #0ea5e9; border-radius: 4px; font-weight: 800; 
+                /* ⭐ Summary Stats */
+                .bp-summary {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 8px;
+                    margin-bottom: 12px;
+                    padding: 10px;
+                    background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+                    border: 2px solid #0ea5e9;
+                    border-radius: 10px;
+                    page-break-inside: avoid;
+                }
+                .bp-summary-cell {
+                    text-align: center;
+                    padding: 8px;
+                    background: #fff;
+                    border-radius: 8px;
+                    border: 1px solid #bae6fd;
+                }
+                .bp-summary-label {
+                    font-size: 10px;
+                    color: #64748b;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                }
+                .bp-summary-value {
+                    font-size: 20px;
+                    font-weight: 800;
+                    color: #0ea5e9;
+                    line-height: 1.2;
+                    margin-top: 2px;
+                }
+                
+                .section-title {
+                    font-size: 15px; font-weight: 800; color: #0f172a;
+                    padding: 8px 12px; margin: 16px 0 10px;
+                    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+                    border-left: 5px solid #475569;
+                    border-radius: 4px;
                     page-break-after: avoid;
                 }
                 
-                .summary { 
-                    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); 
-                    border: 3px solid #0ea5e9; border-radius: 10px; 
-                    padding: 14px; margin: 12px 0;
+                /* ⭐ ส่วนที่ 1: แผนผังเหมือนจริง */
+                .bp-real-zone {
+                    margin-bottom: 12px;
+                    border-radius: 10px;
+                    padding: 10px;
+                    page-break-inside: avoid;
                 }
-                .summary-grid { 
-                    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; 
+                .bp-real-zone.back {
+                    border: 3px solid #f59e0b;
+                    background: #fffbeb;
                 }
-                .summary-item { 
-                    text-align: center; padding: 10px 8px; 
-                    background: #fff; border-radius: 8px; border: 2px solid #bae6fd;
+                .bp-real-zone.front {
+                    border: 3px solid #10b981;
+                    background: #ecfdf5;
                 }
-                .summary-item .label { 
-                    font-size: 11px; color: #64748b; font-weight: 700; 
-                    text-transform: uppercase; letter-spacing: 0.3px;
+                .bp-real-zone-empty {
+                    margin-bottom: 12px;
+                    padding: 20px;
+                    border: 2px dashed #cbd5e1;
+                    border-radius: 10px;
+                    text-align: center;
+                    background: #f8fafc;
+                    color: #94a3b8;
                 }
-                .summary-item .value { 
-                    font-size: 22px; font-weight: 800; color: #0ea5e9; 
-                    line-height: 1.2; margin-top: 4px;
+                .bp-real-zone-empty-label {
+                    font-weight: 700;
+                    font-size: 13px;
                 }
+                .bp-real-zone-label {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 6px 12px;
+                    margin: -10px -10px 10px -10px;
+                    border-radius: 7px 7px 0 0;
+                    color: #fff;
+                    font-weight: 800;
+                }
+                .bp-real-zone-label.back { background: #f59e0b; }
+                .bp-real-zone-label.front { background: #10b981; }
+                .bp-real-zone-title { font-size: 14px; }
+                .bp-real-zone-count { font-size: 11px; opacity: 0.9; font-weight: 600; }
+                .bp-real-zone-canvas {
+                    position: relative;
+                    width: 100%;
+                    height: 240px;
+                    background-image: 
+                        linear-gradient(to right, rgba(100,116,139,.10) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(100,116,139,.10) 1px, transparent 1px);
+                    background-size: 20px 20px;
+                    border: 1px dashed #cbd5e1;
+                    border-radius: 6px;
+                }
+                .bp-real-cab {
+                    position: absolute;
+                    border: 2px solid;
+                    border-radius: 5px;
+                    padding: 3px 5px;
+                    text-align: center;
+                    overflow: hidden;
+                    background: #fff;
+                    font-size: 9px;
+                }
+                .bp-real-cab.front {
+                    border-color: #10b981;
+                    color: #065f46;
+                }
+                .bp-real-cab.back {
+                    border-color: #f59e0b;
+                    color: #92400e;
+                }
+                .bp-real-cab.size-S  { width: 12%; }
+                .bp-real-cab.size-M  { width: 16%; }
+                .bp-real-cab.size-L  { width: 20%; }
+                .bp-real-cab.size-XL { width: 26%; }
+                .bp-real-cab-name { font-weight: 800; font-size: 10px; }
+				.bp-real-cab-size {
+                    font-size: 8px;
+                    opacity: 0.7;
+                    font-style: italic;
+                }
+                .bp-real-cab-shelves { font-size: 8px; opacity: 0.85; }
                 
-                .grid { 
-                    display: grid; grid-template-columns: repeat(3, 1fr); 
-                    gap: 10px; margin-bottom: 16px;
+                /* ⭐ ส่วนที่ 2: การ์ดรายละเอียด */
+                .bp-detail-grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 8px;
                 }
-                
-                .cab-card { 
-                    background: #fff; border: 2px solid #0ea5e9; border-radius: 10px; 
-                    padding: 12px; page-break-inside: avoid; position: relative;
-                    min-height: 90px;
+                .bp-detail-card {
+                    border: 2px solid;
+                    border-radius: 8px;
+                    padding: 10px;
+                    background: #fff;
+                    position: relative;
+                    page-break-inside: avoid;
+                    min-height: 170px;
                 }
-                .cab-num { 
-                    position: absolute; top: -8px; left: -8px; 
-                    width: 24px; height: 24px; background: #0ea5e9; 
-                    color: #fff; border-radius: 50%; 
-                    display: flex; align-items: center; justify-content: center; 
-                    font-weight: 800; font-size: 11px;
+                .bp-detail-card.front {
+                    border-color: #10b981;
+                    background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
                 }
-                .cab-name { 
-                    font-weight: 800; font-size: 14px; color: #0369a1; 
+                .bp-detail-card.back {
+                    border-color: #f59e0b;
+                    background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+                }
+                .bp-detail-card.empty {
+                    border: 2px dashed #e2e8f0;
+                    background: #fafafa;
+                    opacity: 0.3;
+                }
+                .bp-detail-num {
+                    position: absolute;
+                    top: -8px;
+                    left: -8px;
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                    color: #fff;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 800;
+                    font-size: 11px;
+                }
+                .bp-detail-num.front { background: #10b981; }
+                .bp-detail-num.back { background: #f59e0b; }
+                .bp-detail-name {
+                    font-weight: 800;
+                    font-size: 14px;
+                    color: #0f172a;
+                    margin-bottom: 4px;
+                    padding-left: 10px;
+                }
+                .bp-detail-meta {
+                    font-size: 10px;
+                    color: #475569;
                     margin-bottom: 6px;
                 }
-                .cab-shelves { 
-                    font-size: 11px; color: #475569; margin-bottom: 6px; 
-                    line-height: 1.6; word-break: break-word;
+                .bp-detail-shelves {
+                    background: rgba(255,255,255,0.7);
+                    border-radius: 6px;
+                    padding: 5px 8px;
+                    margin-bottom: 6px;
+                    font-size: 10px;
                 }
-                .cab-stats { 
-                    display: flex; justify-content: space-between; 
-                    font-size: 10px; color: #64748b; 
-                    padding-top: 6px; border-top: 1px dashed #cbd5e1;
+                .bp-detail-shelf-names {
+                    font-family: monospace;
+                    font-size: 9px;
+                    color: #64748b;
+                    margin-top: 2px;
+                    word-break: break-word;
                 }
-                .badge-counted { 
-                    background: #d1fae5; color: #065f46; 
-                    padding: 2px 8px; border-radius: 6px; font-weight: 700;
+                .bp-detail-status {
+                    display: flex;
+                    gap: 4px;
+                    margin-bottom: 6px;
+                    flex-wrap: wrap;
                 }
-                .badge-empty { 
-                    background: #f1f5f9; color: #64748b; 
-                    padding: 2px 8px; border-radius: 6px;
+                .bp-stat-ok, .bp-stat-warn, .bp-stat-empty {
+                    font-size: 9px;
+                    padding: 2px 6px;
+                    border-radius: 4px;
+                    font-weight: 700;
                 }
+                .bp-stat-ok { background: #d1fae5; color: #065f46; }
+                .bp-stat-warn { background: #fef3c7; color: #92400e; }
+                .bp-stat-empty { background: #f1f5f9; color: #64748b; }
+                .bp-detail-stats {
+                    border-top: 1px dashed #cbd5e1;
+                    padding-top: 5px;
+                    font-size: 10px;
+                }
+                .bp-stat-row {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 2px 0;
+                }
+                .bp-stat-row strong {
+                    color: #0f172a;
+                }
+                .bp-stat-cost { color: #dc2626 !important; }
+                .bp-stat-sell { color: #059669 !important; }
                 
                 .no-print { 
                     padding: 10px 20px; 
-                    background: linear-gradient(135deg,#0ea5e9,#6366f1); 
+                    background: linear-gradient(135deg,#0f172a,#475569); 
                     color: #fff; border: none; border-radius: 8px; 
                     font-weight: 800; cursor: pointer; margin-bottom: 12px; font-size: 14px;
-                    box-shadow: 0 4px 12px rgba(14,165,233,0.3);
+                    box-shadow: 0 4px 12px rgba(15,23,42,0.3);
                 }
                 
                 @media print { 
                     .no-print { display: none !important; }
                     body { margin: 0; font-size: 11px; }
+                    .bp-real-zone-canvas { height: 200px; }
                 }
             </style></head><body>
+            
             <button class="no-print" onclick="window.print()">🖨️ พิมพ์ / Save as PDF</button>
             
             <h1>🗺️ ผังร้าน — ${esc(branchName)}</h1>
@@ -9134,36 +9639,48 @@ class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opaci
                 <strong>ผู้ใช้:</strong> ${esc(this.v5UserName || '-')}
             </div>
             
-            <div class="summary">
-                <div class="summary-grid">
-                    <div class="summary-item">
-                        <div class="label">🏪 หน้าร้าน</div>
-                        <div class="value">${front.length}</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="label">📦 หลังร้าน</div>
-                        <div class="value">${back.length}</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="label">📚 ชั้นรวม</div>
-                        <div class="value">${totalShelves}</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="label">📊 รายการนับ</div>
-                        <div class="value">${this.sessionItems.length}</div>
-                    </div>
+            <!-- ⭐ Summary Stats -->
+            <div class="bp-summary">
+                <div class="bp-summary-cell">
+                    <div class="bp-summary-label">🏪 หน้าร้าน</div>
+                    <div class="bp-summary-value">${stats.frontCount}</div>
+                </div>
+                <div class="bp-summary-cell">
+                    <div class="bp-summary-label">📦 หลังร้าน</div>
+                    <div class="bp-summary-value">${stats.backCount}</div>
+                </div>
+                <div class="bp-summary-cell">
+                    <div class="bp-summary-label">📚 ชั้นรวม</div>
+                    <div class="bp-summary-value">${stats.totalShelves}</div>
+                </div>
+                <div class="bp-summary-cell">
+                    <div class="bp-summary-label">📊 รายการนับ</div>
+                    <div class="bp-summary-value">${stats.totalItems}</div>
                 </div>
             </div>
             
-            <h2>🏪 หน้าร้าน (${front.length} ตู้)</h2>
-            ${front.length > 0 
-                ? '<div class="grid">' + front.map((c, i) => renderCabinetCard(c, i)).join('') + '</div>' 
-                : '<p style="text-align:center;color:#64748b;padding:20px;">ไม่มีตู้หน้าร้าน</p>'}
+            <!-- ⭐ ส่วนที่ 1: แผนผังเหมือนจริง -->
+            <div class="section-title">📐 ส่วนที่ 1: แผนผังร้าน (แยกโซนบน-ล่าง)</div>
             
-            <h2>📦 หลังร้าน (${back.length} ตู้)</h2>
-            ${back.length > 0 
-                ? '<div class="grid">' + back.map((c, i) => renderCabinetCard(c, front.length + i)).join('') + '</div>' 
-                : '<p style="text-align:center;color:#64748b;padding:20px;">ไม่มีตู้หลังร้าน</p>'}
+            ${buildRealisticZone(firstZone, firstZoneType)}
+            ${buildRealisticZone(secondZone, secondZoneType)}
+            
+            <!-- ⭐ ส่วนที่ 2: รายละเอียดตู้ -->
+            <div class="section-title">📋 ส่วนที่ 2: รายละเอียดตู้ (การ์ด)</div>
+            
+            ${back.length > 0 ? `
+                <h3 style="margin:10px 0 6px;padding:6px 10px;background:#f59e0b;color:#fff;border-radius:6px;font-size:13px;">
+                    📦 หลังร้าน (${back.length} ตู้)
+                </h3>
+                ${buildDetailGrid(back, 0)}
+            ` : ''}
+            
+            ${front.length > 0 ? `
+                <h3 style="margin:10px 0 6px;padding:6px 10px;background:#10b981;color:#fff;border-radius:6px;font-size:13px;">
+                    🏪 หน้าร้าน (${front.length} ตู้)
+                </h3>
+                ${buildDetailGrid(front, back.length)}
+            ` : ''}
             
             </body></html>`;
         
@@ -9171,38 +9688,418 @@ class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opaci
         this.showToast('🖨️ กำลังเปิด PDF ผังร้าน...', 'info');
     }
 	
-	toggleBlueprint() {
+    toggleBlueprint() {
+        const wrapper = document.getElementById('blueprintWrapper');
         const el = document.getElementById('blueprintMap');
-        if (!el) return;
-        el.style.display = el.style.display === 'none' ? 'block' : 'none';
-        if (el.style.display === 'block') this.renderBlueprint();
+        const controls = document.getElementById('blueprintControls');
+        if (!wrapper || !el) return;
+        
+        const isHidden = wrapper.style.display === 'none';
+        wrapper.style.display = isHidden ? 'block' : 'none';
+        if (controls) controls.style.display = isHidden ? 'flex' : 'none';
+        
+        if (isHidden) {
+            this.updateBlueprintFilterButtons();
+            this.renderBlueprint();
+            // ⭐ Reset ซูม
+            this._bpZoomLevel = 100;
+            const levelEl = document.getElementById('bpZoomLevel');
+            if (levelEl) levelEl.textContent = '100%';
+            el.style.transform = 'scale(1)';
+        }
     }
 
     renderBlueprint() {
         const el = document.getElementById('blueprintMap');
         if (!el) return;
-        const html = this.locations.map((c, idx) => {
-            const x = Number.isFinite(c.x) ? c.x : (idx % 4) * 24 + 2;
-            const y = Number.isFinite(c.y) ? c.y : Math.floor(idx / 4) * 24 + 2;
-            return `<div class="blueprint-cab" draggable="true" data-id="${escapeHtml(String(c.id))}" style="left:${Math.max(0, Math.min(92, x))}%;top:${Math.max(0, Math.min(92, y))}%;" title="ลากเพื่อย้ายตู้">
-                <div style="font-size:11px;font-weight:800;">${escapeHtml(c.name)}</div>
-                <div style="font-size:9px;">${c.type === 'front' ? 'หน้าร้าน' : 'หลังร้าน'}</div>
+
+        const filter = this._bpFilter || 'all';
+        const showFront = filter === 'all' || filter === 'front';
+        const showBack = filter === 'all' || filter === 'back';
+        const isSingleZone = filter === 'front' || filter === 'back';
+
+        const frontCabs = this.locations.filter(c => c.type === 'front');
+        const backCabs = this.locations.filter(c => c.type === 'back');
+
+        const frontHeader = `<div class="blueprint-zone-header front" style="${!showFront ? 'display:none;' : ''}">
+            <span>🏪 หน้าร้าน (${frontCabs.length} ตู้)</span>
+            <span class="zone-toggle" onclick="event.stopPropagation(); app.toggleBlueprintZone('front')">👁️ ซ่อน/แสดง</span>
+        </div>`;
+
+        const backHeader = `<div class="blueprint-zone-header back" style="${!showBack ? 'display:none;' : ''}">
+            <span>📦 หลังร้าน (${backCabs.length} ตู้)</span>
+            <span class="zone-toggle" onclick="event.stopPropagation(); app.toggleBlueprintZone('back')">👁️ ซ่อน/แสดง</span>
+        </div>`;
+
+        const renderCab = (c, idx) => {
+            let x, y;
+            if (isSingleZone) {
+                const col = idx % 4;
+                const row = Math.floor(idx / 4);
+                x = 4 + (col * 23);
+                y = 10 + (row * 22);
+            } else {
+                x = Number.isFinite(c.x) ? c.x : (idx % 4) * 24 + 2;
+                y = Number.isFinite(c.y) ? c.y : Math.floor(idx / 4) * 24 + 2;
+            }
+
+            const size = c.size || 'M';
+            const shelfCount = (c.shelves || []).length;
+            const zoneClass = c.type === 'front' ? 'front' : 'back';
+            const icon = c.type === 'front' ? '🏪' : '📦';
+            const typeLabel = c.type === 'front' ? 'หน้าร้าน' : 'หลังร้าน';
+            const itemCount = this.getCabinetItemCount(c.id);
+            const textColor = c.type === 'front' ? '#065f46' : '#92400e';
+            const subColor = c.type === 'front' ? '#059669' : '#d97706';
+            // ⭐ ขนาดตู้
+            const sizeText = (c.width || c.length) 
+                ? `📐 ${c.width || '-'}×${c.length || '-'} cm.` 
+                : '';
+
+            return `<div class="blueprint-cab size-${size} ${zoneClass}" 
+                         draggable="true" 
+                         data-id="${escapeHtml(String(c.id))}" 
+                         style="left:${Math.max(0, Math.min(92, x))}%;top:${Math.max(0, Math.min(92, y))}%;"
+                         title="ลากเพื่อย้าย • คลิกดูชั้น">
+                <div style="font-size:11px;font-weight:800;color:${textColor};">${escapeHtml(c.name)}</div>
+                <div style="font-size:9px;color:${subColor};">${icon} ${typeLabel}</div>
+                ${sizeText ? `<div style="font-size:8px;color:${subColor};opacity:0.85;">${sizeText}</div>` : ''}
+                ${shelfCount > 0 
+                    ? `<div style="font-size:9px;color:${subColor};font-weight:700;">📚 ${shelfCount} ชั้น</div>` 
+                    : '<div style="font-size:9px;color:var(--text-muted);">ไม่มีชั้น</div>'}
+                ${itemCount > 0 
+                    ? `<div style="font-size:9px;color:${subColor};font-weight:700;">📦 ${itemCount} ชิ้น</div>` 
+                    : ''}
             </div>`;
-        }).join('');
-        el.innerHTML = html || '<div style="padding:20px;text-align:center;color:var(--text-muted);">ยังไม่มีตู้</div>';
+        };
+
+        if (this.locations.length === 0) {
+            el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);">ยังไม่มีตู้</div>';
+            return;
+        }
+
+        const frontHtml = showFront ? frontCabs.map(renderCab).join('') : '';
+        const backHtml = showBack ? backCabs.map(renderCab).join('') : '';
+
+        const totalShown = (showFront ? frontCabs.length : 0) + (showBack ? backCabs.length : 0);
+        const rows = Math.max(3, Math.ceil(totalShown / 4));
+        el.style.minHeight = Math.max(360, rows * 80) + 'px';
+
+        if (isSingleZone) {
+            el.innerHTML = `
+                ${showFront ? frontHeader : ''}
+                ${showBack ? backHeader : ''}
+                ${frontHtml}
+                ${backHtml}
+            `;
+            // ⭐ เพิ่ม class single-zone
+            el.classList.add('single-zone');
+            el.classList.remove('dual-zone');
+        } else {
+            el.innerHTML = `
+                ${frontHeader}
+                ${backHeader}
+                ${frontHtml}
+                ${backHtml}
+            `;
+            // ⭐ เพิ่ม class dual-zone
+            el.classList.add('dual-zone');
+            el.classList.remove('single-zone');
+        }
+            const activeHeader = el.querySelector('.blueprint-zone-header:not([style*="display:none"])');
+            if (activeHeader) {
+                activeHeader.style.top = '0';
+                activeHeader.style.bottom = 'auto';
+            }
+        } else {
+            el.innerHTML = `
+                ${frontHeader}
+                ${backHeader}
+                ${frontHtml}
+                ${backHtml}
+            `;
+        }
+
         el.querySelectorAll('.blueprint-cab').forEach(node => {
+            let dragged = false;
+            
+            node.addEventListener('dragstart', () => {
+                dragged = true;
+                node.classList.add('dragging');
+            });
+            
             node.addEventListener('dragend', (ev) => {
+                node.classList.remove('dragging');
                 const rect = el.getBoundingClientRect();
                 const c = this.locations.find(x => String(x.id) === String(node.dataset.id));
                 if (!c) return;
-                c.x = Math.max(0, Math.min(92, ((ev.clientX - rect.left) / rect.width) * 100 - 4));
-                c.y = Math.max(0, Math.min(92, ((ev.clientY - rect.top) / rect.height) * 100 - 3));
-                this.saveLocations();
+                
+                // ⭐ คำนวณ x,y
+                let newX = Math.max(0, Math.min(92, ((ev.clientX - rect.left) / rect.width) * 100 - 4));
+                let newY = Math.max(0, Math.min(92, ((ev.clientY - rect.top) / rect.height) * 100 - 3));
+                
+                // ⭐ จำกัดโซน
+                const isSingleZone = el.classList.contains('single-zone');
+                if (!isSingleZone) {
+                    // โหมด 2 โซน — จำกัดตามโซน
+                    if (c.type === 'back') {
+                        // หลังร้าน — อยู่บน (y: 0-45%)
+                        newY = Math.max(2, Math.min(45, newY));
+                    } else if (c.type === 'front') {
+                        // หน้าร้าน — อยู่ล่าง (y: 55-92%)
+                        newY = Math.max(55, Math.min(92, newY));
+                    }
+                }
+                // โหมดเดียว — ลากได้ทั้งพื้นที่ (0-92%)
+                
+                c.x = newX;
+                c.y = newY;
+				// ⭐ Auto-expand ตาม y
+                const allY = this.locations.map(l => Number(l.y) || 0);
+                const maxY = Math.max(...allY);
+                const minHeightNeeded = ((maxY + 10) / 100) * 500 + 100;  // 500px ต่อ 100%
+                const currentMinHeight = parseInt(el.style.minHeight) || 360;
+                if (minHeightNeeded > currentMinHeight) {
+                    el.style.minHeight = Math.round(minHeightNeeded) + 'px';
+                }
+				this.saveLocations();
                 this.renderBlueprint();
+                setTimeout(() => { dragged = false; }, 200);
+            });
+            
+            node.addEventListener('click', () => {
+                if (dragged) return;
+                this.showBlueprintCabinetDetail(node.dataset.id);
             });
         });
     }
 
+    // ⭐ นับจำนวนสินค้าในตู้ (จาก sessionItems)
+    getCabinetItemCount(cabinetId) {
+        if (!this.sessionItems || this.sessionItems.length === 0) return 0;
+        const cabPrefix = this.getCabinetLocationId(cabinetId);
+        const shelfPrefix = cabPrefix + '_shelf_';
+        return this.sessionItems
+            .filter(i => i.location === cabPrefix || (i.location && i.location.startsWith(shelfPrefix)))
+            .reduce((sum, i) => sum + (Number(i.counted_qty) || 0), 0);
+    }
+
+    // ⭐ Toggle แสดง/ซ่อน โซน
+    toggleBlueprintZone(zone) {
+        const current = this._bpFilter || 'all';
+        if (current === 'all') {
+            this._bpFilter = zone === 'front' ? 'back' : 'front';
+        } else if (current === 'front' && zone === 'front') {
+            this._bpFilter = 'all';
+        } else if (current === 'back' && zone === 'back') {
+            this._bpFilter = 'all';
+        } else {
+            this._bpFilter = zone;
+        }
+        this.updateBlueprintFilterButtons();
+        this.renderBlueprint();
+    }
+
+    // ⭐ ตัวกรองโซน 3 ปุ่ม
+    filterBlueprintZone(filter) {
+        this._bpFilter = filter;
+        this.updateBlueprintFilterButtons();
+        this.renderBlueprint();
+    }
+
+    // ⭐ อัปเดต UI ปุ่มกรอง
+    updateBlueprintFilterButtons() {
+        const filter = this._bpFilter || 'all';
+        document.querySelectorAll('.bp-filter-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.filter === filter);
+        });
+    }
+
+    // ⭐ แสดง Modal รายละเอียดตู้
+    showBlueprintCabinetDetail(cabinetId) {
+        const cabinet = this.locations.find(l => String(l.id) === String(cabinetId));
+        if (!cabinet) return;
+        
+        const shelves = cabinet.shelves || [];
+        const titleEl = document.getElementById('bpCabinetTitle');
+        if (titleEl) titleEl.innerHTML = `<i class="fas fa-archive"></i> ${escapeHtml(cabinet.name)}`;
+        
+        const typeLabel = cabinet.type === 'front' ? '🏪 หน้าร้าน' : '📦 หลังร้าน';
+        const sizeMap = { S: 'เล็ก', M: 'กลาง', L: 'ใหญ่', XL: 'ใหญ่พิเศษ' };
+        const sizeLabel = sizeMap[cabinet.size || 'M'];
+        const shelfCount = shelves.length;
+        
+        // ⭐ ดึงสถิติตู้
+        const cabStats = this.getCabinetStats(cabinet.id);
+        const totalCountedItems = this.sessionItems.filter(i => {
+            const cabPrefix = this.getCabinetLocationId(cabinet.id);
+            const shelfPrefix = cabPrefix + '_shelf_';
+            return i.location === cabPrefix || (i.location && i.location.startsWith(shelfPrefix));
+        }).length;
+        
+        // ⭐ ขนาด cm.
+        const cmText = (cabinet.width || cabinet.length)
+            ? ` • 📐 ${cabinet.width || '-'}×${cabinet.length || '-'} cm.`
+            : '';
+        
+        const metaEl = document.getElementById('bpCabinetMeta');
+        if (metaEl) {
+            metaEl.innerHTML = `
+                ${typeLabel} • 📐 ${sizeLabel}${cmText} • 📚 ${shelfCount} ชั้น<br>
+                <span style="font-weight:700;color:var(--primary);">
+                    📦 สินค้าในตู้: รวม ${cabStats.qty} ชิ้น • ${totalCountedItems} รายการ
+                </span><br>
+                <span style="color:#dc2626;font-weight:700;">💰 ทุนรวม: ${cabStats.cost.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2})} บาท</span>
+                &nbsp;•&nbsp;
+                <span style="color:#059669;font-weight:700;">💵 ขายรวม: ${cabStats.sell.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2})} บาท</span>
+            `;
+        }
+        
+        const shelvesEl = document.getElementById('bpCabinetShelves');
+        if (shelvesEl) {
+            if (shelves.length > 0) {
+                shelvesEl.innerHTML = shelves.map((s, i) => {
+                    const shelfLocId = this.getShelfLocationId(cabinet.id, s.id);
+                    const shelfItems = this.sessionItems.filter(item => item.location === shelfLocId);
+                    const shelfQty = shelfItems.reduce((sum, it) => sum + (Number(it.counted_qty) || 0), 0);
+                    // ⭐ ทุน/ขาย แยกชั้น
+                    const shelfCost = shelfItems.reduce((s2, it) => s2 + ((Number(it.cost) || 0) * (Number(it.counted_qty) || 0)), 0);
+                    const shelfSell = shelfItems.reduce((s2, it) => s2 + ((Number(it.sellPrice) || 0) * (Number(it.counted_qty) || 0)), 0);
+                    
+                    return `
+                        <div style="display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:var(--bg-body);border-radius:8px;margin-bottom:6px;border-left:4px solid var(--primary);">
+                            <span style="background:var(--primary);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0;margin-top:2px;">${i+1}</span>
+                            <div style="flex:1;min-width:0;">
+                                <div style="font-weight:700;font-size:14px;">📚 ${escapeHtml(s.name)}</div>
+                                ${shelfItems.length > 0 
+                                    ? `
+                                        <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">📦 ${shelfQty} ชิ้น • ${shelfItems.length} รายการ</div>
+                                        <div style="font-size:11px;margin-top:2px;">
+                                            <span style="color:#dc2626;font-weight:700;">💰 ทุน: ${shelfCost.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                            &nbsp;•&nbsp;
+                                            <span style="color:#059669;font-weight:700;">💵 ขาย: ${shelfSell.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                        </div>
+                                    ` 
+                                    : '<div style="font-size:11px;color:var(--text-muted);margin-top:3px;">ยังไม่นับ</div>'}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                shelvesEl.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:16px;font-size:13px;">ยังไม่มีชั้นในตู้นี้<br><small>ไปที่หน้าผังร้านเพื่อเพิ่มชั้น</small></p>';
+            }
+        }
+        
+        document.getElementById('blueprintCabinetModal').classList.add('show');
+    }
+
+    // ⭐ ปิด Modal
+    closeBlueprintCabinetModal() {
+        document.getElementById('blueprintCabinetModal').classList.remove('show');
+    }
+	
+	// ⭐ นับจำนวนชั้นที่ยังไม่นับของตู้
+    getUncountedShelves(cabinetId) {
+        const cabinet = this.locations.find(l => String(l.id) === String(cabinetId));
+        if (!cabinet || !cabinet.shelves) return 0;
+        return cabinet.shelves.filter(s => {
+            const shelfLocId = this.getShelfLocationId(cabinetId, s.id);
+            return !this.sessionItems.some(i => i.location === shelfLocId);
+        }).length;
+    }
+	
+	    // ⭐ Zoom Blueprint
+    zoomBlueprint(action) {
+        const el = document.getElementById('blueprintMap');
+        const levelEl = document.getElementById('bpZoomLevel');
+        if (!el) return;
+        
+        if (!this._bpZoomLevel) this._bpZoomLevel = 100;
+        
+        if (action === 'in') {
+            this._bpZoomLevel = Math.min(200, this._bpZoomLevel + 20);
+        } else if (action === 'out') {
+            this._bpZoomLevel = Math.max(50, this._bpZoomLevel - 20);
+        } else if (action === 'reset') {
+            this._bpZoomLevel = 100;
+        }
+        
+        // Apply zoom
+        const scale = this._bpZoomLevel / 100;
+        el.style.transformOrigin = 'top left';
+        el.style.transform = `scale(${scale})`;
+        
+        // ปรับความสูง wrapper ตามการซูม
+        const wrapper = document.getElementById('blueprintWrapper');
+        if (wrapper) {
+            const baseHeight = el.offsetHeight || 400;
+            wrapper.style.height = (baseHeight * scale) + 'px';
+            wrapper.style.overflow = 'auto';
+        }
+        
+        // อัปเดตตัวเลข
+        if (levelEl) levelEl.textContent = this._bpZoomLevel + '%';
+        
+        // อัปเดตความสูง el ด้วย
+        el.style.transformOrigin = 'top left';
+    }
+
+    // ⭐ ดึงสถิติของตู้ (จำนวนสินค้า, ทุน, ขาย)
+    getCabinetStats(cabinetId) {
+        const cabPrefix = this.getCabinetLocationId(cabinetId);
+        const shelfPrefix = cabPrefix + '_shelf_';
+        const items = this.sessionItems.filter(i => 
+            i.location === cabPrefix || (i.location && i.location.startsWith(shelfPrefix))
+        );
+        const totalQty = items.reduce((s, i) => s + (Number(i.counted_qty) || 0), 0);
+        const totalCost = items.reduce((s, i) => s + ((Number(i.cost) || 0) * (Number(i.counted_qty) || 0)), 0);
+        const totalSell = items.reduce((s, i) => s + ((Number(i.sellPrice) || 0) * (Number(i.counted_qty) || 0)), 0);
+        return {
+            count: items.length,
+            qty: totalQty,
+            cost: totalCost,
+            sell: totalSell
+        };
+    }
+
+    // ⭐ คำนวณสถิติรวมทั้งร้าน (สำหรับ Summary Stats)
+    getBlueprintStats() {
+        const front = this.locations.filter(l => l.type === 'front');
+        const back = this.locations.filter(l => l.type === 'back');
+        const totalShelves = this.locations.reduce((s, l) => s + (l.shelves?.length || 0), 0);
+        
+        let totalItems = 0;
+        let totalCost = 0;
+        let totalSell = 0;
+        this.locations.forEach(cab => {
+            const stats = this.getCabinetStats(cab.id);
+            totalItems += stats.count;
+            totalCost += stats.cost;
+            totalSell += stats.sell;
+        });
+        
+        return {
+            frontCount: front.length,
+            backCount: back.length,
+            totalShelves,
+            totalItems,
+            totalCost,
+            totalSell,
+            totalCabinets: this.locations.length
+        };
+    }
+
+    // ⭐ เลือกขนาดตู้
+    selectCabinetSize(size) {
+        this._selectedCabinetSize = size;
+        document.querySelectorAll('#editCabinetModal .size-btn').forEach(btn => {
+            const isActive = btn.dataset.size === size;
+            btn.style.background = isActive ? 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)' : 'var(--bg-card)';
+            btn.style.color = isActive ? '#fff' : 'var(--text-main)';
+            btn.style.borderColor = isActive ? 'var(--primary)' : 'var(--border-color)';
+        });
+    }
+	
     // ================================================================
     // Drag & Drop Setup
     // ================================================================
@@ -10627,7 +11524,7 @@ class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opaci
 		csv += '\n';
 
 		// ⭐ [FIX] แสดงสรุปทุกครั้ง
-		const summaryRows = this.getReportSummaryForExport();
+		const summaryRows = this.getReportSummaryForExport().slice(3);
 		summaryRows.forEach(r => {
 			csv += r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',') + '\n';
 		});
@@ -10660,7 +11557,8 @@ class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opaci
 		];
 		// ⭐ เพิ่มบล็อกสรุป (เฉพาะรายงานที่ต้องการ)
 		// ⭐ [FIX] แสดงสรุปทุกครั้ง
-		const summaryRows = this.getReportSummaryForExport();
+        // ⭐ FIX: ลบ 3 บรรทัดแรกที่ซ้ำกับ headerRows
+        const summaryRows = this.getReportSummaryForExport().slice(3);
 
 		const allRows = [...headerRows, ...summaryRows, headers, ...rows];
 		const ws = XLSX.utils.aoa_to_sheet(allRows);
