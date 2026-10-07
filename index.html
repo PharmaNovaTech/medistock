@@ -1276,7 +1276,8 @@
         /* ⭐ Combo A: Blueprint Cabinet */
         .blueprint-cab {
             position: absolute;
-            min-width: 60px;
+            min-width: 55px;        /* ← ลดจาก 60 */
+			max-width: 16%;         /* ← เพิ่ม */
             min-height: 40px;
             padding: 5px;
             border: 2px solid var(--primary);
@@ -1289,7 +1290,13 @@
             transition: box-shadow 0.2s, transform 0.2s;
             z-index: 1;
         }
-        .blueprint-cab:hover {
+		/* ⭐ v5.3.1 Phase 1: Size S/M/L/XL — ปรับให้เล็กลง */
+        .blueprint-cab.size-S  { width: 9%; }    /* ← ลดจาก 11% */
+        .blueprint-cab.size-M  { width: 13%; }   /* ← ลดจาก 16% */
+        .blueprint-cab.size-L  { width: 17%; }   /* ← ลดจาก 22% */
+        .blueprint-cab.size-XL { width: 22%; }   /* ← ลดจาก 30% */
+        
+		.blueprint-cab:hover {
             box-shadow: 0 4px 20px rgba(14,165,233,0.4);
             transform: translateY(-2px);
             z-index: 10;
@@ -1301,10 +1308,10 @@
             cursor: move;
         }
         /* Size variants */
-        .blueprint-cab.size-S  { width: 11%; }
-        .blueprint-cab.size-M  { width: 16%; }
-        .blueprint-cab.size-L  { width: 22%; }
-        .blueprint-cab.size-XL { width: 30%; }
+		.blueprint-cab.size-S  { width: 9%; }
+		.blueprint-cab.size-M  { width: 13%; }
+		.blueprint-cab.size-L  { width: 17%; }
+		.blueprint-cab.size-XL { width: 22%; }
         /* Zone colors */
         .blueprint-cab.front {
             border-color: #10b981;
@@ -2359,8 +2366,8 @@ infinite;"></div>
 
 radius:var(--radius-md);padding:28px 16px;text-align:center;cursor:pointer;background:var(--bg-body);margin-bottom:8px;">
                 <i class="fas fa-cloud-upload-alt" style="font-size:32px;color:var(--primary);display:block;margin-bottom:6px;"></i>
-                <p style="font-weight:600;font-size:15px;color:var(--text-main);">อัปโหลดไฟล์ Excel / CSV</p>
-                <p style="font-size:12px;color:var(--text-muted);">.xlsx, .xls, .csv</p>
+                <p style="font-weight:600;font-size:15px;color:var(--text-main);">อัปโหลดไฟล์ Excel</p>
+                <p style="font-size:12px;color:var(--text-muted);">.xlsx, .xls</p>
             </div>
             <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFile(event)">
             <div style="background:var(--bg-body);border-radius:var(--radius-md);padding:12px;margin-top:6px;">
@@ -2748,7 +2755,7 @@ id="costDisplay">0.00</span>
 			<div style="position:relative;display:none;" id="blueprintWrapper">
 				<div id="blueprintMap" class="blueprint-map"></div>
 				<!-- ⭐ ปุ่มซูม -->
-				<div id="blueprintZoomControls" style="position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:4px;background:rgba(255,255,255,0.95);padding:4px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.15);z-index:10;">
+				<div id="blueprintZoomControls" style="position:absolute;bottom:8px;right:8px;display:flex;flex-direction:column;gap:4px;background:rgba(255,255,255,0.95);padding:4px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.15);z-index:10;">
 					<button class="bp-zoom-btn" onclick="app.zoomBlueprint('in')" title="ขยาย" style="width:32px;height:32px;border:1px solid var(--border-color);background:#fff;border-radius:6px;cursor:pointer;font-size:16px;font-weight:800;color:var(--primary);display:flex;align-items:center;justify-content:center;">+</button>
 					<button class="bp-zoom-btn" onclick="app.zoomBlueprint('out')" title="ย่อ" style="width:32px;height:32px;border:1px solid var(--border-color);background:#fff;border-radius:6px;cursor:pointer;font-size:16px;font-weight:800;color:var(--primary);display:flex;align-items:center;justify-content:center;">−</button>
 					<button class="bp-zoom-btn" onclick="app.zoomBlueprint('reset')" title="รีเซ็ต" style="width:32px;height:32px;border:1px solid var(--border-color);background:#fff;border-radius:6px;cursor:pointer;font-size:14px;font-weight:800;color:var(--primary);display:flex;align-items:center;justify-content:center;">↺</button>
@@ -3027,7 +3034,7 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
 						<i class="fas fa-history"></i> 🕐 ประวัตินับ
 					</button>
 				</div>
-			</div>>
+			</div>
 			</div>   <!-- ✅ เพิ่ม: ปิด .flex-between -->
             <div class="table-wrap" style="margin-top:8px;">
                 <table>
@@ -3355,7 +3362,7 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
                 <span class="doc-icon">❓</span>
                 <span class="doc-text">
                     <span class="doc-title">คำถามที่พบบ่อย (Q&A)</span>
-                    <span class="doc-desc">6 หมวด • 30 คำถาม-คำตอบ</span>
+                    <span class="doc-desc">7 หมวด • 50 คำถาม-คำตอบ</span>
                 </span>
                 <span class="doc-spinner"></span>
             </button>
@@ -3384,7 +3391,7 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
                     <div class="mode-content">
                         <div class="mode-title">ฉบับสมบูรณ์</div>
                         <div class="mode-desc">
-                            ~35 หน้า • ทุกฟีเจอร์ละเอียด • เหมาะแจกพนักงาน<br>
+                            ~60 หน้า • ทุกฟีเจอร์ละเอียด • เหมาะแจกพนักงาน<br>
                             มีตัวอย่าง, Box diagram, Tip ครบ
                         </div>
                     </div>
@@ -3395,7 +3402,7 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
                     <div class="mode-content">
                         <div class="mode-title">ฉบับพกพา (Quick Reference)</div>
                         <div class="mode-desc">
-                            ~12 หน้า • กระชับ • เหมาะ PWA ในมือถือ<br>
+                            ~10 หน้า • กระชับ • เหมาะ PWA ในมือถือ<br>
                             เฉพาะขั้นตอนสำคัญ + คำสั่งยอดนิยม
                         </div>
                     </div>
@@ -9027,12 +9034,34 @@ async closeFullscreenScanner() {
 
     // ⭐ เพิ่มฟังก์ชันใหม่ต่อท้าย addCabinet()
     getNextCabinetPosition() {
-        // หา x สูงสุดของตู้ที่มีอยู่ → +18 (เว้นช่อง)
-        if (this.locations.length === 0) return 5;
-        const maxX = Math.max(...this.locations.map(l => Number(l.x) || 0));
-        const nextX = maxX + 18;
-        // ถ้าเกิน 80% → ขึ้นแถวใหม่
-        return nextX > 80 ? 5 : nextX;
+        // ⭐ v5.3.1 Phase 1: Grid ละเอียด 13%
+        const gridX = 13;      // ← ตู้ห่าง 13% (เดิม 23%)
+        const gridY = 15;      // ← ตู้ห่าง 15%
+        const padX = 3;        // ระยะห่างขอบซ้าย
+        const padY = 12;       // ระยะห่างขอบบน
+        
+        // ⭐ ลองหาช่องว่าง 7 คอลัมน์ × 12 แถว
+        for (let row = 0; row < 12; row++) {
+            for (let col = 0; col < 7; col++) {
+                const testX = padX + (col * gridX);
+                const testY = padY + (row * gridY);
+                
+                // ตรวจว่าทับตู้เดิมไหม
+                const hasCollision = this.locations.some(x => {
+                    const dx = Math.abs((Number(x.x) || 0) - testX);
+                    const dy = Math.abs((Number(x.y) || 0) - testY);
+                    return dx < gridX * 0.5 && dy < gridY * 0.5;
+                });
+                
+                if (!hasCollision) {
+                    return { x: testX, y: testY };
+                }
+            }
+        }
+        
+        // ⭐ ถ้าเต็ม → หาช่องว่างสุดท้าย
+        const maxY = Math.max(...this.locations.map(l => Number(l.y) || 0), 0);
+        return { x: padX, y: maxY + gridY };
     }
 
     deleteCabinet(id) {
@@ -9826,35 +9855,51 @@ class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opaci
                 const c = this.locations.find(x => String(x.id) === String(node.dataset.id));
                 if (!c) return;
                 
-                // ⭐ คำนวณ x,y
-                let newX = Math.max(0, Math.min(92, ((ev.clientX - rect.left) / rect.width) * 100 - 4));
-                let newY = Math.max(0, Math.min(92, ((ev.clientY - rect.top) / rect.height) * 100 - 3));
+                // ⭐ v5.3.1 Phase 1: คำนวณ x,y
+                let newX = ((ev.clientX - rect.left) / rect.width) * 100 - 4;
+                let newY = ((ev.clientY - rect.top) / rect.height) * 100 - 3;
+                newX = Math.max(0, Math.min(92, newX));
+                newY = Math.max(2, Math.min(92, newY));
                 
-                // ⭐ จำกัดโซน
-                const isSingleZone = el.classList.contains('single-zone');
-                if (!isSingleZone) {
-                    // โหมด 2 โซน — จำกัดตามโซน
-                    if (c.type === 'back') {
-                        // หลังร้าน — อยู่บน (y: 0-45%)
-                        newY = Math.max(2, Math.min(45, newY));
-                    } else if (c.type === 'front') {
-                        // หน้าร้าน — อยู่ล่าง (y: 55-92%)
-                        newY = Math.max(55, Math.min(92, newY));
+                // ⭐ Snap-to-Grid (ถ้าเปิด)
+                if (this._bpSnapEnabled !== false) {
+                    const gridX = 13;      // ← Grid 13%
+                    const gridY = 15;      // ← Grid 15%
+                    const padX = 3;
+                    const padY = 12;
+                    
+                    // Snap ไปช่องใกล้สุด
+                    const snappedX = Math.round((newX - padX) / gridX) * gridX + padX;
+                    const snappedY = Math.round((newY - padY) / gridY) * gridY + padY;
+                    
+                    // ตรวจไม่ให้ทับตู้อื่น
+                    const otherCabs = this.locations.filter(x => String(x.id) !== String(c.id));
+                    const hasCollision = otherCabs.some(x => {
+                        const dx = Math.abs((Number(x.x) || 0) - snappedX);
+                        const dy = Math.abs((Number(x.y) || 0) - snappedY);
+                        return dx < gridX * 0.5 && dy < gridY * 0.5;
+                    });
+                    
+                    // ถ้าไม่ทับ → ใช้ตำแหน่ง snap
+                    if (!hasCollision) {
+                        newX = Math.max(0, Math.min(92, snappedX));
+                        newY = Math.max(2, Math.min(92, snappedY));
                     }
                 }
-                // โหมดเดียว — ลากได้ทั้งพื้นที่ (0-92%)
                 
                 c.x = newX;
                 c.y = newY;
-				// ⭐ Auto-expand ตาม y
+                
+                // ⭐ Auto-expand ตาม y
                 const allY = this.locations.map(l => Number(l.y) || 0);
-                const maxY = Math.max(...allY);
-                const minHeightNeeded = ((maxY + 10) / 100) * 500 + 100;  // 500px ต่อ 100%
+                const maxY = Math.max(...allY, 0);
+                const minHeightNeeded = Math.round((maxY + 20) * 5 + 100);
                 const currentMinHeight = parseInt(el.style.minHeight) || 360;
                 if (minHeightNeeded > currentMinHeight) {
-                    el.style.minHeight = Math.round(minHeightNeeded) + 'px';
+                    el.style.minHeight = minHeightNeeded + 'px';
                 }
-				this.saveLocations();
+                
+                this.saveLocations();
                 this.renderBlueprint();
                 setTimeout(() => { dragged = false; }, 200);
             });
@@ -13993,7 +14038,7 @@ syncProductStock(product) {
         try {
             const header = this._docBuildHeader(
                 'คำถามที่พบบ่อย (Q&A)',
-                '6 หมวด • รวมคำถาม-คำตอบที่พบบ่อยใน MediStock'
+                '7 หมวด • รวมคำถาม-คำตอบที่พบบ่อยใน MediStock'
             );
             const body = QA_CONTENT.map(section => `
                 <div class="qa-section">
@@ -14764,20 +14809,102 @@ const MANUAL_FULL = [
                 <li><strong>➕ เพิ่มสินค้าใหม่</strong> — สำหรับสินค้าที่ไม่มีในระบบ</li>
             </ol>
 
-            <h3>4.2 เปิด Session การนับ</h3>
-            <p>ทุกครั้งที่เริ่มนับ → ระบบจะสร้าง <strong>Session</strong> ใหม่:</p>
-            <ul>
-                <li>แสดงชื่อผู้ใช้ • Session ID • เวลาเริ่ม</li>
-                <li>มีปุ่ม <strong>รายละเอียด</strong> และ <strong>ปิดรอบ</strong></li>
-                <li>Session จะเปิดค้างไว้ 24 ชั่วโมง</li>
-            </ul>
+			<h3>4.2 เปิด Session การนับ</h3>
+			<p>ทุกครั้งที่เริ่มนับ → ระบบจะสร้าง <strong>Session</strong> ใหม่:</p>
+			<ul>
+				<li>แสดงชื่อผู้ใช้ • Session ID • เวลาเริ่ม</li>
+				<li>มีปุ่ม <strong>รายละเอียด</strong> และ <strong>ปิดรอบ</strong></li>
+				<li>Session จะเปิดค้างไว้ <strong>24 ชั่วโมง</strong></li>
+			</ul>
 
-            <div class="tip">
-                💡 <strong>Session ใช้ทำอะไร?</strong><br>
-                • แยกการนับแต่ละรอบ<br>
-                • ตรวจว่าใครนับเมื่อไหร่<br>
-                • Admin ดูย้อนหลังได้
-            </div>
+			<div class="tip">
+				💡 <strong>Session ใช้ทำอะไร?</strong><br>
+				• แยกการนับแต่ละรอบ<br>
+				• ตรวจว่าใครนับเมื่อไหร่<br>
+				• Admin ดูย้อนหลังได้
+			</div>
+
+			<h4>4.2.1 Session 24 ชั่วโมง — ทำงานอย่างไร?</h4>
+
+			<p><strong>แนวคิด:</strong> Session = รอบการนับ 1 รอบ มีอายุ 24 ชม.</p>
+
+			<div class="box">
+			[เริ่มนับ]
+				↓
+			Session #1 เริ่ม
+				│
+				├─ 0-24 ชม. → Session ทำงานปกติ ✅
+				│
+				├─ ผ่าน 24 ชม. → ระบบปิดอัตโนมัติ
+				│                 ↓
+				└─ เปิดแอปใหม่ → Session #2 เริ่มใหม่
+			</div>
+
+			<h4>4.2.2 ถ้าปล่อยทิ้งไว้เกิน 24 ชั่วโมง จะเกิดอะไร?</h4>
+
+			<table>
+				<thead>
+					<tr><th>สิ่งที่เกิด</th><th>ผลกระทบ</th></tr>
+				</thead>
+				<tbody>
+					<tr><td>Session ปิดอัตโนมัติ</td><td>⚠️ ไม่มีผลต่อการนับ</td></tr>
+					<tr><td>ข้อมูล sessionItems ยังอยู่</td><td>✅ ไม่หาย</td></tr>
+					<tr><td>ข้อมูล Products ยังอยู่</td><td>✅ ไม่หาย</td></tr>
+					<tr><td>ข้อมูล Locations ยังอยู่</td><td>✅ ไม่หาย</td></tr>
+					<tr><td>Session ใหม่เริ่มอัตโนมัติ</td><td>✅ ทำงานต่อได้</td></tr>
+				</tbody>
+			</table>
+
+			<div class="success">
+				✅ <strong>ข้อมูลไม่หาย!</strong><br>
+				แค่ Session ID เปลี่ยน — นับต่อได้ปกติ
+			</div>
+
+			<h4>4.2.3 ตัวอย่าง: นับ 3 วันติดกัน</h4>
+
+			<div class="box">
+			วันที่ 1
+			9:00  → เริ่มนับ (Session #1)
+			18:00 → เลิกงาน → ปิดแอป
+
+			วันที่ 2
+			8:00  → เปิดแอป
+					→ ผ่านมา 23 ชม. → ยังไม่เกิน 24
+					→ Session #1 ยังทำงานต่อ ✅
+
+			วันที่ 3
+			10:00 → เปิดแอป
+					→ ผ่านมา 49 ชม. → เกิน 24 ชม.
+					→ Session #1 → auto-closed
+					→ Session #2 → เริ่มใหม่ (อัตโนมัติ)
+					→ Toast: "🆕 เริ่ม Session ใหม่"
+					→ ⚠️ sessionItems ยังอยู่ (ข้อมูลไม่หาย)
+			</div>
+
+			<div class="warning">
+				⚠️ <strong>สิ่งที่หายเมื่อเกิน 24 ชม.:</strong><br>
+				• Session ID เก่า<br>
+				• เวลาเริ่ม Session เก่า<br>
+				• จำนวนรายการใน Session (reset)<br>
+				<br>
+				✅ <strong>แต่ข้อมูลการนับ (sessionItems) ยังอยู่</strong>
+			</div>
+
+			<h4>4.2.4 ปิด Session เองก่อน 24 ชม.</h4>
+
+			<p>ถ้าต้องการปิด Session ก่อน:</p>
+			<ol>
+				<li>กดปุ่ม <strong>🔴 ปิดรอบ</strong> ที่ Session Banner</li>
+				<li>ยืนยัน</li>
+				<li>ระบบจะปิด Session ปัจจุบัน + เปิดใหม่ทันที</li>
+			</ol>
+
+			<div class="tip">
+				💡 <strong>เมื่อไหร่ควรปิดเอง?</strong><br>
+				• ปิดรอบนับเสร็จแล้ว<br>
+				• ต้องการเริ่มรอบใหม่<br>
+				• มีการเปลี่ยนกะ
+			</div>
 
             <h3>4.3 การสแกนบาร์โค้ด</h3>
             <p><strong>ขั้นตอน:</strong></p>
@@ -16898,7 +17025,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
 
             <p><strong>แก้ไข:</strong></p>
             <ol>
-                <li>ตรวจไฟล์เป็น .xlsx, .xls, .csv</li>
+                <li>ตรวจไฟล์เป็น .xlsx, .xls</li>
                 <li>ตรวจว่าไฟล์มีหัวตาราง (row 1)</li>
                 <li>ตรวจว่ามีข้อมูลอย่างน้อย 2 แถว</li>
                 <li>ตรวจการ Mapping ครบ 5 ช่องบังคับ:
@@ -17027,6 +17154,29 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>ตรวจ <code>localStorage</code> มี key <code>v53_active_session_*</code></li>
                 <li>ตรวจว่า Session ไม่เก่าเกิน 24 ชั่วโมง</li>
             </ol>
+			
+			<h4>ปัญหา: Session ปิดตัวเองหลัง 24 ชม.</h4>
+
+			<p><strong>อาการ:</strong> เปิดแอปใหม่ → Toast "🆕 เริ่ม Session ใหม่"</p>
+
+			<p><strong>สาเหตุ:</strong> Session เกิน 24 ชั่วโมง → auto-close</p>
+
+			<div class="success">
+				✅ <strong>ไม่ใช่ปัญหา!</strong><br>
+				• ข้อมูลการนับ (sessionItems) ไม่หาย<br>
+				• นับต่อได้ปกติ<br>
+				• สรุปผลรวมได้
+			</div>
+
+			<p><strong>สิ่งที่ต้องทำ:</strong> <strong>ไม่มี</strong> — แค่ทำงานต่อ</p>
+
+			<h4>ปัญหา: Session ID เปลี่ยนเอง</h4>
+
+			<p><strong>อาการ:</strong> Session ID ไม่เหมือนเดิม</p>
+
+			<p><strong>สาเหตุ:</strong> ผ่าน 24 ชม. → ระบบเริ่มใหม่</p>
+
+			<p><strong>แก้ไข:</strong> ✅ ปกติ — ไม่ต้องแก้</p>
 
             <h3>10.13 ปัญหา: Dedup block ผิด</h3>
 
@@ -17571,7 +17721,7 @@ const MANUAL_POCKET = [
     }
 ];
 
-// ❓ QA_CONTENT — คำถามที่พบบ่อย 6 หมวด (~40 ข้อ)
+// ❓ QA_CONTENT — คำถามที่พบบ่อย 7 หมวด (~50 ข้อ)
 const QA_CONTENT = [
     {
         icon: '🚀',
@@ -17621,6 +17771,62 @@ const QA_CONTENT = [
                 q: 'MediStock เก็บข้อมูลแบบไหน?',
                 a: '2 ที่หลักครับ:<br><br><strong>1. IndexedDB</strong> (ในเครื่อง)<br>• ข้อมูลสินค้า<br>• ข้อมูลนับ<br>• ประวัติ<br><br><strong>2. localStorage</strong> (ในเครื่อง)<br>• Session<br>• Dedup cache<br>• ตั้งค่า<br><br>💡 ทั้งหมดอยู่ในเครื่องคุณ ไม่มี server กลาง'
             },
+			{
+				q: 'Session 24 ชั่วโมง คืออะไร?',
+				a: 'Session = รอบการนับ 1 รอบ มีอายุ 24 ชั่วโมง<br><br>' +
+				   '• เปิดแอป → Session เริ่ม<br>' +
+				   '• นับไปเรื่อยๆ ภายใน 24 ชม. → Session ทำงานปกติ<br>' +
+				   '• เกิน 24 ชม. → ระบบปิดอัตโนมัติ + เริ่มใหม่<br><br>' +
+				   '💡 <strong>ข้อมูลการนับไม่หาย</strong> — แค่ Session ID เปลี่ยน'
+			},
+			{
+				q: 'ถ้าปล่อยทิ้งไว้เกิน 24 ชั่วโมง จะเกิดอะไรขึ้น?',
+				a: '<strong>ข้อมูลไม่หายครับ</strong> — นับต่อได้ปกติ<br><br>' +
+				   '<strong>สิ่งที่เกิดขึ้น:</strong><br>' +
+				   '• Session ปิดอัตโนมัติ<br>' +
+				   '• Session ใหม่เริ่มทันที<br>' +
+				   '• Toast: "🆕 เริ่ม Session ใหม่"<br><br>' +
+				   '<strong>สิ่งที่หาย:</strong><br>' +
+				   '• Session ID เก่า (ตัวเลขใน Banner)<br>' +
+				   '• เวลาเริ่ม<br>' +
+				   '• จำนวนรายการใน Session (reset)<br><br>' +
+				   '<strong>สิ่งที่ไม่หาย:</strong><br>' +
+				   '✅ ข้อมูลการนับ (sessionItems)<br>' +
+				   '✅ สินค้า (Products)<br>' +
+				   '✅ ตู้/ชั้น (Locations)<br>' +
+				   '✅ ประวัติ (History)'
+			},
+			{
+				q: 'นับ 2 วันติดกัน จะมีปัญหาไหม?',
+				a: '<strong>ไม่มีปัญหาครับ!</strong><br><br>' +
+				   '<strong>กรณีที่ 1: นับต่อภายใน 24 ชม.</strong><br>' +
+				   '• Session #1 ยังทำงานต่อ<br>' +
+				   '• นับต่อได้ปกติ<br><br>' +
+				   '<strong>กรณีที่ 2: เกิน 24 ชม.</strong><br>' +
+				   '• Session #1 ปิดอัตโนมัติ<br>' +
+				   '• Session #2 เริ่มใหม่<br>' +
+				   '• ข้อมูลรวมกันได้<br><br>' +
+				   '💡 สรุปผล → ได้ข้อมูลรวมทั้ง 2 วัน'
+			},
+			{
+				q: 'Session ID เปลี่ยนเอง ทำไม?',
+				a: 'เป็นเรื่องปกติครับ — เพราะ Session เกิน 24 ชั่วโมง<br><br>' +
+				   'ระบบจะ:<br>' +
+				   '• ปิด Session เก่า<br>' +
+				   '• เปิด Session ใหม่<br>' +
+				   '• ID เปลี่ยน → แสดงสีเขียวใน Banner<br><br>' +
+				   '💡 ไม่กระทบการนับ'
+			},
+			{
+				q: 'แก้ Session ให้ยาวกว่า 24 ชม. ได้ไหม?',
+				a: 'แก้ได้ครับ แต่<strong>ไม่แนะนำ</strong><br><br>' +
+				   '<strong>ข้อเสียของการแก้:</strong><br>' +
+				   '• Session จะค้างนาน → log สับสน<br>' +
+				   '• Database พอง<br>' +
+				   '• ตรวจสอบย้อนหลังยาก<br><br>' +
+				   '💡 แนะนำ: ปล่อยให้เป็น 24 ชม. ตาม default<br>' +
+				   'ข้อมูลการนับไม่หายอยู่แล้ว'
+			},
             {
                 q: 'เปิดพร้อมกันหลายหน้าจอได้ไหม (PC + มือถือ)?',
                 a: 'ได้ครับ! แต่<strong>ไม่แนะนำ</strong>ให้ใช้บัญชีเดียวกันนับซ้ำ<br><br>แนะนำ:<br>• PC → ดูรายงาน / Admin<br>• มือถือ → นับสต็อก<br><br>💡 ถ้าหลายคนนับพร้อมกัน → ใช้ Multi-user'
@@ -17687,10 +17893,10 @@ const QA_CONTENT = [
                 q: 'ถ้าบางแถวผิด บางแถวถูก จะเกิดอะไรขึ้น?',
                 a: 'ระบบจะ:<br>✅ นำเข้าแถวที่ถูก<br>❌ ข้ามแถวที่ผิด<br>📊 แจ้งสรุป: "นำเข้าสำเร็จ X รายการ, ข้าม Y"<br><br>💡 ไม่ต้องแก้ทั้งหมด! นำเข้าไปก่อน → แก้แถวที่ผิดทีหลัง'
             },
-            {
-                q: 'ไฟล์ CSV นำเข้าได้ไหม?',
-                a: 'ได้ครับ! MediStock รองรับ:<br>✅ .xlsx (แนะนำ)<br>✅ .xls (Excel เก่า)<br>✅ .csv (ไฟล์ข้อความ)<br><br>💡 ถ้าไฟล์ Excel มีหลาย sheet → ระบบอ่าน sheet แรก'
-            },
+			{
+				q: 'ไฟล์ CSV นำเข้าได้ไหม?',
+				a: 'ได้ครับ แต่<strong>ไม่แนะนำ</strong> เพราะมีปัญหา:<br>❌ บาร์โค้ดอาจเพี้ยน (8.85E+12)<br>❌ วันที่อาจแปลงผิด<br>❌ ภาษาไทยอาจเพี้ยน<br><br><strong>แนะนำ:</strong> ใช้ .xlsx หรือ .xls แทน<br><br>💡 ถ้าจำเป็นต้องใช้ CSV → ตั้ง encoding เป็น UTF-8 + ใส่ \' นำหน้าบาร์โค้ด'
+			},
             {
                 q: 'ไฟล์ Excel มีหลาย sheet ระบบอ่าน sheet ไหน?',
                 a: 'ระบบอ่าน <strong>sheet แรก</strong> เท่านั้นครับ<br><br>💡 ถ้าข้อมูลอยู่ sheet อื่น:<br>1. Copy sheet นั้นมาเป็น sheet แรก<br>2. หรือ Save sheet นั้นเป็นไฟล์ใหม่'
