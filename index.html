@@ -11015,10 +11015,12 @@ class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opaci
         add('Dead Stock', ['รหัส', 'ชื่อสินค้า', 'LOT', 'จำนวน', 'ทุน', 'ขาย', 'หมดอายุ', 'คงเหลือวัน', 'มูลค่าทุน'],
             this.getDeadStockRows().map(r => [r.id, r.name, r.lot, r.stock, r.cost, r.sell, this.formatDate(r.expiry), r.diffDays, r.stock * r.cost]));
 
-        // ===== 16: สินค้าใกล้หมด (⭐ 5B-10: เพิ่มมูลค่าขาย) =====
-        add('สินค้าใกล้หมด', ['รหัส', 'ชื่อสินค้า', 'LOT', 'จำนวน', 'Min', 'ทุน', 'ขาย', 'มูลค่าทุน', 'มูลค่าขาย'],
+        // ===== 16: สินค้าใกล้หมด =====
+        // ⭐ v5.3.1 FIX: เพิ่มคอลัมน์ "หน่วย" หลัง "จำนวน"
+        add('สินค้าใกล้หมด',
+            ['รหัส', 'ชื่อสินค้า', 'LOT', 'จำนวน', 'หน่วย', 'Min', 'ทุน', 'ขาย', 'มูลค่าทุน', 'มูลค่าขาย'],
             this.getLowStockRows().map(r => [
-                r.id, r.name, r.lot, r.stock, r.min,
+                r.id, r.name, r.lot, r.stock, r.unit || '', r.min,
                 r.cost, r.sell,
                 (r.stock * r.cost).toFixed(2),
                 (r.stock * r.sell).toFixed(2)
