@@ -10843,21 +10843,39 @@ class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opaci
             'ทีม Sync': 'รายงานข้อมูลทีม (Multi-user)'
         };
 
-        const add = (name, headers, rows) => {
+        // ⭐ v5.3.1 FIX: add() รองรับ textColumns (บังคับคอลัมน์เป็น text)
+        const add = (name, headers, rows, options = {}) => {
             const safeName = name.slice(0, 31).replace(/[\\\/\?\*\[\]:]/g, '_');
             const reportTitle = reportTitleMap[name] || ('รายงาน: ' + name);
             
             // ⭐ Header 4 บรรทัด: ชื่อบริษัท / ชื่อรายงาน / สาขา+วันที่ / ว่าง
             const headerRows = [
                 ['📊 MediStock v5.3.1 — ' + (this.v5UserName || '-')],
-                [reportTitle],                                       // ← ใหม่!
+                [reportTitle],
                 ['สาขา: ' + branchName + ' | วันที่: ' + reportDate],
-                []  // บรรทัดว่าง
+                []
             ];
             
             const allRows = [...headerRows, headers, ...rows];
             const ws = XLSX.utils.aoa_to_sheet(allRows);
             ws['!cols'] = headers.map(h => ({ wch: Math.min(34, Math.max(10, String(h).length + 4)) }));
+            
+            // ⭐ บังคับ text columns (สำหรับบาร์โค้ด 13 หลัก)
+            const textCols = options.textColumns || [];
+            if (textCols.length > 0) {
+                const startRow = headerRows.length + 1;   // แถวแรกของข้อมูล
+                for (let r = startRow; r < allRows.length; r++) {
+                    textCols.forEach(c => {
+                        const cellRef = XLSX.utils.encode_cell({ r: r, c: c });
+                        if (ws[cellRef]) {
+                            ws[cellRef].t = 's';                            // type = string
+                            ws[cellRef].v = String(ws[cellRef].v || '');    // แปลงเป็น string
+                            ws[cellRef].z = '@';                            // format = text
+                        }
+                    });
+                }
+            }
+            
             XLSX.utils.book_append_sheet(wb, ws, safeName);
         };
 
@@ -10928,12 +10946,14 @@ class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opaci
                 r.expiry ? this.formatDate(r.expiry) : '',
                 r.age !== null && r.age !== undefined && r.age > 0 ? r.age.toFixed(1) : '-',
                 r.note
-            ]));
+            ]),
+			{ textColumns: [1] });   // ⭐ บังคับบาร์โค้ด (คอลัมน์ที่ 2) เป็น text
 
         // ===== 3: ขาด-เกิน =====
         add('ขาด-เกิน',
             ['รหัสสินค้า', 'บาร์โค้ด', 'ชื่อสินค้า', 'LOT', 'ระบบ', 'นับ', 'ผลต่าง', 'สถานะ', 'มูลค่าทุนต่าง', 'มูลค่าขายต่าง', 'ตู้/ชั้น', 'ผู้ตรวจนับ'],
-            this.getDifferenceReportRows().map(r => [r.productId, r.barcode, r.name, r.lot, r.system, r.counted, r.difference, r.difference > 0 ? 'เกิน' : 'ขาด', r.costDiff, r.sellDiff, r.locations, r.users]));
+            this.getDifferenceReportRows().map(r => [r.productId, r.barcode, r.name, r.lot, r.system, r.counted, r.difference, r.difference > 0 ? 'เกิน' : 'ขาด', r.costDiff, r.sellDiff, r.locations, r.users]),
+            { textColumns: [1] });   // ⭐ บังคับบาร์โค้ด (คอลัมน์ที่ 2) เป็น text
 
 	 // ===== 4: ยังไม่ได้นับ (⭐ [ข้อ 6] เพิ่มคอลัมน์ "อายุ") =====
 	add('ยังไม่ได้นับ',
@@ -10980,7 +11000,8 @@ class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opaci
         });
         add('Barcode Master',
             ['รหัสสินค้า', 'ชื่อสินค้า', 'Barcode', 'หน่วย', 'ผู้จัดจำหน่าย', 'ทุน', 'ขาย'],
-            bm);
+            bm,
+            { textColumns: [2] });   // ⭐ บังคับ Barcode (คอลัมน์ที่ 3) เป็น text
 
         // ===== 7-11: หมดอายุ =====
         const expirySheet = (name, rows) => add(name,
@@ -11031,8 +11052,13 @@ class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opaci
             this.getZeroStockRows().map(r => [r.id, r.name, r.cost, r.sell, r.unit]));
 
         // ===== 18: ทีม Sync =====
-        add('ทีม Sync', ['เวลา', 'เวลาไทย', 'ผู้ตรวจนับ', 'สาขา', 'บาร์โค้ด', 'สินค้า', 'LOT', 'ระบบ', 'นับ', 'ผลต่าง', 'ตู้/ชั้น', 'หมายเหตุ'],
-            (this._v51LastTeamRows || []));
+        // ⭐ v5.3.1 FIX: Header ครบ 17 คอลัมน์ (ตรงกับ data)
+        add('ทีม Sync',
+            ['เวลา', 'เวลาไทย', 'ผู้ตรวจนับ', 'สาขา', 'บาร์โค้ด', 'สินค้า', 'LOT',
+             'ระบบ', 'นับ', 'ผลต่าง', 'ตู้/ชั้น', 'หมายเหตุ',
+             'Session ID', 'ทุน', 'ขาย', 'ผลต่างทุน', 'ผลต่างขาย'],
+            (this._v51LastTeamRows || []),
+            { textColumns: [4] });   // ⭐ บังคับบาร์โค้ด (คอลัมน์ที่ 5) เป็น text
 
         const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
         XLSX.writeFile(wb, `MediStock_v5.3.1_FullReport_${timestamp}.xlsx`);
