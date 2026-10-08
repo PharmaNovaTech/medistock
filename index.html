@@ -10963,13 +10963,24 @@ class="fas fa-boxes" style="font-size:32px;display:block;margin-bottom:6px;opaci
 		}));
 
         // ===== 6: Barcode Master =====
+        // ⭐ v5.3.1 FIX: เปลี่ยนให้เหมือนรายงานเดี่ยว (7 คอลัมน์)
         const bm = [];
         this.products.forEach(p => {
             const bars = new Set([p.primaryBarcode, ...(p.barcodes || [])].filter(Boolean));
             if (!bars.size) return;
-            bars.forEach(b => bm.push([p.id, p.code || '', p.name, b, p.primaryBarcode || '', p.lot || '', p.unit || '', p.supplier || '']));
+            bars.forEach(b => bm.push([
+                p.id,                                    // รหัสสินค้า
+                p.name,                                  // ชื่อสินค้า
+                b,                                       // Barcode
+                p.unit || '',                            // หน่วย
+                p.supplier || '',                        // ผู้จัดจำหน่าย
+                Number(p.costPerUnit) || 0,              // ทุน
+                Number(p.sellPrice1) || 0                // ขาย
+            ]));
         });
-        add('Barcode Master', ['รหัส', 'Code', 'ชื่อสินค้า', 'Barcode', 'Barcode หลัก', 'LOT', 'หน่วย', 'ผู้จัดจำหน่าย'], bm);
+        add('Barcode Master',
+            ['รหัสสินค้า', 'ชื่อสินค้า', 'Barcode', 'หน่วย', 'ผู้จัดจำหน่าย', 'ทุน', 'ขาย'],
+            bm);
 
         // ===== 7-11: หมดอายุ =====
         const expirySheet = (name, rows) => add(name,
