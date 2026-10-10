@@ -2380,17 +2380,44 @@ radius:var(--radius-md);padding:28px 16px;text-align:center;cursor:pointer;backg
                 <p style="font-size:12px;color:var(--text-muted);">.xlsx, .xls</p>
             </div>
             <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFile(event)">
-            <div style="background:var(--bg-body);border-radius:var(--radius-md);padding:12px;margin-top:6px;">
-                <p style="font-weight:600;font-size:14px;margin-bottom:6px;"><i class="fab fa-google" style="color:#4285F4;"></i> หรือใช้ Google 
-
-Sheets</p>
+            <!-- ⭐ v5.3.1: ปรับ UI Google Sheets -->
+            <div style="background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%);border:2px solid #bae6fd;border-radius:var(--radius-md);padding:12px;margin-top:6px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+                    <p style="font-weight:700;font-size:14px;margin:0;">
+                        <i class="fab fa-google" style="color:#4285F4;"></i> หรือใช้ Google Sheets
+                    </p>
+                    <span id="gsQuickStatus" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;background:#fef3c7;color:#92400e;">
+                        ⚠️ ยังไม่ได้ตั้งค่า
+                    </span>
+                </div>
+                
+                <div id="gsSetupWarning" style="background:#fef3c7;border-left:4px solid #f59e0b;padding:8px 10px;border-radius:6px;margin-bottom:8px;font-size:12px;color:#78350f;line-height:1.6;">
+                    <strong>⚠️ ต้องตั้งค่า API Key ก่อน</strong><br>
+                    • ขอ API Key ฟรีจาก Google (5 นาที)<br>
+                    • ใช้ได้ตลอด ไม่มีค่าใช้จ่าย<br>
+                    <button class="btn btn-warning btn-sm" onclick="app.showGoogleSheetsSetup()" 
+                            style="margin-top:6px;font-size:11px;padding:5px 12px;min-height:32px;">
+                        <i class="fas fa-cog"></i> ตั้งค่า API Key (5 นาที)
+                    </button>
+                </div>
+                
+                <div id="gsSetupSuccess" style="display:none;background:#d1fae5;border-left:4px solid #10b981;padding:8px 10px;border-radius:6px;margin-bottom:8px;font-size:12px;color:#065f46;">
+                    ✅ <strong>พร้อมใช้งาน</strong> — เชื่อมต่อ Google Sheets แล้ว
+                </div>
+                
+                <!-- ⭐ ช่อง URL + ปุ่มนำเข้า — ยังเหมือนเดิม -->
                 <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                    <input type="text" class="input" id="googleSheetsUrl" placeholder="ใส่ URL หรือ Spreadsheet ID" style="flex:1;min-
-
-width:100px;font-size:13px;padding:8px 12px;min-height:42px;">
-                    <button class="btn btn-primary" onclick="importFromGoogleSheets()" style="flex-shrink:0;font-size:13px;padding:8px 
-
-16px;min-height:42px;"><i class="fas fa-google"></i> นำเข้า</button>
+                    <input type="text" class="input" id="googleSheetsUrl" 
+                           placeholder="วาง URL ของ Google Sheet" 
+                           style="flex:1;min-width:100px;font-size:13px;padding:8px 12px;min-height:42px;background:#fff;">
+                    <button class="btn btn-primary" onclick="importFromGoogleSheets()" 
+                            style="flex-shrink:0;font-size:13px;padding:8px 16px;min-height:42px;">
+                        <i class="fas fa-cloud-download-alt"></i> นำเข้า
+                    </button>
+                </div>
+                
+                <div style="font-size:11px;color:#64748b;margin-top:6px;line-height:1.5;">
+                    💡 วิธีใช้: เปิด Google Sheet → Share → "Anyone with link" → Copy URL → วางที่นี่
                 </div>
             </div>
         </div>
@@ -5439,6 +5466,7 @@ if (m) {
         if (page) page.classList.add('active');
 
         if (name === 'scan') this.updateScanBadge();
+		if (name === 'import') this.updateGSheetQuickStatus();
         if (name === 'report') {
             this.generateReport();
             setTimeout(() => this.updateReportDashboard(this.reportMode), 100);
@@ -12340,6 +12368,47 @@ ${expiryDisplay}</td></tr>`;
         this.showToast('✅ บันทึกการตั้งค่าสำเร็จ', 'success');
         this.updateGoogleSheetsStatus();
     }
+	
+	// ⭐ v5.3.1: เปิดหน้า Settings → Google Sheets
+    showGoogleSheetsSetup() {
+        this.switchTab('settings');
+        setTimeout(() => {
+            const cards = document.querySelectorAll('#page-settings .card');
+            for (const card of cards) {
+                if (card.textContent.includes('Google Sheets')) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    card.style.boxShadow = '0 0 0 3px #0ea5e9';
+                    setTimeout(() => { card.style.boxShadow = ''; }, 3000);
+                    break;
+                }
+            }
+        }, 300);
+        this.showToast('ℹ️ ตั้งค่า API Key ที่นี้', 'info');
+    }
+    
+    // ⭐ อัปเดตสถานะ Quick Status
+    updateGSheetQuickStatus() {
+        const apiKey = localStorage.getItem('gs_api_key') || '';
+        const statusEl = document.getElementById('gsQuickStatus');
+        const warningEl = document.getElementById('gsSetupWarning');
+        const successEl = document.getElementById('gsSetupSuccess');
+        
+        if (!statusEl) return;
+        
+        if (apiKey) {
+            statusEl.textContent = '✅ พร้อมใช้งาน';
+            statusEl.style.background = '#d1fae5';
+            statusEl.style.color = '#065f46';
+            if (warningEl) warningEl.style.display = 'none';
+            if (successEl) successEl.style.display = 'block';
+        } else {
+            statusEl.textContent = '⚠️ ยังไม่ได้ตั้งค่า';
+            statusEl.style.background = '#fef3c7';
+            statusEl.style.color = '#92400e';
+            if (warningEl) warningEl.style.display = 'block';
+            if (successEl) successEl.style.display = 'none';
+        }
+    }
 
     updateGoogleSheetsStatus() {
         const el = document.getElementById('googleSheetsStatus');
@@ -14918,8 +14987,208 @@ const MANUAL_FULL = [
             <div class="warning">
                 ⚠️ <strong>ระวัง!</strong> ถ้าไม่อยากให้ "บวกจำนวน" ซ้ำ → ล้างข้อมูลก่อนนำเข้าใหม่
             </div>
+			
+			<h3>3.14 นำเข้าจาก Google Sheets (ฉบับเต็ม)</h3>
 
-            <h3>3.14 ปัญหาที่พบบ่อย</h3>
+            <h4>3.14.1 ภาพรวม</h4>
+            <p>
+                MediStock นำเข้าข้อมูลจาก <strong>Google Sheets</strong> ได้ 
+                เหมาะกับข้อมูลที่:
+            </p>
+            <ul>
+                <li>✅ อัปเดตบ่อย (แก้ในชีต → refresh ใน MediStock)</li>
+                <li>✅ หลายคนช่วยกันกรอก</li>
+                <li>✅ ไม่ต้องดาวน์โหลดเป็น Excel</li>
+            </ul>
+
+            <div class="warning">
+                ⚠️ <strong>สำคัญมาก:</strong> ก่อนนำเข้าจาก Google Sheets 
+                <strong>ต้องตั้งค่า API Key ก่อน</strong><br>
+                ถ้ายังไม่ตั้ง → ระบบจะแจ้ง "⚠️ ต้องตั้งค่า API Key ก่อน"
+            </div>
+
+            <h4>3.14.2 ขั้นตอนที่ 1: ขอ Google API Key</h4>
+
+            <div class="tip">
+                💡 <strong>ทำครั้งเดียว</strong> — ใช้ได้ตลอด ไม่ต้องทำซ้ำ<br>
+                ⏱️ ใช้เวลา ~5 นาที
+            </div>
+
+            <p><strong>1. เปิด Google Cloud Console</strong></p>
+            <ol>
+                <li>เปิดเบราว์เซอร์ → <code>console.cloud.google.com</code></li>
+                <li>Login ด้วยบัญชี Google ของคุณ</li>
+                <li>ยอมรับเงื่อนไข (ถ้ามี)</li>
+            </ol>
+
+            <p><strong>2. สร้าง Project ใหม่</strong></p>
+            <ol>
+                <li>คลิก Dropdown "Select a project" (ด้านบน)</li>
+                <li>กด <strong>NEW PROJECT</strong></li>
+                <li>ตั้งชื่อ: <code>MediStock</code></li>
+                <li>กด <strong>CREATE</strong></li>
+                <li>รอ 10-20 วินาที → เลือก Project ที่สร้าง</li>
+            </ol>
+
+            <p><strong>3. Enable Google Sheets API</strong></p>
+            <ol>
+                <li>แถบซ้าย → <strong>APIs & Services</strong> → <strong>Library</strong></li>
+                <li>ค้นหา: <code>Google Sheets API</code></li>
+                <li>คลิกที่ Google Sheets API</li>
+                <li>กด <strong>ENABLE</strong></li>
+                <li>รอ 5-10 วินาที</li>
+            </ol>
+
+            <p><strong>4. สร้าง API Key</strong></p>
+            <ol>
+                <li>แถบซ้าย → <strong>APIs & Services</strong> → <strong>Credentials</strong></li>
+                <li>กด <strong>+ CREATE CREDENTIALS</strong> → <strong>API Key</strong></li>
+                <li>ระบบจะสร้าง API Key ให้</li>
+                <li><strong>Copy API Key</strong> (ขึ้นต้นด้วย <code>AIza...</code>)</li>
+                <li>เก็บไว้ใน Notepad</li>
+            </ol>
+
+            <div class="success">
+                ✅ <strong>API Key ตัวอย่าง:</strong><br>
+                <code>AIzaSyA1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q</code>
+            </div>
+
+            <h4>3.14.3 ขั้นตอนที่ 2: ตั้งค่าใน MediStock</h4>
+            <ol>
+                <li>เปิด MediStock</li>
+                <li>ไปที่ <strong>⚙️ ตั้งค่า</strong></li>
+                <li>เลื่อนลง → การ์ด <strong>Google Sheets</strong></li>
+                <li>ช่อง <strong>API Key</strong> → วาง API Key</li>
+                <li>ช่อง <strong>Spreadsheet ID</strong> → <strong>เว้นว่าง</strong> (ใส่ทีหลังได้)</li>
+                <li>ช่อง <strong>ชื่อไฟล์</strong> → พิมพ์ชื่อ เช่น <code>MediStock Data</code></li>
+                <li>กด <strong>💾 บันทึก</strong></li>
+                <li>กด <strong>🔌 ทดสอบ</strong> → ควรขึ้น <code>✅ เชื่อมต่อสำเร็จ</code></li>
+            </ol>
+
+            <h4>3.14.4 ขั้นตอนที่ 3: เตรียม Google Sheet</h4>
+            <ol>
+                <li>เปิด <code>sheets.new</code> (สร้าง Sheet ใหม่)</li>
+                <li>ตั้งชื่อ: <code>MediStock_Data</code></li>
+                <li>กรอกข้อมูล 14 คอลัมน์:
+                    <ul>
+                        <li>แถว 1: หัวตาราง</li>
+                        <li>แถว 2+: ข้อมูล</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <p><strong>ตัวอย่างข้อมูล:</strong></p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>รหัสสินค้า</th>
+                        <th>ชื่อสินค้า</th>
+                        <th>บาร์โค้ด</th>
+                        <th>LOT</th>
+                        <th>วันหมดอายุ</th>
+                        <th>จำนวน</th>
+                        <th>หน่วย</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>P001</td><td>พารา 500mg</td><td>'8852662200012</td><td>LOT2401</td><td>2026-01-15</td><td>1000</td><td>เม็ด</td></tr>
+                    <tr><td>P002</td><td>อะม็อก 250mg</td><td>'8852662200029</td><td>N/A</td><td>2025-03-01</td><td>500</td><td>แคปซูล</td></tr>
+                </tbody>
+            </table>
+
+            <div class="warning">
+                ⚠️ <strong>บาร์โค้ดต้องเป็น Plain text</strong><br>
+                วิธีตั้งค่า:
+                <ol>
+                    <li>เลือกคอลัมน์บาร์โค้ด</li>
+                    <li><strong>Format</strong> → <strong>Number</strong> → <strong>Plain text</strong></li>
+                    <li>หรือใส่ <code>'</code> นำหน้า เช่น <code>'8852662200012</code></li>
+                </ol>
+            </div>
+
+            <h4>3.14.5 ขั้นตอนที่ 4: แชร์ Sheet</h4>
+            <ol>
+                <li>เปิด Google Sheet</li>
+                <li>คลิก <strong>Share</strong> (มุมขวาบน)</li>
+                <li>คลิก <strong>"Change to anyone with the link"</strong></li>
+                <li>เลือก <strong>Viewer</strong></li>
+                <li>กด <strong>"Copy link"</strong></li>
+                <li>กด <strong>"Done"</strong></li>
+            </ol>
+
+            <div class="success">
+                ✅ <strong>Link ที่ได้:</strong><br>
+                <code>https://docs.google.com/spreadsheets/d/1AbCdEfGh.../edit?usp=sharing</code>
+            </div>
+
+            <h4>3.14.6 ขั้นตอนที่ 5: นำเข้าใน MediStock</h4>
+            <ol>
+                <li>ไปที่ <strong>📥 นำเข้า</strong></li>
+                <li>เลื่อนลง → การ์ด <strong>"หรือใช้ Google Sheets"</strong></li>
+                <li>วาง <strong>URL</strong> (จาก 3.15.5)</li>
+                <li>กด <strong>"นำเข้า"</strong></li>
+                <li>รอ 3-5 วินาที</li>
+                <li>ระบบจะอ่าน Sheet แรก + แสดงตาราง</li>
+                <li>กำหนดคอลัมน์ (Mapping)</li>
+                <li>กด <strong>"ยืนยันและนำเข้าข้อมูล"</strong></li>
+            </ol>
+
+            <h4>3.14.7 ตารางสรุปขั้นตอน</h4>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ขั้นตอน</th>
+                        <th>ทำอะไร</th>
+                        <th>เวลา</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>ขอ Google API Key</td><td>5 นาที</td></tr>
+                    <tr><td>2</td><td>ตั้งค่า API Key ใน MediStock</td><td>1 นาที</td></tr>
+                    <tr><td>3</td><td>เตรียม Google Sheet</td><td>5 นาที</td></tr>
+                    <tr><td>4</td><td>แชร์ Sheet</td><td>30 วินาที</td></tr>
+                    <tr><td>5</td><td>นำเข้าใน MediStock</td><td>1 นาที</td></tr>
+                    <tr><td colspan="2"><strong>รวม</strong></td><td><strong>~12 นาที</strong></td></tr>
+                </tbody>
+            </table>
+
+            <h4>3.14.8 ปัญหาที่พบบ่อย</h4>
+
+            <p><strong>❌ "ต้องตั้งค่า API Key ก่อน"</strong></p>
+            <ul>
+                <li>สาเหตุ: ยังไม่ได้ใส่ API Key ใน ⚙️ ตั้งค่า</li>
+                <li>แก้: กลับไปทำ 3.15.2 และ 3.15.3</li>
+            </ul>
+
+            <p><strong>❌ "ไม่พบข้อมูล"</strong></p>
+            <ul>
+                <li>สาเหตุ: Sheet ไม่ได้แชร์ "Anyone with link"</li>
+                <li>แก้: กลับไปทำ 3.15.5</li>
+            </ul>
+
+            <p><strong>❌ "API Key ไม่ถูกต้อง"</strong></p>
+            <ul>
+                <li>สาเหตุ: ยังไม่ Enable Google Sheets API</li>
+                <li>แก้: กลับไปทำ 3.15.2 ข้อ 3</li>
+            </ul>
+
+            <p><strong>❌ "บาร์โค้ดเพี้ยน 8.85E+12"</strong></p>
+            <ul>
+                <li>สาเหตุ: Google Sheets auto-convert เป็น number</li>
+                <li>แก้: ตั้ง Format = Plain text หรือใส่ <code>'</code></li>
+            </ul>
+
+            <div class="tip">
+                💡 <strong>Fallback: ถ้าใช้ Google Sheets ไม่ได้</strong><br>
+                ดาวน์โหลดเป็น Excel แทน:<br>
+                1. Google Sheets → File → Download → .xlsx<br>
+                2. ใช้วิธีอัปโหลดไฟล์ปกติ<br>
+                → ปลอดภัยกว่า ไม่ต้องใช้ API Key
+            </div>
+
+            <h3>3.15 ปัญหาที่พบบ่อย</h3>
             <p><strong>❌ "ไม่พบสินค้าในระบบ" หลังนำเข้า</strong></p>
             <ul>
                 <li>ตรวจสอบว่ากดปุ่มยืนยันครบหรือไม่</li>
@@ -15956,20 +16225,75 @@ const MANUAL_FULL = [
     },
     {
         no: 6,
+        title: 'นำเข้าจาก Google Sheets',
+        content: `
+            <h3>5.1 หลักการ</h3>
+            <p>ดึงข้อมูลจาก Google Sheets → เข้า MediStock</p>
+
+            <h3>5.2 5 ขั้นตอน</h3>
+            
+            <div class="warning">
+                ⚠️ <strong>ต้องตั้งค่า API Key ก่อน!</strong>
+            </div>
+
+            <p><strong>1. ขอ API Key</strong> (ครั้งเดียว)</p>
+            <ol>
+                <li>ไปที่ <code>console.cloud.google.com</code></li>
+                <li>สร้าง Project → <code>MediStock</code></li>
+                <li>APIs & Services → Library → <code>Google Sheets API</code> → Enable</li>
+                <li>Credentials → Create → API Key</li>
+                <li>Copy key (ขึ้นต้น <code>AIza...</code>)</li>
+            </ol>
+
+            <p><strong>2. ตั้งค่า MediStock</strong></p>
+            <ol>
+                <li>⚙️ ตั้งค่า → Google Sheets</li>
+                <li>API Key → วาง</li>
+                <li>กด บันทึก → ทดสอบ</li>
+            </ol>
+
+            <p><strong>3. เตรียม Sheet</strong></p>
+            <ul>
+                <li>14 คอลัมน์</li>
+                <li>บาร์โค้ด = Plain text (Format → Number → Plain text)</li>
+                <li>วันที่ = YYYY-MM-DD</li>
+            </ul>
+
+            <p><strong>4. แชร์ Sheet</strong></p>
+            <ol>
+                <li>Share → "Anyone with link"</li>
+                <li>Viewer → Copy link</li>
+            </ol>
+
+            <p><strong>5. นำเข้า</strong></p>
+            <ol>
+                <li>📥 นำเข้า</li>
+                <li>วาง URL</li>
+                <li>กด "นำเข้า"</li>
+                <li>Mapping → ยืนยัน</li>
+            </ol>
+
+            <div class="tip">
+                💡 <strong>Fallback:</strong> ถ้าไม่ได้ → ดาวน์โหลดเป็น .xlsx แล้วอัปโหลด
+            </div>
+        `
+    },
+    {
+        no: 7,
         title: 'ดูรายงาน',
         content: `
-            <h3>6.1 ภาพรวมรายงาน</h3>
+            <h3>7.1 ภาพรวมรายงาน</h3>
             <p>
                 MediStock มีระบบรายงาน<strong>ครบวงจร</strong> ตั้งแต่ Dashboard สรุปผล ไปจนถึง Export Excel 18 Sheets
             </p>
 
-            <h3>6.2 เปิดหน้ารายงาน</h3>
+            <h3>7.2 เปิดหน้ารายงาน</h3>
             <ol>
                 <li>กดปุ่ม <strong>🏁 สรุปผล</strong> ในหน้า <strong>📷 นับสต็อก</strong></li>
                 <li>หรือไปที่แท็บ <strong>📊 รายงาน</strong> โดยตรง</li>
             </ol>
 
-            <h3>6.3 2 โหมดรายงาน</h3>
+            <h3>7.3 2 โหมดรายงาน</h3>
             <p>ด้านบนสุดของหน้ารายงานมีปุ่ม 2 อัน:</p>
             <ul>
                 <li><strong>📱 เครื่องนี้ (Local)</strong> — แสดงข้อมูลของเครื่องนี้เท่านั้น</li>
@@ -15982,7 +16306,7 @@ const MANUAL_FULL = [
                 • <strong>Team</strong> — มีหลายคนนับ, ดูผลรวมทั้งทีม
             </div>
 
-            <h3>6.4 Dashboard สรุปผล</h3>
+            <h3>7.4 Dashboard สรุปผล</h3>
             <p>ด้านบนของหน้ารายงานมี Dashboard 4 ช่อง:</p>
 
             <div class="box">
@@ -16001,7 +16325,7 @@ const MANUAL_FULL = [
                 <li><strong>💵 ผลต่างขาย</strong> — มูลค่าผลต่าง × ราคาขาย</li>
             </ul>
 
-            <h3>6.5 สรุปภาพรวม</h3>
+            <h3>7.5 สรุปภาพรวม</h3>
             <p>ด้านล่าง Dashboard มีการ์ด 3 ช่อง:</p>
             <ul>
                 <li><strong>ทั้งหมด</strong> — จำนวน LOT ในระบบ</li>
@@ -16009,7 +16333,7 @@ const MANUAL_FULL = [
                 <li><strong>ยังไม่นับ</strong> — จำนวน LOT ที่ยังไม่ได้นับ</li>
             </ul>
 
-            <h3>6.6 การแจ้งเตือน</h3>
+            <h3>7.6 การแจ้งเตือน</h3>
             <p>ถ้ามีสินค้าสต็อก 0 หรือใกล้หมดอายุ → จะแสดงการ์ดสีแดง/เหลือง:</p>
             <ul>
                 <li><strong>📦 สต็อก 0</strong> — จำนวนสินค้าที่สต็อก 0</li>
@@ -16017,7 +16341,7 @@ const MANUAL_FULL = [
                 <li>แต่ละอันมีปุ่ม <strong>Export</strong> ให้ดาวน์โหลด</li>
             </ul>
 
-            <h3>6.7 สรุปผลต่าง (Over/Short)</h3>
+            <h3>7.7 สรุปผลต่าง (Over/Short)</h3>
             <p>การ์ด <strong>⚖️ สรุปผลต่าง</strong> จะแสดง 2 ฝั่ง:</p>
 
             <p><strong>🟢 เกิน (Over) — สีเขียว</strong></p>
@@ -16032,21 +16356,21 @@ const MANUAL_FULL = [
                 <li>เช่น ระบบ 50, นับได้ 45 → ขาด -5</li>
             </ul>
 
-            <h3>6.8 สรุปหน้า/หลังร้าน</h3>
+            <h3>7.8 สรุปหน้า/หลังร้าน</h3>
             <p>แสดงยอดรวมแยกตาม:</p>
             <ul>
                 <li><strong>🏪 หน้าร้าน</strong> — รายการ • จำนวนชิ้น • มูลค่าทุน • มูลค่าขาย</li>
                 <li><strong>📦 หลังร้าน</strong> — เหมือนกัน</li>
             </ul>
 
-            <h3>6.9 สินค้าที่ยังไม่ได้นับ</h3>
+            <h3>7.9 สินค้าที่ยังไม่ได้นับ</h3>
             <p>ถ้ามีสินค้าที่ยังไม่นับ → จะแสดงตาราง:</p>
             <ul>
                 <li>ชื่อสินค้า • LOT • จำนวน • ทุน • ขาย • มูลค่ารวม • วันหมดอายุ</li>
                 <li>ด้านบนมีปุ่ม <strong>Export สินค้าที่ยังไม่นับ</strong></li>
             </ul>
 
-            <h3>6.10 รายละเอียดการนับทั้งหมด</h3>
+            <h3>7.10 รายละเอียดการนับทั้งหมด</h3>
             <p>ตารางใหญ่ด้านล่างแสดง:</p>
             <ul>
                 <li>บาร์โค้ด • ชื่อ • LOT • ประเภท • ตู้/ชั้น • ระบบ • นับ • ต่าง</li>
@@ -16058,7 +16382,7 @@ const MANUAL_FULL = [
                 ในมือถือ → ใช้นิ้วปัดซ้าย-ขวา
             </div>
 
-            <h3>6.11 ปุ่ม Export</h3>
+            <h3>7.11 ปุ่ม Export</h3>
             <p>มุมขวาบนของตารางมีปุ่ม:</p>
 
             <p><strong>📊 Full Report (Excel) — ปุ่มสีเขียว</strong></p>
@@ -16076,7 +16400,7 @@ const MANUAL_FULL = [
                 <li><strong>🕐 ประวัตินับ</strong> — Export history</li>
             </ul>
 
-            <h3>6.12 Full Report Excel — 18 Sheets</h3>
+            <h3>7.12 Full Report Excel — 18 Sheets</h3>
             <p>กดปุ่ม 📊 จะได้ Excel ที่มี 18 ชีต:</p>
 
             <table>
@@ -16102,7 +16426,7 @@ const MANUAL_FULL = [
                 </tbody>
             </table>
 
-            <h3>6.13 Full Report PDF — 2 โหมด</h3>
+            <h3>7.13 Full Report PDF — 2 โหมด</h3>
             <p>กดปุ่ม PDF → จะเปิด modal ให้เลือก:</p>
 
             <p><strong>🌈 ตารางสีสวย (แนะนำ)</strong></p>
@@ -16125,7 +16449,7 @@ const MANUAL_FULL = [
                 <li>ยังไม่ได้นับ (พร้อมอายุ)</li>
             </ol>
 
-            <h3>6.14 วิธี Save PDF</h3>
+            <h3>7.14 วิธี Save PDF</h3>
             <ol>
                 <li>กดปุ่ม PDF → รอระบบเปิดหน้า preview</li>
                 <li>กดปุ่ม <strong>🖨️ พิมพ์ / Save as PDF</strong> ด้านบน</li>
@@ -16144,7 +16468,7 @@ const MANUAL_FULL = [
                 💡 <strong>บนมือถือ:</strong> กดปุ่ม → เลือก <strong>บันทึกเป็น PDF</strong> ในเมนูแชร์
             </div>
 			
-			<h3>6.15 รายละเอียด 18 Sheets (แบบละเอียด)</h3>
+			<h3>7.15 รายละเอียด 18 Sheets (แบบละเอียด)</h3>
             <p>Full Report Excel มี 18 Sheets — แต่ละ Sheet ใช้ทำอะไร:</p>
             <table>
                 <thead>
@@ -16169,7 +16493,7 @@ const MANUAL_FULL = [
                 </tbody>
             </table>
 
-            <h3>6.16 วิธีใช้ "Team Mode" (รวมทีม)</h3>
+            <h3>7.16 วิธีใช้ "Team Mode" (รวมทีม)</h3>
             <p><strong>ใช้เมื่อ:</strong> มีพนักงานหลายคนนับ → ต้องการดูผลรวม</p>
             <ol>
                 <li>กดปุ่ม <strong>🌐 รวมทีม (Sheets)</strong> ที่หน้ารายงาน</li>
@@ -16183,7 +16507,7 @@ const MANUAL_FULL = [
                 • ดูรายละเอียดในบทที่ 8
             </div>
 
-            <h3>6.17 Export แบบ CSV — เมื่อไหร่ใช้?</h3>
+            <h3>7.17 Export แบบ CSV — เมื่อไหร่ใช้?</h3>
             <p><strong>CSV เหมาะกับ:</strong></p>
             <ul>
                 <li>นำไปใช้ใน Google Sheets</li>
@@ -16201,7 +16525,7 @@ const MANUAL_FULL = [
                 💡 <strong>แนะนำ:</strong> ใช้ Excel (.xlsx) เป็นหลัก — ใช้ CSV เป็นทางเลือก
             </div>
 
-            <h3>6.18 การเก็บไฟล์รายงาน</h3>
+            <h3>7.18 การเก็บไฟล์รายงาน</h3>
             <p><strong>แนะนำการเก็บ:</strong></p>
             <table>
                 <thead>
@@ -16220,7 +16544,7 @@ const MANUAL_FULL = [
                 • <code>MediStock_Q1_2026_สรุปผู้บริหาร.pdf</code>
             </div>
 
-            <h3>6.19 Dashboard สีแสดงอะไร?</h3>
+            <h3>7.19 Dashboard สีแสดงอะไร?</h3>
             <p>บนการ์ด Dashboard สีของตัวเลข:</p>
             <ul>
                 <li><strong>🟢 เขียว</strong> — เกิน (นับได้มากกว่าระบบ)</li>
@@ -16234,7 +16558,7 @@ const MANUAL_FULL = [
                 • เกินเยอะ → อาจนับซ้ำ
             </div>
 
-            <h3>6.20 ปัญหาที่พบบ่อย</h3>
+            <h3>7.20 ปัญหาที่พบบ่อย</h3>
             <p><strong>❌ Dashboard ไม่แสดงตัวเลข</strong></p>
             <ul>
                 <li>ตรวจว่ามีการนับแล้วหรือยัง (sessionItems ไม่ว่าง)</li>
@@ -16255,10 +16579,10 @@ const MANUAL_FULL = [
         `
     },
     {
-        no: 7,
+        no: 8,
         title: 'วิเคราะห์ข้อมูล',
         content: `
-            <h3>7.1 ภาพรวมการวิเคราะห์</h3>
+            <h3>8.1 ภาพรวมการวิเคราะห์</h3>
             <p>
                 MediStock มีการวิเคราะห์ <strong>4 ประเภท</strong>:
             </p>
@@ -16269,10 +16593,10 @@ const MANUAL_FULL = [
                 <li><strong>📦 Max Stock</strong> — สินค้าเกินสต็อก</li>
             </ul>
 
-            <h3>7.2 เปิดหน้าวิเคราะห์</h3>
+            <h3>8.2 เปิดหน้าวิเคราะห์</h3>
             <p>ไปที่แท็บ <strong>📈 วิเคราะห์</strong> — ระบบจะคำนวณอัตโนมัติ</p>
 
-            <h3>7.3 Dashboard วิเคราะห์</h3>
+            <h3>8.3 Dashboard วิเคราะห์</h3>
             <p>ด้านบนมี 3 การ์ด:</p>
             <ul>
                 <li><strong>📦 มูลค่าสต็อก</strong> — มูลค่าทุนรวมทั้งหมด</li>
@@ -16280,7 +16604,7 @@ const MANUAL_FULL = [
                 <li><strong>⚠️ สินค้าหมด</strong> — จำนวนสินค้าสต็อก 0</li>
             </ul>
 
-            <h3>7.4 ABC Analysis</h3>
+            <h3>8.4 ABC Analysis</h3>
             <p><strong>หลักการ:</strong> จัดกลุ่มสินค้าตามมูลค่าทุนสะสม</p>
             <ul>
                 <li><strong>🔴 กลุ่ม A</strong> — 70% ของมูลค่ารวม (~20% ของสินค้า)</li>
@@ -16297,7 +16621,7 @@ const MANUAL_FULL = [
 
             <p><strong>แผนภูมิวงกลม:</strong> แสดงสัดส่วน A/B/C</p>
 
-            <h3>7.5 Dead Stock Alert</h3>
+            <h3>8.5 Dead Stock Alert</h3>
             <p><strong>เงื่อนไข:</strong> สินค้าที่มีสต็อก > 20 ชิ้น และจะหมดอายุใน 90 วัน</p>
 
             <p><strong>แสดง:</strong></p>
@@ -16313,7 +16637,7 @@ const MANUAL_FULL = [
                 ควรเร่งระบาย: ลดราคา, โปรโมชั่น, คืนบริษัท
             </div>
 
-            <h3>7.6 สินค้าใกล้หมด (Min Stock)</h3>
+            <h3>8.6 สินค้าใกล้หมด (Min Stock)</h3>
             <p><strong>เงื่อนไข:</strong> สินค้าที่มีสต็อก ≤ ค่า Min Stock</p>
 
             <p><strong>แสดง:</strong></p>
@@ -16330,7 +16654,7 @@ const MANUAL_FULL = [
                 • ค่าเริ่มต้น = 5
             </div>
 
-            <h3>7.7 สินค้าเกินสต็อก (Max Stock)</h3>
+            <h3>8.7 สินค้าเกินสต็อก (Max Stock)</h3>
             <p><strong>เงื่อนไข:</strong> สินค้าที่มีสต็อก > ค่า Max Stock</p>
 
             <p><strong>แสดง:</strong></p>
@@ -16340,7 +16664,7 @@ const MANUAL_FULL = [
                 <li>ป้าย <strong>⚠️</strong></li>
             </ul>
 
-            <h3>7.8 วิธีใช้ข้อมูลวิเคราะห์</h3>
+            <h3>8.8 วิธีใช้ข้อมูลวิเคราะห์</h3>
             <p><strong>สำหรับผู้จัดการ:</strong></p>
             <ol>
                 <li>ดู <strong>ABC</strong> → ตัดสินใจกลุ่มที่ต้องดูแลเป็นพิเศษ</li>
@@ -16349,7 +16673,7 @@ const MANUAL_FULL = [
                 <li>ดู <strong>Max Stock</strong> → ลดการสั่งซื้อ</li>
             </ol>
 
-            <h3>7.9 ตั้งค่า Min/Max Stock</h3>
+            <h3>8.9 ตั้งค่า Min/Max Stock</h3>
             <p><strong>ตอนนำเข้า Excel:</strong></p>
             <ul>
                 <li>คอลัมน์ Stock Min</li>
@@ -16364,7 +16688,7 @@ const MANUAL_FULL = [
                 <li>กด <strong>💾 บันทึก</strong></li>
             </ol>
 			
-			<h3>7.10 Dead Stock — เกณฑ์การคำนวณ</h3>
+			<h3>8.10 Dead Stock — เกณฑ์การคำนวณ</h3>
             <p><strong>Dead Stock ใน MediStock:</strong></p>
             <ul>
                 <li>สต็อก > 20 ชิ้น <strong>และ</strong></li>
@@ -16376,20 +16700,20 @@ const MANUAL_FULL = [
                 • 90 วัน: พอมีเวลาขาย/โปรโมชั่น
             </div>
 
-            <h3>7.11 Min Stock — หลักการตั้งค่า</h3>
+            <h3>8.11 Min Stock — หลักการตั้งค่า</h3>
             <p><strong>Min Stock = สต็อกต่ำสุดที่ต้องมี</strong></p>
             <p><strong>วิธีคำนวณ:</strong></p>
             <div class="box">
-Min Stock ≈ ยอดขายเฉลี่ยต่อวัน × ระยะเวลารอสั่งซื้อ + Safety Stock
+				Min Stock ≈ ยอดขายเฉลี่ยต่อวัน × ระยะเวลารอสั่งซื้อ + Safety Stock
 
-ตัวอย่าง:
-• ยอดขายเฉลี่ย 20 เม็ด/วัน
-• ระยะเวลารอของ 3 วัน
-• Safety 20%
-→ Min Stock = 20 × 3 + (20 × 3 × 0.2) = 72 เม็ด
+				ตัวอย่าง:
+				• ยอดขายเฉลี่ย 20 เม็ด/วัน
+				• ระยะเวลารอของ 3 วัน
+				• Safety 20%
+				→ Min Stock = 20 × 3 + (20 × 3 × 0.2) = 72 เม็ด
             </div>
 
-            <h3>7.12 Max Stock — เมื่อไหร่ตั้งเท่าไหร่?</h3>
+            <h3>8.12 Max Stock — เมื่อไหร่ตั้งเท่าไหร่?</h3>
             <p><strong>Max Stock = สต็อกสูงสุดที่ควรมี</strong></p>
             <ul>
                 <li>ยาที่ขายดี → Max สูง (5,000-10,000)</li>
@@ -16397,7 +16721,7 @@ Min Stock ≈ ยอดขายเฉลี่ยต่อวัน × ระ�
                 <li>ยาใกล้หมดอายุ → Max น้อย (เสี่ยง)</li>
             </ul>
 
-            <h3>7.13 ตัวอย่างการใช้งานจริง (Case Study)</h3>
+            <h3>8.13 ตัวอย่างการใช้งานจริง (Case Study)</h3>
             <p><strong>ร้านยาขนาดกลาง 1,500 รายการ</strong></p>
             <p><strong>ผลลัพธ์การวิเคราะห์:</strong></p>
             <ul>
@@ -16412,7 +16736,7 @@ Min Stock ≈ ยอดขายเฉลี่ยต่อวัน × ระ�
                 <li>→ เร่งระบาย: จัดโปร 50%, คืนบริษัท</li>
             </ul>
 
-            <h3>7.14 ใช้ ABC ยังไงให้เกิดประโยชน์?</h3>
+            <h3>8.14 ใช้ ABC ยังไงให้เกิดประโยชน์?</h3>
             <p><strong>สำหรับผู้จัดการ:</strong></p>
             <ol>
                 <li>ดูรายการ <strong>กลุ่ม A</strong> ก่อน → ตรวจสต็อกทุกสัปดาห์</li>
@@ -16421,7 +16745,7 @@ Min Stock ≈ ยอดขายเฉลี่ยต่อวัน × ระ�
                 <li>ทบทวนทุก 3 เดือน → อัปเดตกลุ่ม</li>
             </ol>
 
-            <h3>7.15 ตั้งค่า Min/Max ทีละตัว vs Bulk Import</h3>
+            <h3>8.15 ตั้งค่า Min/Max ทีละตัว vs Bulk Import</h3>
             <p><strong>ทีละตัว (ไม่แนะนำ ถ้าเยอะ):</strong></p>
             <ol>
                 <li>📷 นับสต็อก → คลิกสินค้า</li>
@@ -16434,7 +16758,7 @@ Min Stock ≈ ยอดขายเฉลี่ยต่อวัน × ระ�
                 <li>อัปโหลดใหม่ → ระบบอัปเดตค่าให้อัตโนมัติ</li>
             </ol>
 
-            <h3>7.16 ปัญหาที่พบบ่อย</h3>
+            <h3>8.16 ปัญหาที่พบบ่อย</h3>
             <p><strong>❌ ABC ไม่แสดงข้อมูล</strong></p>
             <ul>
                 <li>ตรวจว่ามีสินค้าที่มีสต็อก > 0</li>
@@ -16449,10 +16773,10 @@ Min Stock ≈ ยอดขายเฉลี่ยต่อวัน × ระ�
         `
     },
     {
-        no: 8,
+        no: 9,
         title: 'Multi-user',
         content: `
-            <h3>8.1 ภาพรวม Multi-user</h3>
+            <h3>9.1 ภาพรวม Multi-user</h3>
             <p>
                 <strong>Multi-user</strong> คือระบบให้<strong>หลายคนนับสต็อกพร้อมกัน</strong>ได้
                 แล้วข้อมูลจะรวมกันผ่าน <strong>Google Sheets</strong>
@@ -16465,7 +16789,7 @@ Min Stock ≈ ยอดขายเฉลี่ยต่อวัน × ระ�
                 <li>Admin ต้องการดูผลรวมแบบ real-time</li>
             </ul>
 
-            <h3>8.2 การทำงาน (Architecture)</h3>
+            <h3>9.2 การทำงาน (Architecture)</h3>
             <p>ระบบ Multi-user มี 3 ส่วนหลัก:</p>
             <div class="box">
 ┌──────────────────────────────────────────────┐
@@ -16521,7 +16845,7 @@ Min Stock ≈ ยอดขายเฉลี่ยต่อวัน × ระ�
 └─────────────┘  └─────────────┘  └─────────────┘
             </div>
 
-            <h3>8.3 เตรียม Google Sheet</h3>
+            <h3>9.3 เตรียม Google Sheet</h3>
             <p>
                 <strong>Google Sheet</strong> ทำหน้าที่เป็นฐานข้อมูลกลางที่ทุกเครื่องจะ sync ข้อมูลเข้าไป
             </p>
@@ -16563,7 +16887,7 @@ https://docs.google.com/spreadsheets/d/[SPREADSHEET_ID]/edit
                 </tbody>
             </table>
 
-            <h3>8.4 สร้าง Apps Script</h3>
+            <h3>9.4 สร้าง Apps Script</h3>
             <p>
                 <strong>Apps Script</strong> คือโค้ดกลางที่รับข้อมูลจากทุกเครื่อง → บันทึกลง Google Sheet
             </p>
@@ -16589,7 +16913,7 @@ https://docs.google.com/spreadsheets/d/[SPREADSHEET_ID]/edit
                 ใช้แบบไหนก็ได้ตามสถานการณ์
             </div>
 
-            <h3>8.5 ตั้งค่า Script Properties (Token)</h3>
+            <h3>9.5 ตั้งค่า Script Properties (Token)</h3>
             <p>
                 <strong>Script Properties</strong> เก็บค่าที่เป็นความลับ (Spreadsheet ID + Token)
             </p>
@@ -16630,7 +16954,7 @@ https://docs.google.com/spreadsheets/d/[SPREADSHEET_ID]/edit
                 = <strong>ถ้าไม่ตรง → Apps Script ปฏิเสธ</strong>
             </div>
 
-            <h3>8.6 Deploy Apps Script</h3>
+            <h3>9.6 Deploy Apps Script</h3>
 
             <p><strong>ขั้นตอนที่ 1: Deploy</strong></p>
             <ol>
@@ -16671,7 +16995,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 → Apps Script ใช้ Token ตรวจสิทธิ์แทน
             </div>
 
-            <h3>8.7 ทดสอบ Apps Script</h3>
+            <h3>9.7 ทดสอบ Apps Script</h3>
             <ol>
                 <li>เปิด URL ที่ได้ในเบราว์เซอร์ (ต้องมี <code>/exec</code> ต่อท้าย)</li>
                 <li>ควรเห็นข้อความ:
@@ -16688,7 +17012,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 </li>
             </ol>
 			
-			<h3>8.8 ตั้งชื่อผู้ใช้</h3>
+			<h3>9.8 ตั้งชื่อผู้ใช้</h3>
             <p><strong>ทำในทุกเครื่อง</strong>ที่ต้องการ sync:</p>
             <ol>
                 <li>เปิด MediStock → แท็บ <strong>⚙️ ตั้งค่า</strong></li>
@@ -16703,7 +17027,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 ถ้าหลายคนใช้เครื่องเดียวกัน → ต้องเปลี่ยนชื่อก่อนเริ่มนับ
             </div>
 
-            <h3>8.9 ตั้งค่า Shared Sync</h3>
+            <h3>9.9 ตั้งค่า Shared Sync</h3>
             <p><strong>ทำในทุกเครื่อง</strong>ที่ต้องการ sync:</p>
             <ol>
                 <li>ไปที่ <strong>⚙️ ตั้งค่า</strong> → การ์ด <strong>👤 ผู้ใช้งาน / Multi-user</strong></li>
@@ -16722,14 +17046,14 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 ❌ <strong>ถ้าไม่สำเร็จ:</strong> ดูข้อ 8.17 ปัญหาที่พบบ่อย
             </div>
 
-            <h3>8.10 ดูข้อมูลทีม</h3>
+            <h3>9.10 ดูข้อมูลทีม</h3>
             <p>เมื่อโหลดข้อมูลทีมสำเร็จ จะเห็น:</p>
             <ul>
                 <li><strong>สรุปทีม</strong> — แต่ละคนนับกี่รายการ</li>
                 <li><strong>ตาราง 20 รายการล่าสุด</strong> — เวลา • ผู้นับ • สินค้า • LOT • นับ • ต่าง</li>
             </ul>
 
-            <h3>8.11 โหมดรายงาน "รวมทีม"</h3>
+            <h3>9.11 โหมดรายงาน "รวมทีม"</h3>
             <p>ไปที่แท็บ <strong>📊 รายงาน</strong> → กดปุ่ม <strong>🌐 รวมทีม (Sheets)</strong></p>
 
             <p><strong>ระบบจะ:</strong></p>
@@ -16745,7 +17069,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 • <strong>Team</strong> = ข้อมูลรวมจากทุกเครื่อง
             </div>
 
-            <h3>8.12 Conflict Resolution</h3>
+            <h3>9.12 Conflict Resolution</h3>
             <p><strong>Conflict</strong> = เมื่อ 2 คนนับสินค้าเดียวกัน ได้ผลต่างกัน</p>
 
             <p><strong>ตัวอย่าง:</strong></p>
@@ -16765,7 +17089,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>แก้ไขจำนวนใน MediStock</li>
             </ol>
 
-            <h3>8.13 Auto-Sync</h3>
+            <h3>9.13 Auto-Sync</h3>
             <p>ระบบจะ sync อัตโนมัติ <strong>ทุก 30 วินาที</strong> เมื่อมี:</p>
             <ul>
                 <li>Endpoint + Token</li>
@@ -16779,7 +17103,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>กดปุ่ม → บังคับ sync</li>
             </ul>
 
-            <h3>8.14 Offline Mode</h3>
+            <h3>9.14 Offline Mode</h3>
             <p>MediStock ทำงานแบบ <strong>Offline-first</strong>:</p>
             <ol>
                 <li>ข้อมูลบันทึกในเครื่องก่อน (IndexedDB)</li>
@@ -16789,7 +17113,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
 
             <p><strong>ดู Queue:</strong> ใน Console จะเห็น log "offlineQueue: N items"</p>
 
-            <h3>8.15 ตัวอย่างการใช้งาน</h3>
+            <h3>9.15 ตัวอย่างการใช้งาน</h3>
             <p><strong>สถานการณ์:</strong> ร้านมียา 3,000 รายการ, พนักงาน 3 คน</p>
 
             <p><strong>วิธีที่ 1: แบ่งโซน</strong></p>
@@ -16807,7 +17131,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>พนักงาน C → ยาทา/ยาหยอด</li>
             </ul>
 
-            <h3>8.16 เปลี่ยน Token เมื่อไร / อย่างไร?</h3>
+            <h3>9.16 เปลี่ยน Token เมื่อไร / อย่างไร?</h3>
 
             <p><strong>ควรเปลี่ยน Token เมื่อ:</strong></p>
             <ul>
@@ -16848,7 +17172,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 ถ้าเครื่องหนึ่งใช้เก่า → จะ sync ไม่ได้
             </div>
 			
-			<h3>8.17 ความจุระบบ Multi-user</h3>
+			<h3>9.17 ความจุระบบ Multi-user</h3>
             <p><strong>MediStock + Google Sheets รองรับ:</strong></p>
             <table>
                 <thead>
@@ -16862,7 +17186,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 </tbody>
             </table>
 
-            <h3>8.18 Best Practice การใช้งาน Multi-user</h3>
+            <h3>9.18 Best Practice การใช้งาน Multi-user</h3>
             <ol>
                 <li><strong>ให้พนักงาน 1 คน = 1 เครื่อง</strong> — ลด Conflict</li>
                 <li><strong>แบ่งโซนนับ</strong> — ไม่ให้ทับซ้อนกัน</li>
@@ -16871,7 +17195,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li><strong>Admin ตรวจ Conflict ทุกครั้ง</strong> — ก่อนสรุปรายงาน</li>
             </ol>
 
-            <h3>8.19 Token Rotation — เมื่อไหร่ควรเปลี่ยน?</h3>
+            <h3>9.19 Token Rotation — เมื่อไหร่ควรเปลี่ยน?</h3>
             <table>
                 <thead>
                     <tr><th>เหตุการณ์</th><th>เปลี่ยนทันที?</th></tr>
@@ -16885,7 +17209,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 </tbody>
             </table>
 			
-			<h3>8.20 ตัวอย่าง Token + Endpoint ที่ปลอดภัย vs ไม่ปลอดภัย</h3>
+			<h3>9.20 ตัวอย่าง Token + Endpoint ที่ปลอดภัย vs ไม่ปลอดภัย</h3>
 
             <p><strong>ตัวอย่าง Token:</strong></p>
             <table>
@@ -16937,7 +17261,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 </tbody>
             </table>
 
-            <h3>8.21 Multiple Sheets — แยกตามสาขา</h3>
+            <h3>9.21 Multiple Sheets — แยกตามสาขา</h3>
             <p><strong>กรณีมี 3 สาขา:</strong></p>
             <ol>
                 <li><strong>แบบที่ 1:</strong> ใช้ Sheet เดียว — กรองตามสาขา</li>
@@ -16948,7 +17272,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 ง่ายต่อการจัดการสิทธิ์
             </div>
 
-            <h3>8.22 ปัญหา Google Sheets API Quota</h3>
+            <h3>9.22 ปัญหา Google Sheets API Quota</h3>
             <div class="warning">
                 ⚠️ <strong>Google Sheets API มี quota:</strong><br>
                 • อ่าน 300 requests/นาที<br>
@@ -16957,7 +17281,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 → ถ้าใช้ Apps Script → ไม่ต้องกังวล
             </div>
 
-            <h3>8.23 ปัญหาที่พบบ่อย</h3>
+            <h3>9.23 ปัญหาที่พบบ่อย</h3>
 
             <p><strong>❌ โหลดข้อมูลทีม → "Unauthorized"</strong></p>
             <ul>
@@ -16997,10 +17321,10 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
         `
     },
     {
-        no: 9,
+        no: 10,
         title: 'สำรอง/กู้คืนข้อมูล',
         content: `
-            <h3>9.1 ทำไมต้อง Backup?</h3>
+            <h3>10.1 ทำไมต้อง Backup?</h3>
             <p>
                 ข้อมูล MediStock เก็บใน <strong>IndexedDB</strong> ของเบราว์เซอร์
                 ถ้าล้างข้อมูลเบราว์เซอร์ → <strong>ข้อมูลหายทั้งหมด!</strong>
@@ -17015,14 +17339,14 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 • ใช้ Incognito mode
             </div>
 
-            <h3>9.2 ประเภทการ Backup</h3>
+            <h3>10.2 ประเภทการ Backup</h3>
             <ul>
                 <li><strong>Manual Backup</strong> — กดปุ่มสำรองเอง</li>
                 <li><strong>Emergency Backup</strong> — ระบบสำรองอัตโนมัติทุก 5 วิ</li>
                 <li><strong>Auto Save Session</strong> — บันทึก sessionItems ทุก 5 วิ</li>
             </ul>
 
-            <h3>9.3 Manual Backup</h3>
+            <h3>10.3 Manual Backup</h3>
             <p><strong>วิธี:</strong></p>
             <ol>
                 <li>ไปที่แท็บ <strong>📥 นำเข้า</strong></li>
@@ -17033,7 +17357,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
 
             <p><strong>หรือ</strong> ไปที่ <strong>⚙️ ตั้งค่า</strong> → การ์ด <strong>💾 การจัดการข้อมูล</strong> → กด <strong>สำรองข้อมูล</strong></p>
 
-            <h3>9.4 เนื้อหาในไฟล์ Backup</h3>
+            <h3>10.4 เนื้อหาในไฟล์ Backup</h3>
             <ul>
                 <li><strong>schemaVersion</strong> — เวอร์ชัน schema (14)</li>
                 <li><strong>appVersion</strong> — เวอร์ชันแอป (5.3.1)</li>
@@ -17048,7 +17372,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li><strong>expiryChangeLogs</strong> — Log การแก้วันหมดอายุ</li>
             </ul>
 
-            <h3>9.5 Restore (กู้คืน)</h3>
+            <h3>10.5 Restore (กู้คืน)</h3>
             <p><strong>วิธี:</strong></p>
             <ol>
                 <li>ไปที่ <strong>📥 นำเข้า</strong> → การ์ด <strong>💾 Backup & Restore</strong></li>
@@ -17064,7 +17388,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 ควร Backup ข้อมูลปัจจุบันก่อน Restore
             </div>
 
-            <h3>9.6 Emergency Backup</h3>
+            <h3>10.6 Emergency Backup</h3>
             <p>ระบบสำรองข้อมูลอัตโนมัติลง <code>localStorage</code>:</p>
             <ul>
                 <li>ทุกครั้งที่ยืนยันการนับ</li>
@@ -17079,7 +17403,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>กด <strong>OK</strong> → กู้คืนข้อมูลกลับ</li>
             </ol>
 
-            <h3>9.7 Auto Save</h3>
+            <h3>10.7 Auto Save</h3>
             <p><strong>Session Items</strong> ถูกบันทึกอัตโนมัติทุก 5 วินาที ลง <code>localStorage</code></p>
 
             <p><strong>เมื่อเปิดแอปใหม่:</strong></p>
@@ -17088,7 +17412,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>แจ้ง toast "💾 โหลดข้อมูลที่บันทึกไว้"</li>
             </ul>
 
-            <h3>9.8 Best Practices</h3>
+            <h3>10.8 Best Practices</h3>
 
             <p><strong>✅ ควรทำ:</strong></p>
             <ul>
@@ -17112,7 +17436,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>เก็บ Backup ไว้ในเครื่องเดียว</li>
             </ul>
 
-            <h3>9.9 ตารางการ Backup แนะนำ</h3>
+            <h3>10.9 ตารางการ Backup แนะนำ</h3>
             <table>
                 <thead>
                     <tr><th>ความถี่</th><th>เวลา</th><th>เก็บไว้</th></tr>
@@ -17124,7 +17448,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 </tbody>
             </table>
 
-            <h3>9.10 ล้างข้อมูลทั้งหมด</h3>
+            <h3>10.10 ล้างข้อมูลทั้งหมด</h3>
             <p><strong>วิธี:</strong></p>
             <ol>
                 <li>ไปที่ <strong>📥 นำเข้า</strong></li>
@@ -17139,7 +17463,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 Backup ก่อนล้างทุกครั้ง!
             </div>
 
-            <h3>9.11 ปัญหาที่พบบ่อย</h3>
+            <h3>10.11 ปัญหาที่พบบ่อย</h3>
             <p><strong>❌ กู้คืนไม่สำเร็จ</strong></p>
             <ul>
                 <li>ตรวจไฟล์ .json ถูกต้อง</li>
@@ -17162,10 +17486,10 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
         `
     },
     {
-        no: 10,
+        no: 11,
         title: 'แก้ปัญหาเบื้องต้น',
         content: `
-            <h3>10.1 ปัญหา: หน้าเว็บขาว / โหลดไม่จบ</h3>
+            <h3>11.1 ปัญหา: หน้าเว็บขาว / โหลดไม่จบ</h3>
 
             <p><strong>อาการ:</strong> เปิดแอปแล้ว Loading ค้าง หรือหน้าเว็บขาว</p>
 
@@ -17185,7 +17509,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>ล้าง Cache (⚙️ ตั้งค่า → ล้าง Cache)</li>
             </ol>
 
-            <h3>10.2 ปัญหา: กล้องไม่ทำงาน</h3>
+            <h3>11.2 ปัญหา: กล้องไม่ทำงาน</h3>
 
             <p><strong>อาการ:</strong> กดปุ่ม "เปิดสแกน" → กล้องดำ / error</p>
 
@@ -17205,7 +17529,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>ใช้ปุ่ม <strong>📸 ถ่ายรูปบาร์โค้ด</strong> แทน</li>
             </ol>
 
-            <h3>10.3 ปัญหา: สแกนบาร์โค้ดไม่ติด</h3>
+            <h3>11.3 ปัญหา: สแกนบาร์โค้ดไม่ติด</h3>
 
             <p><strong>อาการ:</strong> หันกล้องไปที่บาร์โค้ดแล้วไม่อ่าน</p>
 
@@ -17221,7 +17545,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>หรือ <strong>⌨️ ใส่รหัส</strong> มือ</li>
             </ol>
 
-            <h3>10.4 ปัญหา: นำเข้า Excel ไม่ผ่าน</h3>
+            <h3>11.4 ปัญหา: นำเข้า Excel ไม่ผ่าน</h3>
 
             <p><strong>อาการ:</strong> อัปโหลดแล้ว error / ไม่แสดงข้อมูล</p>
 
@@ -17243,7 +17567,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>ดู Console ว่ามี error อะไร</li>
             </ol>
 
-            <h3>10.5 ปัญหา: Sync ไม่ทำงาน</h3>
+            <h3>11.5 ปัญหา: Sync ไม่ทำงาน</h3>
 
             <p><strong>อาการ:</strong> Multi-user sync ไม่ขึ้นข้อมูล</p>
 
@@ -17268,7 +17592,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>กดปุ่ม <strong>โหลดข้อมูลทีม</strong> ทดสอบ</li>
             </ol>
 
-            <h3>10.6 ปัญหา: ข้อมูลหาย</h3>
+            <h3>11.6 ปัญหา: ข้อมูลหาย</h3>
 
             <p><strong>อาการ:</strong> เปิดแอปใหม่ → ข้อมูลไม่เห็น</p>
 
@@ -17287,7 +17611,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>Restore จากไฟล์ Backup</li>
             </ol>
 
-            <h3>10.7 ปัญหา: ปุ่มกดไม่ทำงาน</h3>
+            <h3>11.7 ปัญหา: ปุ่มกดไม่ทำงาน</h3>
 
             <p><strong>อาการ:</strong> กดปุ่มแล้วไม่มีอะไรเกิดขึ้น</p>
 
@@ -17300,7 +17624,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>ตรวจว่า <code>let app = null;</code> อยู่ก่อน <code>function switchTab</code></li>
             </ol>
 
-            <h3>10.8 ปัญหา: PDF ไม่เปิด</h3>
+            <h3>11.8 ปัญหา: PDF ไม่เปิด</h3>
 
             <p><strong>อาการ:</strong> กดปุ่ม PDF → ไม่มีอะไรเกิดขึ้น</p>
 
@@ -17313,7 +17637,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>ถ้าอยู่ใน iframe → ต้องเปิดใน tab ใหม่</li>
             </ol>
 
-            <h3>10.9 ปัญหา: Excel Export ไม่ครบ</h3>
+            <h3>11.9 ปัญหา: Excel Export ไม่ครบ</h3>
 
             <p><strong>อาการ:</strong> Full Report Excel ได้ไม่ครบ 18 Sheets</p>
 
@@ -17324,7 +17648,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>ตรวจว่าเรียก <code>exportFullReportXLSX()</code> ถูกต้อง</li>
             </ol>
 
-            <h3>10.10 ปัญหา: ตัวเลขใน Excel เพี้ยน</h3>
+            <h3>11.10 ปัญหา: ตัวเลขใน Excel เพี้ยน</h3>
 
             <p><strong>อาการ:</strong> บาร์โค้ดยาวๆ กลายเป็น <code>8.85E+12</code></p>
 
@@ -17334,7 +17658,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>ถ้ายังเจอ → ตรวจว่าใช้เวอร์ชันล่าสุด</li>
             </ul>
 
-            <h3>10.11 ปัญหา: วันที่เพี้ยน +/- 1 วัน</h3>
+            <h3>11.11 ปัญหา: วันที่เพี้ยน +/- 1 วัน</h3>
 
             <p><strong>อาการ:</strong> วันที่ในระบบคลาดเคลื่อน 1 วัน</p>
 
@@ -17346,7 +17670,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>ตรวจว่า <code>normalizeDateValue()</code> ทำงานถูกต้อง</li>
             </ul>
 
-            <h3>10.12 ปัญหา: Session ไม่เปิด</h3>
+            <h3>11.12 ปัญหา: Session ไม่เปิด</h3>
 
             <p><strong>อาการ:</strong> Session banner ขึ้น "ไม่มี Session"</p>
 
@@ -17380,7 +17704,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
 
 			<p><strong>แก้ไข:</strong> ✅ ปกติ — ไม่ต้องแก้</p>
 
-            <h3>10.13 ปัญหา: Dedup block ผิด</h3>
+            <h3>11.13 ปัญหา: Dedup block ผิด</h3>
 
             <p><strong>อาการ:</strong> นับสินค้าใหม่ → ขึ้น "รายการนี้ถูกบันทึกไปแล้ว"</p>
 
@@ -17392,7 +17716,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>ลองนับใหม่</li>
             </ol>
 
-            <h3>10.14 ปัญหา: Performance ช้า</h3>
+            <h3>11.14 ปัญหา: Performance ช้า</h3>
 
             <p><strong>อาการ:</strong> แอปช้า, หมุนนาน, ค้นหาช้า</p>
 
@@ -17405,7 +17729,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>Reboot เครื่อง</li>
             </ol>
 
-            <h3>10.15 ปัญหา: Dark Mode กระพริบ</h3>
+            <h3>11.15 ปัญหา: Dark Mode กระพริบ</h3>
 
             <p><strong>แก้ไข:</strong></p>
             <ol>
@@ -17413,7 +17737,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 <li>ตรวจว่า <code>loadTheme()</code> เรียกใน <code>init()</code> ก่อน render</li>
             </ol>
 
-            <h3>10.16 ติดต่อขอความช่วยเหลือ</h3>
+            <h3>11.16 ติดต่อขอความช่วยเหลือ</h3>
 
             <p><strong>ข้อมูลที่ควรเตรียม:</strong></p>
             <ul>
@@ -17428,12 +17752,12 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
             <div class="tip">
                 💡 <strong>ก่อนแจ้งปัญหา:</strong><br>
                 1. Refresh (Ctrl+Shift+R)<br>
-                2. ล้าง Cache<br>
-                3. ลองเบราว์เซอร์อื่น<br>
+                                            2.     ล้าง Cache<br>
+                                            3.     ลองเบราว์เซอร์อื่น<br>
                 4. Backup ข้อมูลก่อน
             </div>
 
-            <h3>10.17 Checklist ตรวจสุขภาพระบบ</h3>
+            <h3>11.17 Checklist ตรวจสุขภาพระบบ</h3>
             <table>
                 <thead>
                     <tr><th>รายการ</th><th>สถานะ</th></tr>
@@ -17454,7 +17778,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 ถ้าตัวใด 🔴 → ทำตามหัวข้อที่สอดคล้องด้านบน
             </div>
 			
-		    <h3>10.18 Debug ด้วย Console (F12) — ฉบับละเอียด</h3>
+		    <h3>11.18 Debug ด้วย Console (F12) — ฉบับละเอียด</h3>
             <p><strong>เปิด Console ยังไง:</strong></p>
             <ul>
                 <li>PC: กด F12 → แท็บ Console</li>
@@ -17479,7 +17803,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 • "QuotaExceededError" → เก็บข้อมูลเต็ม
             </div>
 
-            <h3>10.19 ระบบ Log ของ MediStock</h3>
+            <h3>11.19 ระบบ Log ของ MediStock</h3>
             <p><strong>Log ที่ระบบเก็บ:</strong></p>
             <ul>
                 <li><strong>Session Log:</strong> ใครนับ เมื่อไหร่</li>
@@ -17489,7 +17813,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
             </ul>
             <p><strong>ดูได้ที่:</strong> ⚙️ ตั้งค่า → <strong>ประวัติการแก้ไข</strong></p>
 
-            <h3>10.20 Performance Checklist</h3>
+            <h3>11.20 Performance Checklist</h3>
             <p>ถ้าแอปช้า → ตรวจตามนี้:</p>
             <table>
                 <thead>
@@ -17504,7 +17828,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 </tbody>
             </table>
 
-            <h3>10.21 การขอความช่วยเหลือ</h3>
+            <h3>11.21 การขอความช่วยเหลือ</h3>
             <p><strong>ข้อมูลที่ควรเตรียม:</strong></p>
             <ol>
                 <li>เวอร์ชัน MediStock (⚙️ ตั้งค่า → Header)</li>
@@ -17523,7 +17847,7 @@ https://script.google.com/macros/s/[DEPLOY_ID]/exec
                 5. **ห้ามแชร์ข้อมูลลูกค้า** (ลบข้อมูลส่วนตัวก่อนส่งรูป)
             </div>
 
-            <h3>10.22 Emergency — เมื่อระบบค้างทั้งหน้า</h3>
+            <h3>11.22 Emergency — เมื่อระบบค้างทั้งหน้า</h3>
             <ol>
                 <li><strong>อย่าเพิ่งปิดเบราว์เซอร์!</strong></li>
                 <li>กด F5 → refresh</li>
@@ -18148,7 +18472,51 @@ const QA_CONTENT = [
             {
                 q: 'ชื่อสินค้าซ้ำกันในไฟล์ นำเข้าได้ไหม?',
                 a: 'ได้ครับ! MediStock แยกตาม <strong>ชื่อ + LOT</strong><br><br>ตัวอย่าง:<br>• พาราเซตามอล 500mg / LOT2401<br>• พาราเซตามอล 500mg / LOT2402<br>→ ระบบเก็บเป็น 2 LOT ต่างกัน<br><br>💡 ถ้าชื่อเดียวกัน LOT เดียวกัน → บวกจำนวน'
-            }
+            },
+			{
+				q: 'นำเข้าจาก Google Sheets ต้องทำอะไรก่อน?',
+				a: '<strong>ต้องตั้งค่า API Key ก่อน!</strong><br><br>' +
+				   'ขั้นตอน:<br>' +
+				   '1. ขอ API Key จาก console.cloud.google.com<br>' +
+				   '2. ตั้งค่าใน MediStock (⚙️ ตั้งค่า → Google Sheets)<br>' +
+				   '3. เตรียม Sheet + แชร์ "Anyone with link"<br>' +
+				   '4. นำเข้าใน 📥 นำเข้า<br><br>' +
+				   '⏱️ ใช้เวลา ~12 นาที<br>' +
+				   '💡 ครั้งเดียว — ใช้ตลอด'
+			},
+			{
+				q: 'ขอ Google API Key ยังไง?',
+				a: '<strong>5 ขั้นตอน:</strong><br><br>' +
+				   '1. เปิด <code>console.cloud.google.com</code><br>' +
+				   '2. สร้าง Project ใหม่ → "MediStock"<br>' +
+				   '3. APIs & Services → Library → ค้นหา "Google Sheets API" → Enable<br>' +
+				   '4. Credentials → Create → API Key<br>' +
+				   '5. Copy key (ขึ้นต้น <code>AIza...</code>)<br><br>' +
+				   '⏱️ ~5 นาที<br>' +
+				   '💡 ใช้ฟรี — ไม่มีค่าใช้จ่าย'
+			},
+			{
+				q: 'แชร์ Google Sheet ยังไง?',
+				a: 'เพื่อให้ MediStock อ่านได้:<br><br>' +
+				   '1. เปิด Sheet<br>' +
+				   '2. คลิก "Share" (มุมขวาบน)<br>' +
+				   '3. "Change to anyone with the link"<br>' +
+				   '4. เลือก "Viewer"<br>' +
+				   '5. Copy link<br><br>' +
+				   '⚠️ ถ้าไม่แชร์ → ระบบจะขึ้น "ไม่พบข้อมูล"<br><br>' +
+				   '💡 Link ที่ได้จะขึ้นต้น <code>https://docs.google.com/spreadsheets/d/...</code>'
+			},
+			{
+				q: 'นำเข้าจาก Google Sheets ไม่ได้ ขึ้น "ต้องตั้งค่า API Key ก่อน" ทำไง?',
+				a: 'เพราะยังไม่ได้ใส่ API Key ใน MediStock<br><br>' +
+				   '<strong>แก้:</strong><br>' +
+				   '1. ⚙️ ตั้งค่า → การ์ด Google Sheets<br>' +
+				   '2. ช่อง API Key → วาง API Key (ขึ้นต้น AIza)<br>' +
+				   '3. กด 💾 บันทึก<br>' +
+				   '4. กด 🔌 ทดสอบ → ควรขึ้น "เชื่อมต่อสำเร็จ"<br>' +
+				   '5. กลับไป 📥 นำเข้า → ลองใหม่<br><br>' +
+				   '💡 ถ้ายังไม่มี API Key → ดู Q "ขอ Google API Key ยังไง?"'
+			}
         ]
     },
     {
