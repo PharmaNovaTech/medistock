@@ -2351,6 +2351,16 @@ infinite;"></div>
 					2️⃣ LOT ห้ามว่าง → ใส่ <strong>N/A</strong> แทน<br>
 					3️⃣ วันผลิต + วันหมดอายุ → ต้องมี ไม่งั้นไม่เตือนของหมดอายุ
 				</div>
+				
+				<!-- ⭐ v5.3.1 FIX: คำเตือนบาร์โค้ด -->
+				<div style="background:#fee2e2;border-left:4px solid #dc2626;padding:8px 12px;border-radius:6px;margin-top:10px;font-size:12px;color:#991b1b;line-height:1.7;">
+					<strong>⚠️ บาร์โค้ดต้องเป็น TEXT เท่านั้น!</strong><br>
+					• ถ้าพิมพ์ <code>8851473009814</code> → Excel แสดง <code>8.85E+12</code> ❌<br>
+					• <strong>วิธีแก้:</strong> Format Cells = Text (ก่อนพิมพ์) แล้วพิมพ์ <code>8851473009814</code> (ไม่ต้องใส่ <code>'</code>)<br>
+					• <strong>หรือ</strong> ใส่ <code>'</code> นำหน้า: <code>'8851473009814</code><br>
+					• 💡 <strong>เลือก 1 วิธี</strong> — อย่าทำทั้ง 2 พร้อมกัน
+				</div>
+				
 				<button class="btn btn-outline btn-sm" onclick="app.showImportGuide()" 
 						style="margin-top:8px;font-size:12px;padding:6px 14px;min-height:34px;border-color:#92400e;color:#92400e;">
 					<i class="fas fa-book-open"></i> 📖 อ่านเพิ่มเติม
@@ -3509,6 +3519,45 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
                 </div>
             </div>
         </div>
+		 <!-- ⭐ v5.3.1 FIX: หัวข้อที่ 7 — บาร์โค้ด Text -->
+            <div style="background:#fee2e2;border-left:4px solid #ef4444;padding:10px 12px;border-radius:8px;margin-bottom:8px;">
+                <div style="font-weight:700;font-size:14px;color:#991b1b;margin-bottom:4px;">7️⃣ บาร์โค้ดต้องเป็น TEXT *</div>
+                <div style="font-size:12px;line-height:1.7;color:#0f172a;">
+                    ❌ ผิด: พิมพ์ <code>8851473009814</code> (Format General) → <code>8.85E+12</code><br>
+                    ✅ ถูก: <strong>วิธี A</strong> — Format Cells = Text + พิมพ์ <code>8851473009814</code> (ไม่ต้องใส่ <code>'</code>)<br>
+                    ✅ ถูก: <strong>วิธี B</strong> — ใส่ <code>'</code> นำหน้า: <code>'8851473009814</code><br>
+                    ⚠️ <strong>เลือก 1 วิธี</strong> เท่านั้น
+                </div>
+            </div>
+            
+            <!-- ⭐ v5.3.1 FIX: หัวข้อที่ 8 — สรุปวิธีใส่บาร์โค้ด -->
+            <div style="background:#d1fae5;border-left:4px solid #10b981;padding:10px 12px;border-radius:8px;margin-bottom:8px;">
+                <div style="font-weight:700;font-size:14px;color:#065f46;margin-bottom:4px;">8️⃣ สรุปวิธีใส่บาร์โค้ด</div>
+                <table style="width:100%;border-collapse:collapse;font-size:11px;">
+                    <thead>
+                        <tr style="background:#f0fdf4;">
+                            <th style="padding:4px;text-align:left;border:1px solid #86efac;"></th>
+                            <th style="padding:4px;text-align:center;border:1px solid #86efac;">General</th>
+                            <th style="padding:4px;text-align:center;border:1px solid #86efac;">Text ⭐</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding:4px;border:1px solid #86efac;">ไม่ใส่ <code>'</code></td>
+                            <td style="padding:4px;text-align:center;border:1px solid #86efac;color:#dc2626;">❌ 8.85E+12</td>
+                            <td style="padding:4px;text-align:center;border:1px solid #86efac;color:#059669;">✅ ครบ</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:4px;border:1px solid #86efac;">ใส่ <code>'</code></td>
+                            <td style="padding:4px;text-align:center;border:1px solid #86efac;color:#059669;">✅ ครบ</td>
+                            <td style="padding:4px;text-align:center;border:1px solid #86efac;color:#dc2626;">❌ มี ' ติด</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="font-size:11px;color:#065f46;margin-top:6px;">
+                    💡 <strong>แนะนำ:</strong> วิธี A (Format = Text + ไม่ใส่ <code>'</code>)
+                </div>
+            </div>
         
         <button class="btn btn-primary btn-block" onclick="app.closeImportGuide()" 
                 style="margin-top:12px;font-size:15px;padding:12px;min-height:48px;">
@@ -13042,16 +13091,26 @@ downloadImportTemplate() {
     ];
     
     // แถวตัวอย่าง 3 แถว
+    // ⭐ v5.3.1 FIX: ตัวอย่างบาร์โค้ด 13 หลัก + ' นำหน้า
     const sampleRows = [
-        ['P001', 'พาราเซตามอล 500mg', '8850001', 'LOT2401', '2024-01-15', '2026-01-15', 1.00, 0.50, 1000, 'เม็ด', 100, 5000, 'บ.ยาไทย', ''],
-        ['P002', 'อะม็อกซิซิลิน 250mg', '8850002', 'N/A', '2024-03-01', '2025-03-01', 2.50, 1.20, 500, 'แคปซูล', 50, 2000, 'บ.เภสัช', 'ไม่มี LOT'],
+        ['P001', 'พาราเซตามอล 500mg', "'8852662200012", 'LOT2401', '2024-01-15', '2026-01-15', 1.00, 0.50, 1000, 'เม็ด', 100, 5000, 'บ.ยาไทย', ''],
+        ['P002', 'อะม็อกซิซิลิน 250mg', "'8852662200029", 'N/A', '2024-03-01', '2025-03-01', 2.50, 1.20, 500, 'แคปซูล', 50, 2000, 'บ.เภสัช', 'ไม่มี LOT'],
         ['P003', 'วิตามินซี 1000mg', '', 'LOT2403', '', '2027-12-31', 1.50, 0.80, 2000, 'เม็ด', 200, 10000, '', 'รอวันผลิต']
-    ];
+		]; 
     
     const wsData = [headers, ...sampleRows];
-    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    const ws = XLSX.utils.aoa_to_sheet(wsData);    
+    // ⭐ v5.3.1 FIX: บังคับคอลัมน์ C (บาร์โค้ด) เป็น text
+    const barcodeCol = 2;
+    for (let r = 1; r <= sampleRows.length; r++) {
+        const cellRef = XLSX.utils.encode_cell({ r: r, c: barcodeCol });
+        if (ws[cellRef]) {
+            ws[cellRef].t = 's';
+            ws[cellRef].z = '@';
+        }
+    }
     
-    // ตั้งความกว้างคอลัมน์
+        // ตั้งความกว้างคอลัมน์
     ws['!cols'] = [
         {wch: 12}, {wch: 25}, {wch: 14}, {wch: 12},
         {wch: 16}, {wch: 16}, {wch: 10}, {wch: 10},
@@ -13072,6 +13131,52 @@ downloadImportTemplate() {
         ['4. วันที่กรอกได้ 2 แบบ: 2024-01-15 หรือ 15/01/2024'],
         ['5. บาร์โค้ด: ตัวเลข 8, 12, 13 หลัก'],
         [],
+        // ⭐ v5.3.1 FIX: อธิบาย Format + ' อย่างชัดเจน
+        ['⚠️ สำคัญมาก! — บาร์โค้ดต้องเป็น TEXT'],
+        [],
+        ['❌ ปัญหาที่เจอ: พิมพ์ 8851473009814 → Excel แสดง 8.85E+12'],
+        [],
+        ['✅ มี 2 วิธีที่ถูก — เลือก 1 วิธี'],
+        [],
+        ['━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'],
+        ['🎯 วิธี A: Format Cells = Text (แนะนำ)'],
+        ['━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'],
+        ['1. คลิกหัวคอลัมน์ C (บาร์โค้ด) ทั้งคอลัมน์'],
+        ['2. คลิกขวา → Format Cells'],
+        ['3. หรือกด Ctrl+1'],
+        ['4. แท็บ Number → เลือก "Text"'],
+        ['5. กด OK'],
+        ['6. พิมพ์: 8851473009814 (ไม่ต้องใส่ \')'],
+        [],
+        ['✅ ผลลัพธ์: 8851473009814 (ครบ 13 หลัก)'],
+        ['⚠️ ห้ามใส่ \' — เพราะ Format = Text แล้ว'],
+        [],
+        ['━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'],
+        ['🎯 วิธี B: ใส่ \' นำหน้า (ทางเลือก)'],
+        ['━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'],
+        ['1. ไม่ต้องตั้ง Format (ปล่อย General)'],
+        ['2. พิมพ์: \'8851473009814'],
+        ['3. หรือใส่ \' นำหน้า เช่น \'8852662200012'],
+        [],
+        ['✅ ผลลัพธ์: 8851473009814 (ครบ 13 หลัก)'],
+        ['⚠️ ต้องใส่ \' ทุกแถวด้วยมือ'],
+        [],
+        ['━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'],
+        ['📊 สรุป — เลือก 1 ใน 2'],
+        ['━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'],
+        ['ตาราง', 'Format = General', 'Format = Text'],
+        ['ไม่ใส่ \'', '❌ 8.85E+12', '✅ 8851473009814'],
+        ['ใส่ \' นำหน้า', '✅ 8851473009814', '❌ \'8851473009814'],
+        [],
+        ['✅ ถูกต้อง 2 ช่อง  ❌ ผิด 2 ช่อง'],
+        ['💡 แนะนำ: วิธี A (Format = Text + ไม่ใส่ \')'],
+        [],
+        ['📅 วันที่ — แนะนำใช้ YYYY-MM-DD'],
+        ['✅ 2024-01-15 (แนะนำ)'],
+        ['✅ 15/01/2024 (ได้)'],
+        ['✅ 15-01-2024 (ได้)'],
+        ['❌ 15/01/2567 (พ.ศ. ใช้ไม่ได้)'],
+        ['❌ ม.ค. 2567 (ใช้ไม่ได้)'],
         ['📋 คำอธิบายคอลัมน์ (14 คอลัมน์)'],
         ['คอลัมน์', 'จำเป็น?', 'คำอธิบาย', 'ตัวอย่าง'],
         ['รหัสสินค้า', 'ไม่บังคับ', 'รหัสภายในของร้าน', 'P001'],
@@ -14999,6 +15104,64 @@ const MANUAL_FULL = [
                 5. <strong>แตะจอเพื่อโฟกัส</strong> ถ้าภาพเบลอ<br>
                 6. <strong>ใช้ 2x-4x</strong> กับบาร์โค้ดเล็ก
             </div>
+				<h3>4.5.1 รองรับบาร์โค้ด 9 ประเภท</h3>
+
+				<p>MediStock รองรับบาร์โค้ดหลายประเภท:</p>
+
+				<table>
+					<thead>
+						<tr><th>ประเภท</th><th>จำนวนหลัก</th><th>ตัวอย่าง</th><th>ใช้ที่ไหน</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>EAN-13</td><td>13</td><td>8852662200012</td><td>ยาไทยส่วนใหญ่</td></tr>
+						<tr><td>EAN-8</td><td>8</td><td>96385074</td><td>ของเล็ก</td></tr>
+						<tr><td>UPC-A</td><td>12</td><td>885266220001</td><td>ของอเมริกา</td></tr>
+						<tr><td>UPC-E</td><td>6-8</td><td>01234565</td><td>ของเล็ก</td></tr>
+						<tr><td>Code-128</td><td>4-80</td><td>ABC123XYZ</td><td>ซองยา</td></tr>
+						<tr><td>Code-39</td><td>4-80</td><td>CODE39</td><td>ป้ายราคา</td></tr>
+						<tr><td>ITF-14</td><td>14</td><td>12345678901234</td><td>ลัง</td></tr>
+						<tr><td>QR Code</td><td>2D</td><td>ข้อมูลหลายแบบ</td><td>ป้ายยาใหม่</td></tr>
+						<tr><td>Data Matrix</td><td>2D</td><td>ข้อมูลหลายแบบ</td><td>ยาใหม่</td></tr>
+					</tbody>
+				</table>
+
+				<div class="tip">
+					💡 <strong>EAN-8 (8 หลัก):</strong> ระบบอ่านได้ + ใช้ค่าจริง 8 หลัก<br>
+					⚠️ <strong>ไม่เติม 0 นำหน้า</strong> — เก็บ 96385074 (ไม่ใช่ 0000096385074)
+				</div>
+
+				<h3>4.5.2 Checksum คืออะไร?</h3>
+
+				<p><strong>Checksum</strong> = ตัวเลขตรวจสอบ — ตัวสุดท้ายของบาร์โค้ด</p>
+
+				<p><strong>ตัวอย่าง:</strong> EAN-13 <code>8852662200012</code></p>
+				<ul>
+					<li>12 หลักแรก: <code>885266220001</code></li>
+					<li><strong>หลักที่ 13:</strong> <code>2</code> ← Checksum</li>
+				</ul>
+
+				<p><strong>หลักการ:</strong> คำนวณจาก 12 หลักแรก → ต้องได้ <code>2</code> เท่านั้น</p>
+
+				<h3>4.5.3 Checksum ผิด — เกิดจากอะไร?</h3>
+
+				<table>
+					<thead>
+						<tr><th>สาเหตุ</th><th>%</th><th>แก้ยังไง</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>บาร์โค้ดเสียหาย/พิมพ์ผิด</td><td>40%</td><td>สแกนใหม่ / ใส่รหัสด้วยมือ</td></tr>
+						<tr><td>ไม่ใช่ EAN-13/8</td><td>25%</td><td>ตรวจว่าเป็น Code-128 หรือไม่</td></tr>
+						<tr><td>กล้องอ่านผิด</td><td>20%</td><td>สแกนใหม่ให้ชัด</td></tr>
+						<tr><td>ยาวไม่ตรง</td><td>10%</td><td>ตรวจ 8/12/13 หลัก</td></tr>
+						<tr><td>อื่นๆ</td><td>5%</td><td>แจ้งผู้พัฒนา</td></tr>
+					</tbody>
+				</table>
+
+				<div class="tip">
+					💡 <strong>ถ้า Checksum ผิด</strong> → ระบบจะถาม:<br>
+					• กด <strong>OK</strong> → ใช้งานต่อ<br>
+					• กด <strong>Cancel</strong> → ยกเลิก
+				</div>
 
             <h3>4.6 ถ้าสแกนไม่ได้ — ใช้ปุ่มเสริม</h3>
             <p>มี 3 ทางเลือก:</p>
@@ -17884,6 +18047,32 @@ const QA_CONTENT = [
                 q: 'ไฟล์ Excel ต้องมีคอลัมน์อะไรบ้าง?',
                 a: '5 คอลัมน์บังคับ:<br>1. ชื่อสินค้า *<br>2. LOT *<br>3. วันหมดอายุ *<br>4. จำนวน *<br>5. หน่วย *<br><br>ที่เหลือไม่บังคับ: รหัส, บาร์โค้ด, ราคา, Min/Max, ผู้จัดจำหน่าย, หมายเหตุ'
             },
+			{
+				q: 'บาร์โค้ด Format = Text แล้ว ต้องใส่ \' นำหน้าไหม?',
+				a: '<strong>ไม่ต้องครับ!</strong><br><br>' +
+				   '⚠️ <strong>ห้ามใส่ \' ถ้า Format = Text</strong><br>' +
+				   'เพราะ Excel จะเก็บ \' ติดไปด้วย → MediStock อ่านได้ <code>\'8851473009814</code> (ผิด!)<br><br>' +
+				   '<strong>ตารางสรุป:</strong><br>' +
+				   '• Format = General + ไม่ใส่ \' → ❌ 8.85E+12<br>' +
+				   '• Format = General + ใส่ \' → ✅ ครบ<br>' +
+				   '• <strong>Format = Text + ไม่ใส่ \' → ✅ ครบ (แนะนำ)</strong><br>' +
+				   '• Format = Text + ใส่ \' → ❌ มี \' ติด<br><br>' +
+				   '💡 <strong>เลือก 1 ใน 2 วิธี:</strong><br>' +
+				   '1. Format = Text + ไม่ใส่ \'<br>' +
+				   '2. Format = General + ใส่ \''
+			},
+			{
+				q: 'Format Cells อยู่ตรงไหน?',
+				a: 'มี 3 วิธี:<br><br>' +
+				   '<strong>วิธีที่ 1: คลิกขวา</strong><br>' +
+				   '1. เลือก cell หรือคอลัมน์<br>' +
+				   '2. คลิกขวา → Format Cells<br><br>' +
+				   '<strong>วิธีที่ 2: คีย์ลัด</strong><br>' +
+				   '• กด Ctrl+1<br><br>' +
+				   '<strong>วิธีที่ 3: Ribbon</strong><br>' +
+				   '• Home → Number Format → เลือก "Text"<br><br>' +
+				   '💡 เมื่อเลือก Text → พิมพ์บาร์โค้ดได้เลย (ไม่ต้องใส่ \')'
+			},
             {
                 q: 'ทำไมต้องใช้ "เม็ด" ไม่ใช้ "กล่อง"?',
                 a: 'เพราะการนับทำที่ระดับเม็ดครับ<br><br>• ถ้าใช้ "กล่อง" แล้วขาย 10 เม็ด → หักครึ่งกล่องไม่ได้<br>• นับเม็ดแม่นยำกว่า<br><br>แต่ MediStock มีระบบแปลงหน่วยให้ — ถ้าใส่ "1 กล่อง = 100 เม็ด" ระบบจะแปลงให้อัตโนมัติ'
@@ -18054,6 +18243,38 @@ const QA_CONTENT = [
                 q: 'บาร์โค้ด 1D กับ 2D ต่างกันยังไง? MediStock อ่านได้ทั้งหมดไหม?',
                 a: 'ได้ทั้งหมดครับ!<br><br><strong>บาร์โค้ด 1D</strong> (เส้นแนวตั้ง):<br>• EAN-13 (13 หลัก — ของยาไทยส่วนใหญ่)<br>• EAN-8 (8 หลัก — ของเล็ก)<br>• UPC-A (12 หลัก — ของอเมริกา)<br>• Code-128 (ตัวอักษร+ตัวเลข)<br>• Code-39, Code-93, ITF, Codabar<br><br><strong>บาร์โค้ด 2D</strong> (สี่เหลี่ยม):<br>• QR Code<br>• Data Matrix<br>• PDF-417<br>• Aztec<br><br>💡 MediStock รองรับทั้งหมดนี้'
             },
+			{
+				q: 'บาร์โค้ด EAN-8 (8 หลัก) อ่านได้ไหม?',
+				a: 'ได้ครับ! MediStock รองรับ EAN-8<br><br>' +
+				   'ตัวอย่าง: <code>96385074</code><br><br>' +
+				   '✅ ระบบอ่านได้<br>' +
+				   '✅ เก็บค่าจริง 8 หลัก<br>' +
+				   '⚠️ ไม่เติม 0 นำหน้า<br><br>' +
+				   '💡 ถ้า Excel เก็บ 96385074 → ระบบจะเจอ'
+			},
+			{
+				q: 'Checksum ไม่ถูกต้อง หมายความว่าอะไร?',
+				a: 'Checksum = ตัวเลขตรวจสอบ — ตัวสุดท้ายของบาร์โค้ด<br><br>' +
+				   '<strong>สาเหตุ 5 อย่าง:</strong><br>' +
+				   '1. บาร์โค้ดเสียหาย (40%)<br>' +
+				   '2. ไม่ใช่ EAN-13 (25%)<br>' +
+				   '3. กล้องอ่านผิด (20%)<br>' +
+				   '4. ยาวไม่ตรง (10%)<br>' +
+				   '5. อื่นๆ (5%)<br><br>' +
+				   '💡 ระบบจะถาม:<br>' +
+				   '• กด OK → ใช้งานต่อ<br>' +
+				   '• กด Cancel → ยกเลิก'
+			},
+			{
+				q: 'บาร์โค้ดต้องบันทึกเป็น Text หรือ Number?',
+				a: '<strong>ต้องเป็น Text เท่านั้น</strong><br><br>' +
+				   'สาเหตุ: ถ้าเป็น Number → Excel จะแปลง:<br>' +
+				   '• 8852662200012 → 8.85E+12 ❌<br><br>' +
+				   'วิธีใส่:<br>' +
+				   '1. Format Cells → Text (ก่อนพิมพ์)<br>' +
+				   '2. หรือใส่ \' นำหน้า เช่น \'8852662200012<br><br>' +
+				   '💡 Text ไม่กระทบการอ่าน — สแกนได้ปกติ'
+			},
             {
                 q: 'สแกนบาร์โค้ด Code-128 (แบบมีตัวอักษร) นับได้ไหม?',
                 a: 'ได้ครับ! Code-128 รองรับทั้ง:<br>• ตัวเลข (0-9)<br>• ตัวอักษร (A-Z, a-z)<br>• อักขระพิเศษ<br><br>💡 มักเจอใน: ซองยาที่มีวันหมดอายุฝังในบาร์โค้ด<br>ตัวอย่าง: <code>(01)08850001234567(17)260115(10)LOT2401</code>'
