@@ -3233,15 +3233,18 @@ size:12px;padding:8px 12px;min-height:38px;border-color:var(--danger);color:var(
 				<div id="changeLogList" style="max-height:300px;overflow-y:auto;font-size:12px;border:1px solid var(--border-color);border-radius:8px;padding:6px;background:var(--bg-body);">
 					<div style="text-align:center;color:var(--text-muted);padding:12px;">กำลังโหลด...</div>
 				</div>
-				<div style="display:flex;gap:6px;margin-top:8px;">
-					<button class="btn btn-primary btn-sm" onclick="app.exportChangeLogs()" style="flex:1;font-size:12px;padding:6px;min-height:34px;">
-						<i class="fas fa-file-excel"></i> Export Excel
+				<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;">
+					<button class="btn btn-primary btn-sm" onclick="app.exportChangeLogs()" style="font-size:11px;padding:6px 4px;min-height:34px;width:100%;">
+						<i class="fas fa-file-excel"></i> Export
 					</button>
-					<button class="btn btn-outline btn-sm" onclick="app.renderChangeLog()" style="flex:1;font-size:12px;padding:6px;min-height:34px;">
+					<button class="btn btn-outline btn-sm" onclick="app.renderChangeLog()" style="font-size:11px;padding:6px 4px;min-height:34px;width:100%;">
 						<i class="fas fa-sync"></i> รีเฟรช
 					</button>
+					<button class="btn btn-danger btn-sm" onclick="app.clearChangeLogs()" style="font-size:11px;padding:6px 4px;min-height:34px;width:100%;">
+						<i class="fas fa-trash"></i> ล้างประวัติ
+					</button>
 				</div>
-			</div>
+				</div>
 				
         <div class="card" style="border:2px solid var(--info);">
             <div class="card-title" style="color:var(--info);font-size:14px;">
@@ -4251,11 +4254,19 @@ class StockApp {
         this.v52SchemaVersion = CONFIG.SCHEMA_VERSION;
 
         // ========== Unit ==========
-        this.unitMap = {
-            'ชิ้น': 1, 'โหล': 12, 'ลัง': 12, 'กล่อง': 1, 'แผง': 10,
-            'ขวด': 1, 'หลอด': 1, 'ซอง': 1, 'แพ็ค': 1, 'แผ่น': 1,
-            'กระปุก': 1, 'ขีด': 1, 'ถุง': 1, 'ตลับ': 1
-        };
+		this.unitMap = {
+			'ชิ้น': 1,
+			'เม็ด': 1,
+			'แคปซูล': 1,
+			'ขวด': 1,
+			'หลอด': 1,
+			'ซอง': 1,
+			'แผ่น': 1,
+			'กระปุก': 1,
+			'กล่อง': 1,
+			'แผง': 1,
+			'โหล': 12
+		};
 
         // ========== v5.3.1: Dedup Engine ==========
         this._seenEventIds = new Set();
@@ -13066,11 +13077,19 @@ valueInputOption=USER_ENTERED&key=${config.apiKey}`;
             ].forEach(k => {
                 localStorage.removeItem(k);
             });
-            this.unitMap = {
-                'ชิ้น': 1, 'โหล': 12, 'ลัง': 12, 'กล่อง': 1, 'แผง': 10,
-                'ขวด': 1, 'หลอด': 1, 'ซอง': 1, 'แพ็ค': 1, 'แผ่น': 1,
-                'กระปุก': 1, 'ขีด': 1, 'ถุง': 1, 'ตลับ': 1
-            };
+		this.unitMap = {
+			'ชิ้น': 1,
+			'เม็ด': 1,
+			'แคปซูล': 1,
+			'ขวด': 1,
+			'หลอด': 1,
+			'ซอง': 1,
+			'แผ่น': 1,
+			'กระปุก': 1,
+			'กล่อง': 1,
+			'แผง': 1,
+			'โหล': 12
+		};
             this.renderMap();
             this.updateLocationDropdowns();
             this.updateProgress();
@@ -13827,7 +13846,43 @@ syncProductStock(product) {
     // ═══════════════════════════════════════════════════════════════
     // [PLAN-B 5f] exportChangeLogs
     // ═══════════════════════════════════════════════════════════════
-    exportChangeLogs() {
+    clearChangeLogs() {
+        // ตรวจสอบว่ามี Log ไหม
+        const total = this.getChangeLogs().length;
+        
+        if (total === 0) {
+            this.showToast('ℹ️ ไม่มีประวัติให้ล้าง', 'info');
+            return;
+        }
+        
+        // ยืนยันครั้งที่ 1
+        if (!confirm(`🗑️ ล้างประวัติการแก้ไขทั้งหมด?\n\nมีทั้งหมด ${total} รายการ\n\n⚠️ การลบไม่สามารถกู้คืนได้`)) {
+            return;
+        }
+        
+        // ยืนยันครั้งที่ 2
+        if (!confirm('⚠️ ยืนยันครั้งสุดท้าย!\n\nกด "ตกลง" เพื่อลบประวัติทั้งหมด')) {
+            this.showToast('ℹ️ ยกเลิกการล้างประวัติ', 'info');
+            return;
+        }
+        
+        // ลบข้อมูล
+        try {
+            const key = 'changeLogs_' + this.branchId;
+            localStorage.removeItem(key);
+            
+            this.showToast(`🗑️ ล้างประวัติ ${total} รายการ เรียบร้อย`, 'success');
+            
+            // Refresh UI
+            this.renderChangeLog();
+            
+        } catch (e) {
+            console.error('clearChangeLogs error:', e);
+            this.showToast('❌ ล้างประวัติไม่สำเร็จ: ' + e.message, 'error');
+        }
+    }
+	
+	exportChangeLogs() {
 		const typeFilter = document.getElementById('logFilterType')?.value || '';
 		const userFilter = document.getElementById('logFilterUser')?.value || '';
 		const fromFilter = document.getElementById('logFilterFrom')?.value || '';
