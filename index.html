@@ -6366,26 +6366,52 @@ if (m) {
     // ================================================================
     // Barcode Validation
     // ================================================================
-    validateBarcode(barcode) {
-        const clean = String(barcode).replace(/[^0-9]/g, '');
-        if (clean.length === 0) return { valid: false, message: '❌ ไม่พบข้อมูลบาร์โค้ด' };
-        if (clean.length === 13) {
-            if (!this.validateEAN13Checksum(clean)) return { valid: false, message: '❌ Checksum ไม่ถูกต้อง' };
-            return { valid: true, barcode: clean, type: 'EAN-13' };
-        }
-        if (clean.length === 12) {
-            const ean13 = '0' + clean;
-            if (this.validateEAN13Checksum(ean13)) return { valid: true, barcode: ean13, type: 'UPC-A' };
-            return { valid: false, message: '❌ UPC-A ไม่ถูกต้อง' };
-        }
-        if (clean.length === 8) {
-            const ean13 = '00000' + clean;
-            if (this.validateEAN13Checksum(ean13)) return { valid: true, barcode: ean13, type: 'EAN-8' };
-            return { valid: false, message: '❌ EAN-8 ไม่ถูกต้อง' };
-        }
-        if (clean.length >= 4 && clean.length <= 80) return { valid: true, barcode: clean, type: 'OTHER' };
-        return { valid: false, message: `❌ บาร์โค้ดต้องมี 8, 12 หรือ 13 หลัก` };
-    }
+	validateBarcode(barcode) {
+		const clean = String(barcode).replace(/[^0-9]/g, '');
+		if (clean.length === 0) return { valid: false, message: '❌ ไม่พบข้อมูลบาร์โค้ด' };
+		
+		if (clean.length === 13) {
+			if (!this.validateEAN13Checksum(clean)) return { valid: false, message: '❌ Checksum ไม่ถูกต้อง' };
+			return { valid: true, barcode: clean, type: 'EAN-13' };
+		}
+		
+		if (clean.length === 12) {
+			const ean13 = '0' + clean;
+			if (this.validateEAN13Checksum(ean13)) return { valid: true, barcode: ean13, type: 'UPC-A' };
+			return { valid: false, message: '❌ UPC-A ไม่ถูกต้อง' };
+		}
+		
+		if (clean.length === 8) {
+			// ⭐ แก้: ลองทั้ง 8 หลัก และ 13 หลัก
+			const ean13 = '00000' + clean;
+			
+			// ✅ ลอง 8 หลักก่อน (ถ้าผ่าน Checksum)
+			if (this.validateEAN8Checksum(clean)) {
+				return { valid: true, barcode: clean, type: 'EAN-8' };  // ← เก็บ 8 หลัก
+			}
+			
+			// ✅ ถ้า 8 หลักไม่ผ่าน → ลอง 13 หลัก
+			if (this.validateEAN13Checksum(ean13)) {
+				return { valid: true, barcode: ean13, type: 'EAN-8' };
+			}
+			
+			return { valid: false, message: '❌ EAN-8 ไม่ถูกต้อง' };
+		}
+		
+		if (clean.length >= 4 && clean.length <= 80) return { valid: true, barcode: clean, type: 'OTHER' };
+		return { valid: false, message: `❌ บาร์โค้ดต้องมี 8, 12 หรือ 13 หลัก` };
+	}
+
+	// ⭐ เพิ่มฟังก์ชันใหม่: ตรวจ Checksum ของ EAN-8
+	validateEAN8Checksum(barcode) {
+		if (barcode.length !== 8) return false;
+		let sum = 0;
+		for (let i = 0; i < 7; i++) {
+			const d = parseInt(barcode[i]);
+			sum += i % 2 === 0 ? d * 3 : d;
+		}
+		return ((10 - (sum % 10)) % 10) === parseInt(barcode[7]);
+	}
 
     validateEAN13Checksum(barcode) {
         if (barcode.length !== 13) return false;
