@@ -8250,7 +8250,60 @@ async closeFullscreenScanner() {
     // ================================================================
     // v5.3.1: Add More Count — FIX (push ไป Sheets)
     // ================================================================
-    async addMoreCount() {
+	// ⭐ v5.3.1 FIX: ปุ่มนับใหม่ — ล้างค่าเดิม แล้วใส่ใหม่
+	recountProduct() {
+		// 1. ตรวจสอบว่ามีสินค้าเลือกอยู่ไหม
+		if (!this.currentProduct) {
+			this.showToast('⚠️ กรุณาเลือกสินค้าก่อน', 'warning');
+			return;
+		}
+		
+		const product = this.v5NormalizeProduct(this.currentProduct);
+		const lot = product.lots?.[this.selectedLotIndex] || null;
+		const lotName = lot?.lot || product.lot || '';
+		const location = this.getSelectedLocation();
+		
+		// 2. หารายการเดิมใน Session
+		const index = this.sessionItems.findIndex(item =>
+			String(item.productId) === String(product.id) &&
+			String(item.location) === String(location.id) &&
+			String(item.lotName || item.lot || '') === String(lotName)
+		);
+		
+		// 3. ถ้าไม่เจอรายการเดิม → แจ้งเตือน
+		if (index === -1) {
+			this.showToast('ℹ️ ยังไม่ได้นับในตำแหน่งนี้ — กด "ยืนยันการนับ" ก่อน', 'info');
+			return;
+		}
+		
+		// 4. ลบรายการเดิมออกจาก Session
+		const removed = this.sessionItems.splice(index, 1)[0];
+		console.log('🔄 ลบรายการเดิม:', {
+			name: removed.name,
+			lot: removed.lotName,
+			qty: removed.counted_qty
+		});
+		
+		// 5. ล้างค่าในฟอร์ม
+		const qtyInput = document.getElementById('qtyInput');
+		if (qtyInput) qtyInput.value = 0;
+		
+		const noteInput = document.getElementById('noteInput');
+		if (noteInput) noteInput.value = '';
+		
+		// 6. แจ้งเตือนสำเร็จ
+		this.showToast(`🔄 ล้างค่าเดิมแล้ว (${removed.counted_qty} ชิ้น) — ใส่จำนวนใหม่`, 'info');
+		
+		// 7. รีเฟรช UI
+		this.recalculateGroupDifferences();
+		this.renderRecentScans();
+		this.updateProgress();
+		this.updateScanBadge();
+		this.saveSession();
+		this.v53RenderSessionBanner();
+	}
+    
+	async addMoreCount() {
         if (!this.currentProduct) {
             this.showToast('⚠️ กรุณาเลือกสินค้าก่อน', 'warning');
             return;
